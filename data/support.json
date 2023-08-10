@@ -1,0 +1,11 @@
+{
+    "id": 2,
+    "id": 2,
+    "joiningDate": "2021-08-22",
+    "contactEmail": "support2@example.com",
+    "contactNumber": "987-654-3210",
+    "salary": 48000,
+    "address": "456 Help St, Town",
+    "notes": "Knowledgeable in technical troubleshooting",
+    "profilePicture": "https://example.com/profile-pics/support2.jpg"
+  }

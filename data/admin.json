@@ -1,0 +1,13 @@
+{
+    "id": 1,
+    "id": 1,
+    "joiningDate": "2022-03-10",
+    "contactEmail": "admin@example.com",
+    "contactNumber": "123-456-7890",
+    "salary": 60000,
+    "address": "456 admin St, City",
+    "notes": "Experienced administrator",
+    "socialProfile": "https://www.linkedin.com/admin-profile",
+    "profilePicture": "https://example.com/profile-pics/admin1.jpg"
+  }
+  

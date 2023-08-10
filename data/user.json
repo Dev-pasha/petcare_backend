@@ -1,0 +1,237 @@
+[
+  {
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john.doe@example.com",
+    "password": "hashed_password_1",
+    "meta": {
+      "age": 30,
+      "occupation": "Engineer"
+    },
+    "dateOfBirth": "1993-05-15",
+    "gender": "Male",
+    "address": "123 Main St, City",
+    "phoneNumber": "123-456-7890",
+    "registerDate": "2022-01-15"
+  },
+  {
+    "firstName": "Jane",
+    "lastName": "Smith",
+    "email": "jane.smith@example.com",
+    "password": "hashed_password_2",
+    "meta": {
+      "age": 28,
+      "occupation": "Designer"
+    },
+    "dateOfBirth": "1995-02-28",
+    "gender": "Female",
+    "address": "456 Elm St, Town",
+    "phoneNumber": "987-654-3210",
+    "registerDate": "2021-11-10"
+  },
+  {
+    "firstName": "Michael",
+    "lastName": "Johnson",
+    "email": "michael.johnson@example.com",
+    "password": "hashed_password_3",
+    "meta": {
+      "age": 42,
+      "occupation": "Manager"
+    },
+    "dateOfBirth": "1979-09-03",
+    "gender": "Male",
+    "address": "789 Oak St, Village",
+    "phoneNumber": "555-123-4567",
+    "registerDate": "2023-03-20"
+  },
+  {
+    "firstName": "Emily",
+    "lastName": "Williams",
+    "email": "emily.williams@example.com",
+    "password": "hashed_password_4",
+    "meta": {
+      "age": 25,
+      "occupation": "Student"
+    },
+    "dateOfBirth": "1998-07-12",
+    "gender": "Female",
+    "address": "567 Pine St, Hamlet",
+    "phoneNumber": "222-333-4444",
+    "registerDate": "2020-06-05"
+  },
+  {
+    "firstName": "William",
+    "lastName": "Brown",
+    "email": "william.brown@example.com",
+    "password": "hashed_password_5",
+    "meta": {
+      "age": 55,
+      "occupation": "Retired"
+    },
+    "dateOfBirth": "1968-12-01",
+    "gender": "Male",
+    "address": "789 Maple St, County",
+    "phoneNumber": "777-888-9999",
+    "registerDate": "2019-04-25"
+  },
+  {
+    "firstName": "Sarah",
+    "lastName": "Miller",
+    "email": "sarah.miller@example.com",
+    "password": "hashed_password_6",
+    "meta": {
+      "age": 32,
+      "occupation": "Doctor"
+    },
+    "dateOfBirth": "1989-11-03",
+    "gender": "Female",
+    "address": "123 Oak St, City",
+    "phoneNumber": "555-777-8888",
+    "registerDate": "2022-09-15",
+    "deletedAt": null
+  },
+  {
+    "firstName": "Daniel",
+    "lastName": "Wilson",
+    "email": "daniel.wilson@example.com",
+    "password": "hashed_password_7",
+    "meta": {
+      "age": 28,
+      "occupation": "Software Engineer"
+    },
+    "dateOfBirth": "1994-06-20",
+    "gender": "Male",
+    "address": "456 Elm St, Town",
+    "phoneNumber": "777-444-5555",
+    "registerDate": "2021-04-10",
+    "deletedAt": null
+  },
+  {
+    "firstName": "Ava",
+    "lastName": "Martin",
+    "email": "ava.martin@example.com",
+    "password": "hashed_password_8",
+    "meta": {
+      "age": 40,
+      "occupation": "Manager"
+    },
+    "dateOfBirth": "1981-08-12",
+    "gender": "Female",
+    "address": "789 Maple St, Village",
+    "phoneNumber": "333-666-7777",
+    "registerDate": "2020-03-05",
+    "deletedAt": null
+  },
+  {
+    "firstName": "Ethan",
+    "lastName": "Johnson",
+    "email": "ethan.johnson@example.com",
+    "password": "hashed_password_9",
+    "meta": {
+      "age": 24,
+      "occupation": "Student"
+    },
+    "dateOfBirth": "1997-01-18",
+    "gender": "Male",
+    "address": "567 Pine St, Hamlet",
+    "phoneNumber": "888-444-3333",
+    "registerDate": "2019-11-22",
+    "deletedAt": null
+  },
+  {
+    "firstName": "Mia",
+    "lastName": "Robinson",
+    "email": "mia.robinson@example.com",
+    "password": "hashed_password_10",
+    "meta": {
+      "age": 28,
+      "occupation": "Teacher"
+    },
+    "dateOfBirth": "1993-12-07",
+    "gender": "Female",
+    "address": "789 Oak St, County",
+    "phoneNumber": "222-999-8888",
+    "registerDate": "2018-08-15",
+    "deletedAt": null
+  },
+  {
+    "firstName": "Liam",
+    "lastName": "Anderson",
+    "email": "liam.anderson@example.com",
+    "password": "hashed_password_11",
+    "meta": {
+      "age": 35,
+      "occupation": "Engineer"
+    },
+    "dateOfBirth": "1986-09-25",
+    "gender": "Male",
+    "address": "123 Elm St, City",
+    "phoneNumber": "555-222-1111",
+    "registerDate": "2022-07-10",
+    "deletedAt": null
+  },
+  {
+    "firstName": "Charlotte",
+    "lastName": "Harris",
+    "email": "charlotte.harris@example.com",
+    "password": "hashed_password_12",
+    "meta": {
+      "age": 29,
+      "occupation": "Designer"
+    },
+    "dateOfBirth": "1992-04-18",
+    "gender": "Female",
+    "address": "456 Oak St, Town",
+    "phoneNumber": "777-888-3333",
+    "registerDate": "2021-02-22",
+    "deletedAt": null
+  },
+  {
+    "firstName": "Liam",
+    "lastName": "Taylor",
+    "email": "liam.taylor@example.com",
+    "password": "hashed_password_13",
+    "meta": {
+      "age": 22,
+      "occupation": "Student"
+    },
+    "dateOfBirth": "1999-10-05",
+    "gender": "Male",
+    "address": "789 Elm St, Village",
+    "phoneNumber": "444-555-7777",
+    "registerDate": "2020-11-15",
+    "deletedAt": null
+  },
+  {
+    "firstName": "Ava",
+    "lastName": "Jones",
+    "email": "ava.jones@example.com",
+    "password": "hashed_password_14",
+    "meta": {
+      "age": 41,
+      "occupation": "Manager"
+    },
+    "dateOfBirth": "1980-03-30",
+    "gender": "Female",
+    "address": "567 Pine St, Hamlet",
+    "phoneNumber": "888-777-6666",
+    "registerDate": "2019-01-20",
+    "deletedAt": null
+  },
+  {
+    "firstName": "Noah",
+    "lastName": "Williams",
+    "email": "noah.williams@example.com",
+    "password": "hashed_password_15",
+    "meta": {
+      "age": 26,
+      "occupation": "Developer"
+    },
+    "dateOfBirth": "1995-07-08",
+    "gender": "Male",
+    "address": "789 Oak St, County",
+    "phoneNumber": "222-333-5555",
+    "registerDate": "2018-09-05",
+    "deletedAt": null
+  }
+]
