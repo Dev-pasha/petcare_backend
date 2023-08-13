@@ -8,26 +8,27 @@ const attributes = {
     primaryKey: true,
     type: DataTypes.INTEGER,
     autoIncrement: true,
+    field: "support_id",
     allowNull: false,
     comment: "Support ID",
     references: {
       model: "users",
-      key: "id",
+      key: "user_id",
     },
   },
   joiningDate: {
     type: DataTypes.DATE,
-    allowNull: false,
+    allowNull: true,
     field: "joining_date",
   },
   contactEmail: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
     field: "contact_email",
   },
   contactNumber: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
     field: "contact_number",
   },
   salary: {
@@ -67,7 +68,7 @@ const define = () => {
 };
 
 const associate = ({ users, Support }) => {
-  Support.belongsTo(users, { foreignKey: "id" });
+  Support.belongsTo(users, { foreignKey: "user_id" });
 };
 
 module.exports = { modelName, attributes, options, define, associate };

@@ -19,24 +19,24 @@ const modelsDefiners = {
   Client,
   Doctor,
   Support,
-  Pet,
-  Appointment,
-  Payment,
-  PetAppointment,
-  Chats,
-  Notification,
-  Review,
+  // Pet,
+  // Appointment,
+  // Payment,
+  // PetAppointment,
+  // Chats,
+  // Notification,
+  // Review,
   // LiveSession,
   users,
 };
 
-const initModels = sequelize => {
+const initModels = (sequelize) => {
   const models = Object.keys(modelsDefiners).reduce((models, modelname) => {
     models[modelname] = modelsDefiners[modelname].define(sequelize, Sequelize);
     return models;
   }, {});
 
-  Object.keys(models).forEach(modelName => {
+  Object.keys(models).forEach((modelName) => {
     if (models[modelName].associate) {
       models[modelName].associate(models);
     }
@@ -48,11 +48,11 @@ const initModels = sequelize => {
 const models = initModels(sequelize);
 
 sequelize
-  .sync({ force: true })
+  .sync({ alter: true })
   .then(() => {
     console.log("Tables created....");
   })
-  .catch(err => {
+  .catch((err) => {
     console.log(err.message);
     throw err;
   });

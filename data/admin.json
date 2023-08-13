@@ -1,6 +1,5 @@
-{
-    "id": 1,
-    "id": 1,
+[
+  {
     "joiningDate": "2022-03-10",
     "contactEmail": "admin@example.com",
     "contactNumber": "123-456-7890",
@@ -9,5 +8,30 @@
     "notes": "Experienced administrator",
     "socialProfile": "https://www.linkedin.com/admin-profile",
     "profilePicture": "https://example.com/profile-pics/admin1.jpg"
+  },
+  {
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john.doe@example.com",
+    "password": "hashed_password_1",
+    "meta": {
+      "age": 30,
+      "occupation": "Engineer"
+    },
+    "dateOfBirth": "1993-05-15",
+    "gender": "Male",
+    "address": "123 Main St, City",
+    "phoneNumber": "123-456-7890",
+    "registerDate": "2022-01-15",
+    "admin": {
+      "joiningDate": "2022-03-10",
+      "contactEmail": "admin@example.com",
+      "contactNumber": "123-456-7890",
+      "salary": 60000,
+      "address": "456 admin St, City",
+      "notes": "Experienced administrator",
+      "socialProfile": "https://www.linkedin.com/admin-profile",
+      "profilePicture": "https://example.com/profile-pics/admin1.jpg"
+    }
   }
-  
+]

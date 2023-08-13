@@ -9,47 +9,48 @@ const attributes = {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     allowNull: false,
+    field: "doctor_id",
     comment: "Doctor id",
     references: {
       model: "users",
-      key: "id",
+      key: "user_id",
     },
   },
   specialization: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
     field: "specialization",
   },
 
   licenseNumber: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
     field: "license_number",
   },
   education: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
     field: "education",
   },
   experience: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
     field: "experience",
   },
 
   joiningDate: {
     type: DataTypes.DATE,
-    allowNull: false,
+    allowNull: true,
     field: "joining_date",
   },
   contactEmail: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
     field: "contact_email",
   },
   contactNumber: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
     field: "contact_number",
   },
   address: {
@@ -83,17 +84,17 @@ const define = () => {
 };
 
 const associate = ({ users, Doctor, Review, Appointment }) => {
-  Doctor.belongsTo(users, { foreignKey: "id" });
-  Doctor.hasMany(Review, {
-    foreignKey: "id",
-    onDelete: "CASCADE",
-    onUpdate: "CASCADE",
-  });
-  Doctor.hasMany(Appointment, {
-    foreignKey: "id",
-    onDelete: "CASCADE",
-    onUpdate: "CASCADE",
-  });
+  Doctor.belongsTo(users, { foreignKey: "user_id" });
+  // Doctor.hasMany(Review, {
+  //   foreignKey: "id",
+  //   onDelete: "CASCADE",
+  //   onUpdate: "CASCADE",
+  // });
+  // Doctor.hasMany(Appointment, {
+  //   foreignKey: "id",
+  //   onDelete: "CASCADE",
+  //   onUpdate: "CASCADE",
+  // });
 };
 
 module.exports = { modelName, attributes, options, define, associate };
