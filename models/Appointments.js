@@ -4,11 +4,10 @@ const sequelize = require("../config/db");
 const modelName = "Appointment";
 
 const attributes = {
-  id: {
+  appointmentId: {
     type: DataTypes.INTEGER,
     allowNull: false,
     autoIncrement: true,
-    field: "appointment_id",
     primaryKey: true,
   },
 
@@ -16,7 +15,7 @@ const attributes = {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: "Pets",
+      model: "Pet",
       key: "pet_id",
     },
   },
@@ -25,16 +24,16 @@ const attributes = {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: "Client",
-      key: "id",
+      model: "client",
+      key: "client_id",
     },
   },
   doctorId: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: "Doctor",
-      key: "id",
+      model: "doctor",
+      key: "doctor_id",
     },
   },
 
@@ -103,26 +102,28 @@ const define = () => {
 
 const associate = ({
   Appointment,
-  Doctor,
-  Client,
+  doctor,
+  client,
   Pet,
   PetAppointment,
   Payment,
   LiveSession,
 }) => {
-  Appointment.belongsTo(Doctor, { foreignKey: "id" });
-  Appointment.belongsTo(Client, { foreignKey: "id" });
-  Appointment.belongsTo(Pet, { foreignKey: "id" });
-  Appointment.hasMany(PetAppointment, {
-    foreignKey: "id",
-    onDelete: "CASCADE",
-    onUpdate: "CASCADE",
-  });
-  Appointment.hasOne(Payment, {
-    foreignKey: "id",
-    onDelete: "CASCADE",
-    onUpdate: "CASCADE",
-  });
+  Appointment.belongsTo(doctor, { foreignKey: "doctor_id" });
+  Appointment.belongsTo(client, { foreignKey: "client_id" });
+  Appointment.belongsTo(Pet, { foreignKey: "petId" });
+
+
+  // Appointment.hasMany(PetAppointment, {
+  //   foreignKey: "id",
+  //   onDelete: "CASCADE",
+  //   onUpdate: "CASCADE",
+  // });
+  // Appointment.hasOne(Payment, {
+  //   foreignKey: "id",
+  //   onDelete: "CASCADE",
+  //   onUpdate: "CASCADE",
+  // });
   // Appointment.hasOne(LiveSession, {
   //   foreignKey: "id",
   //   onDelete: "CASCADE",

@@ -20,7 +20,7 @@ const modelsDefiners = {
   doctor,
   support,
   Pet,
-  // Appointment,
+  Appointment,
   // Payment,
   // PetAppointment,
   // Chats,

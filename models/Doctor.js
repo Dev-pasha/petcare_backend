@@ -86,22 +86,22 @@ const define = () => {
 };
 
 const associate = ({ users, doctor,
-  //  Review, Appointment
+   Review, Appointment
    }) => {
+
   doctor.belongsTo(users, {
     foreignKey: "user_id",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   });
 
-  
+  doctor.hasMany(Appointment, {
+    foreignKey: "appointmentId",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
 
   // Doctor.hasMany(Review, {
-  //   foreignKey: "id",
-  //   onDelete: "CASCADE",
-  //   onUpdate: "CASCADE",
-  // });
-  // Doctor.hasMany(Appointment, {
   //   foreignKey: "id",
   //   onDelete: "CASCADE",
   //   onUpdate: "CASCADE",

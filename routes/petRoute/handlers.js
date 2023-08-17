@@ -9,8 +9,8 @@ const {
 async function addPet(req, res) {
   try {
     const pet = req.body;
-    const newPet = await addPetInStorage(pet);
-    res.status(201).json({
+    const newPet = await addPetInStorage({pet});
+    res.status(200).json({
       message: "Pet added successfully",
       pet: newPet,
     });

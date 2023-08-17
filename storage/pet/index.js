@@ -1,10 +1,11 @@
 const { models } = require("../../models");
 
-const addPetInStorage = async (pet) => {
+const addPetInStorage = async ({ pet }) => {
   try {
     const newPet = await models.Pet.create(pet);
     return newPet;
   } catch (error) {
+    console.log(error.message);
     throw error.message;
   }
 };

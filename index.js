@@ -18,9 +18,11 @@ app.use(express.json());
 const authRoute = require("./routes/authRoute");
 const petRoute = require("./routes/petRoute");
 const userRoute = require("./routes/userRoute");
+const appointmentRoute = require("./routes/appointmentRoute");
 app.use("/api", authRoute);
 app.use("/api", petRoute);
 app.use("/api", userRoute);
+app.use("/api", appointmentRoute);
 
 // server
 const PORT = process.env.PORT || 5000;

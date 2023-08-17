@@ -77,17 +77,18 @@ const associate = ({ users, client, Pet, Appointment, Payment }) => {
   });
 
   client.hasMany(Pet, {
-    foreignKey: "client_id",
+    foreignKey: "petId",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   });
 
-  
-  // Client.hasMany(Appointment, {
-  //   foreignKey: "clientId",
-  //   onDelete: "CASCADE",
-  //   onUpdate: "CASCADE",
-  // });
+  client.hasMany(Appointment, {
+    foreignKey: "appointmentId",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
+
+
   // Client.hasMany(Payment, {
   //   foreignKey: "clientId",
   //   onDelete: "CASCADE",

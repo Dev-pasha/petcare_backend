@@ -5,11 +5,10 @@ const modelName = "Pet";
 
 const attributes = {
   petId: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    allowNull: false,
     primaryKey: true,
-    field:"pet_id"
+    autoIncrement: true,
+    type: DataTypes.INTEGER,
+    allowNull: false,
   },
 
   clientId: {
@@ -91,11 +90,10 @@ const attributes = {
     allowNull: true,
     field: "next_visit",
   },
- 
 };
 
 const options = {
-  tableName: "Pets",
+  tableName: "Pet",
   comment: "Pet data",
   underscored: true,
 };
@@ -109,12 +107,12 @@ const define = () => {
 const associate = ({ client, Pet, Appointment, PetAppointment }) => {
   Pet.belongsTo(client, { foreignKey: "client_id" });
 
-
   // Pet.hasMany(Appointment, {
-  //   foreignKey: "id",
+  //   foreignKey: "appointment_id",
   //   onDelete: "CASCADE",
   //   onUpdate: "CASCADE",
   // });
+
   // Pet.hasMany(PetAppointment, {
   //   foreignKey: "id",
   //   onDelete: "CASCADE",
