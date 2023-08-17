@@ -19,7 +19,7 @@ const modelsDefiners = {
   client,
   doctor,
   support,
-  // Pet,
+  Pet,
   // Appointment,
   // Payment,
   // PetAppointment,
@@ -44,7 +44,6 @@ const initModels = (sequelize) => {
 
   return models;
 };
-
 
 const models = initModels(sequelize);
 

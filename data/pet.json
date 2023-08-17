@@ -1,0 +1,50 @@
+[
+    {
+        "petName": "Rocky",
+        "petType": "Hamster",
+        "petBreed": "Syrian",
+        "petAge": 1,
+        "petGender": "Male",
+        "petWeight": 0.1,
+        "petHeight": 5,
+        "petColor": "Brown",
+        "petDescription": "Active and curious hamster",
+        "petImage": "rocky.jpg",
+        "petStatus": "Available",
+        "medicalHistory": "Regular health checkups",
+        "lastVisit": null,
+        "nextVisit": "2023-08-25T09:30:00Z"
+    },
+    {
+        "petName": "Whiskers",
+        "petType": "Cat",
+        "petBreed": "Siamese",
+        "petAge": 2,
+        "petGender": "Female",
+        "petWeight": 8,
+        "petHeight": 25,
+        "petColor": "Cream",
+        "petDescription": "Elegant and independent cat",
+        "petImage": "whiskers.jpg",
+        "petStatus": "Adopted",
+        "medicalHistory": "Spayed, regular checkups",
+        "lastVisit": "2023-07-20T15:45:00Z",
+        "nextVisit": "2023-09-10T14:00:00Z"
+    },
+    {
+        "petName": "Buddy",
+        "petType": "Dog",
+        "petBreed": "Golden Retriever",
+        "petAge": 3,
+        "petGender": "Male",
+        "petWeight": 30,
+        "petHeight": 60,
+        "petColor": "Golden",
+        "petDescription": "Friendly and playful dog",
+        "petImage": "buddy.jpg",
+        "petStatus": "Available",
+        "medicalHistory": "Up-to-date vaccinations",
+        "lastVisit": "2023-08-10T10:00:00Z",
+        "nextVisit": "2023-09-15T11:30:00Z"
+    }
+]

@@ -10,7 +10,7 @@ const {
 
 router.post("/addPet", addPet);
 router.post("/updatePet", updatePet);
-router.post("/deletePet", deletePet);
+router.get("/deletePet", deletePet);
 router.get("/getPets", getPets);
 router.get("/getSinglePet", getSinglePet);
 

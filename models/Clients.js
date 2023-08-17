@@ -69,22 +69,20 @@ const define = () => {
   return client;
 };
 
-const associate = ({
-  users,
-  client,
-  //  Pet, Appointment, Payment
-}) => {
+const associate = ({ users, client, Pet, Appointment, Payment }) => {
   client.belongsTo(users, {
     foreignKey: "user_id",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   });
 
-  // Client.hasMany(Pet, {
-  //   foreignKey: "clientId",
-  //   onDelete: "CASCADE",
-  //   onUpdate: "CASCADE",
-  // });
+  client.hasMany(Pet, {
+    foreignKey: "client_id",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
+
+  
   // Client.hasMany(Appointment, {
   //   foreignKey: "clientId",
   //   onDelete: "CASCADE",
