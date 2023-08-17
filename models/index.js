@@ -1,9 +1,9 @@
 const { Sequelize } = require("sequelize");
 const sequelize = require("../config/db");
 const admin = require("./Admin");
-const Client = require("./Clients");
-const Doctor = require("./Doctor");
-const Support = require("./Support");
+const client = require("./clients");
+const doctor = require("./doctor");
+const support = require("./support");
 const Pet = require("./Pets");
 const Appointment = require("./Appointments");
 const Payment = require("./Payments");
@@ -16,9 +16,9 @@ const users = require("./Users");
 
 const modelsDefiners = {
   admin,
-  Client,
-  Doctor,
-  Support,
+  client,
+  doctor,
+  support,
   // Pet,
   // Appointment,
   // Payment,
@@ -44,6 +44,7 @@ const initModels = (sequelize) => {
 
   return models;
 };
+
 
 const models = initModels(sequelize);
 

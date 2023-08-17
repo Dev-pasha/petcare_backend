@@ -9,32 +9,21 @@ const attributes = {
     autoIncrement: true,
     type: DataTypes.INTEGER,
     allowNull: false,
-    field: "adminId",
-  },
-
-  userId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    comment: "userId",
+    field: "admin_id",
     references: {
       model: "users",
       key: "user_id",
     },
-    
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
   },
 
-  userName: {
+  adminRole: {
     type: DataTypes.STRING,
-    allowNull: false,
-    field: "user_name",
-    comment: "User's user name",
+    allowNull: true,
+    field: "admin_role",
   },
 
-  salary: {
-    type: DataTypes.INTEGER,
-    allowNull: true,
-    field: "salary",
-  },
   notes: {
     type: DataTypes.STRING,
     allowNull: true,
@@ -67,7 +56,6 @@ const attributes = {
 const options = {
   tableName: "admin",
   comment: "admin data",
-  paranoid: true,
   underscored: true,
 };
 
@@ -83,7 +71,9 @@ const associate = ({
   // Payment
 }) => {
   admin.belongsTo(users, {
-    foreignKey: "adminId",
+    foreignKey: "user_id",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
   });
 
   // admin.hasMany(Payment, {

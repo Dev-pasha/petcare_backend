@@ -64,7 +64,6 @@ const attributes = {
 const options = {
   tableName: "notification",
   comment: "Notification data",
-  paranoid: true,
   underscored: true,
 };
 

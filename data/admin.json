@@ -1,37 +1,134 @@
 [
   {
-    "joiningDate": "2022-03-10",
-    "contactEmail": "admin@example.com",
-    "contactNumber": "123-456-7890",
-    "salary": 60000,
-    "address": "456 admin St, City",
-    "notes": "Experienced administrator",
-    "socialProfile": "https://www.linkedin.com/admin-profile",
-    "profilePicture": "https://example.com/profile-pics/admin1.jpg"
+    "type": "ADMIN",
+    "userName": "emily987",
+    "firstName": "Emily",
+    "lastName": "Jones",
+    "email": "emily.jones@example.com",
+    "password": "hashed_password_6",
+    "meta": {
+      "age": 31,
+      "occupation": "HR Manager"
+    },
+    "dateOfBirth": "1990-11-28",
+    "gender": "Female",
+    "address": "678 Cedar St, County",
+    "phoneNumber": "543-210-8765",
+    "registerDate": "2022-04-25",
+    "admin": {
+      "adminRole": "Moderator",
+      "notes": "Responsible for content moderation",
+      "profilePicture": "https://example.com/profile-pics/moderator.jpg"
+    }
   },
   {
-    "firstName": "John",
-    "lastName": "Doe",
-    "email": "john.doe@example.com",
-    "password": "hashed_password_1",
+    "type": "ADMIN",
+    "userName": "alex456",
+    "firstName": "Alex",
+    "lastName": "Smith",
+    "email": "alex.smith@example.com",
+    "password": "hashed_password_18",
     "meta": {
-      "age": 30,
-      "occupation": "Engineer"
+      "age": 28,
+      "occupation": "Marketing Manager"
     },
-    "dateOfBirth": "1993-05-15",
+    "dateOfBirth": "1995-03-15",
     "gender": "Male",
-    "address": "123 Main St, City",
-    "phoneNumber": "123-456-7890",
-    "registerDate": "2022-01-15",
+    "address": "123 Marketing Ave, Cityville",
+    "phoneNumber": "987-654-3210",
+    "registerDate": "2021-08-12",
     "admin": {
-      "joiningDate": "2022-03-10",
-      "contactEmail": "admin@example.com",
-      "contactNumber": "123-456-7890",
-      "salary": 60000,
-      "address": "456 admin St, City",
-      "notes": "Experienced administrator",
-      "socialProfile": "https://www.linkedin.com/admin-profile",
-      "profilePicture": "https://example.com/profile-pics/admin1.jpg"
+      "adminRole": "Content Manager",
+      "notes": "Oversees marketing campaigns",
+      "profilePicture": "https://example.com/profile-pics/marketing_admin.jpg"
+    }
+  },
+  {
+    "type": "ADMIN",
+    "userName": "sarah543",
+    "firstName": "Sarah",
+    "lastName": "Wilson",
+    "email": "sarah.wilson@example.com",
+    "password": "hashed_password_73",
+    "meta": {
+      "age": 42,
+      "occupation": "Finance Director"
+    },
+    "dateOfBirth": "1979-09-02",
+    "gender": "Female",
+    "address": "456 Finance Street, Moneyville",
+    "phoneNumber": "876-543-2109",
+    "registerDate": "2019-05-20",
+    "admin": {
+      "adminRole": "Financial Controller",
+      "notes": "Oversees financial operations",
+      "profilePicture": "https://example.com/profile-pics/finance_admin.jpg"
+    }
+  },
+  {
+    "type": "ADMIN",
+    "userName": "jason329",
+    "firstName": "Jason",
+    "lastName": "Brown",
+    "email": "jason.brown@example.com",
+    "password": "hashed_password_92",
+    "meta": {
+      "age": 35,
+      "occupation": "IT Manager"
+    },
+    "dateOfBirth": "1988-07-15",
+    "gender": "Male",
+    "address": "789 Tech Lane, Technoville",
+    "phoneNumber": "234-567-8901",
+    "registerDate": "2020-10-18",
+    "admin": {
+      "adminRole": "Technology Lead",
+      "notes": "Oversees IT infrastructure",
+      "profilePicture": "https://example.com/profile-pics/it_admin.jpg"
+    }
+  },
+  {
+    "type": "ADMIN",
+    "userName": "linda217",
+    "firstName": "Linda",
+    "lastName": "Davis",
+    "email": "linda.davis@example.com",
+    "password": "hashed_password_57",
+    "meta": {
+      "age": 29,
+      "occupation": "Operations Manager"
+    },
+    "dateOfBirth": "1994-12-08",
+    "gender": "Female",
+    "address": "234 Operations Ave, Operations City",
+    "phoneNumber": "765-432-1098",
+    "registerDate": "2021-03-05",
+    "admin": {
+      "adminRole": "Operations Coordinator",
+      "notes": "Coordinates daily operations",
+      "profilePicture": "https://example.com/profile-pics/operations_admin.jpg"
+    }
+  },
+  {
+    "type": "ADMIN",
+    "userName": "michael124",
+    "firstName": "Michael",
+    "lastName": "Taylor",
+    "email": "michael.taylor@example.com",
+    "password": "hashed_password_21",
+    "meta": {
+      "age": 38,
+      "occupation": "Sales Manager"
+    },
+    "dateOfBirth": "1985-02-28",
+    "gender": "Male",
+    "address": "567 Sales Street, Salesville",
+    "phoneNumber": "321-987-6543",
+    "registerDate": "2018-06-10",
+    "admin": {
+      "adminRole": "Sales Director",
+      "notes": "Oversees sales team",
+      "profilePicture": "https://example.com/profile-pics/sales_admin.jpg"
     }
   }
 ]

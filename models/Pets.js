@@ -99,7 +99,6 @@ const attributes = {
 const options = {
   tableName: "Pets",
   comment: "Pet data",
-  paranoid: true,
   underscored: true,
 };
 

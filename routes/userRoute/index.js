@@ -14,6 +14,6 @@ router.post("/createProfile", createProfile);
 router.get("/getProfiles", getProfiles);
 router.get("/getSingleProfile", getSingleProfile);
 router.put("/updateProfile", updateProfile);
-router.delete("/deleteProfile", deleteProfile);
+router.get("/deleteProfile", deleteProfile);
 
 module.exports = router;

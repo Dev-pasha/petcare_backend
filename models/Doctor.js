@@ -1,21 +1,21 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
 
-const modelName = "Doctor";
+const modelName = "doctor";
 
 const attributes = {
-  id: {
+  doctorId: {
+    autoIncrement: true,
     primaryKey: true,
     type: DataTypes.INTEGER,
-    autoIncrement: true,
     allowNull: false,
     field: "doctor_id",
-    comment: "Doctor id",
     references: {
       model: "users",
       key: "user_id",
     },
   },
+
   specialization: {
     type: DataTypes.STRING,
     allowNull: true,
@@ -43,21 +43,6 @@ const attributes = {
     allowNull: true,
     field: "joining_date",
   },
-  contactEmail: {
-    type: DataTypes.STRING,
-    allowNull: true,
-    field: "contact_email",
-  },
-  contactNumber: {
-    type: DataTypes.STRING,
-    allowNull: true,
-    field: "contact_number",
-  },
-  address: {
-    type: DataTypes.STRING,
-    allowNull: true,
-    field: "address",
-  },
   notes: {
     type: DataTypes.STRING,
     allowNull: true,
@@ -68,23 +53,49 @@ const attributes = {
     allowNull: true,
     field: "profile_picture",
   },
+
+  createdAt: {
+    allowNull: false,
+    type: DataTypes.DATE,
+    field: "created_at",
+  },
+
+  updatedAt: {
+    allowNull: false,
+    type: DataTypes.DATE,
+    field: "updated_at",
+  },
+
+  deletedAt: {
+    allowNull: true,
+    type: DataTypes.DATE,
+    field: "deleted_at",
+  },
 };
 
 const options = {
   tableName: "Doctor",
   comment: "Doctor data",
-  paranoid: true,
   underscored: true,
 };
 
 const define = () => {
-  const Doctor = sequelize.define(modelName, attributes, options);
-  Doctor.associate = associate;
-  return Doctor;
+  const doctor = sequelize.define(modelName, attributes, options);
+  doctor.associate = associate;
+  return doctor;
 };
 
-const associate = ({ users, Doctor, Review, Appointment }) => {
-  Doctor.belongsTo(users, { foreignKey: "user_id" });
+const associate = ({ users, doctor,
+  //  Review, Appointment
+   }) => {
+  doctor.belongsTo(users, {
+    foreignKey: "user_id",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
+
+  
+
   // Doctor.hasMany(Review, {
   //   foreignKey: "id",
   //   onDelete: "CASCADE",

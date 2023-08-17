@@ -69,13 +69,29 @@ const attributes = {
     field: "payment_status",
   },
 
+  createdAt: {
+    allowNull: false,
+    type: DataTypes.DATE,
+    field: "created_at",
+  },
+
+  updatedAt: {
+    allowNull: false,
+    type: DataTypes.DATE,
+    field: "updated_at",
+  },
+
+  deletedAt: {
+    allowNull: true,
+    type: DataTypes.DATE,
+    field: "deleted_at",
+  },
  
 };
 
 const options = {
   tableName: "Appointment",
   comment: "Appointment data",
-  paranoid: true,
   underscored: true,
 };
 

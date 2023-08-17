@@ -1,22 +1,15 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
 
-const modelName = "Client";
+const modelName = "client";
 
 const attributes = {
-  id: {
+  clientId: {
     primaryKey: true,
     autoIncrement: true,
     type: DataTypes.INTEGER,
     allowNull: false,
     field: "client_id",
-    comment: "clientId",
-  },
-
-  userId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    comment: "userId",
     references: {
       model: "users",
       key: "user_id",
@@ -33,24 +26,6 @@ const attributes = {
     allowNull: true,
     field: "last_appointment_date",
   },
-  contactEmail: {
-    type: DataTypes.STRING,
-    defaultValue: "contact@gmail.com",
-    allowNull: true,
-    field: "contact_email",
-  },
-  contactNumber: {
-    type: DataTypes.STRING,
-    allowNull: true,
-    defaultValue: "1234567890",
-    field: "contact_number",
-  },
-  address: {
-    type: DataTypes.STRING,
-    allowNull: true,
-    defaultValue: "123, abc street, xyz city",
-    field: "address",
-  },
   notes: {
     type: DataTypes.STRING,
     defaultValue: "No notes",
@@ -62,23 +37,49 @@ const attributes = {
     allowNull: true,
     field: "profile_picture",
   },
+
+  createdAt: {
+    allowNull: false,
+    type: DataTypes.DATE,
+    field: "created_at",
+  },
+
+  updatedAt: {
+    allowNull: false,
+    type: DataTypes.DATE,
+    field: "updated_at",
+  },
+
+  deletedAt: {
+    allowNull: true,
+    type: DataTypes.DATE,
+    field: "deleted_at",
+  },
 };
 
 const options = {
-  tableName: "Client",
-  comment: "Client data",
-  paranoid: true,
+  tableName: "client",
+  comment: "client data",
   underscored: true,
 };
 
 const define = () => {
-  const Client = sequelize.define(modelName, attributes, options);
-  Client.associate = associate;
-  return Client;
+  const client = sequelize.define(modelName, attributes, options);
+  client.associate = associate;
+  return client;
 };
 
-const associate = ({ users, Client, Pet, Appointment, Payment }) => {
-  Client.belongsTo(users, { foreignKey: "user_id" });
+const associate = ({
+  users,
+  client,
+  //  Pet, Appointment, Payment
+}) => {
+  client.belongsTo(users, {
+    foreignKey: "user_id",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
+
   // Client.hasMany(Pet, {
   //   foreignKey: "clientId",
   //   onDelete: "CASCADE",

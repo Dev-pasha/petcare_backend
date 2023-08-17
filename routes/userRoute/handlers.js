@@ -29,17 +29,37 @@ async function createProfile(req, res) {
   try {
     const { type } = req.body;
     const data = req.body;
-    console.log(type);
-    // console.log(data);
     let profile;
+    if (type === "ADMIN") {
+      profile = await createAdminProfileInStorage({ data });
+      res.status(200).json({
+        message: "admin profile created successfully",
+        profile,
+      });
+    }
+    if (type === "CLIENT") {
+      profile = await createClientProfileInStorage({ data });
+      res.status(200).json({
+        message: "client profile created successfully",
+        profile,
+      });
+    }
 
-    profile = await createAdminProfileInStorage({ data });
-    // console.log("herer");
+    if (type === "DOCTOR") {
+      profile = await createDoctorProfileInStorage({ data });
+      res.status(200).json({
+        message: "doctor profile created successfully",
+        profile,
+      });
+    }
 
-    res.status(200).json({
-      message: "Profile created successfully",
-      profile,
-    });
+    if (type === "SUPPORT") {
+      profile = await createSupportProfileInStorage({ data });
+      res.status(200).json({
+        message: "support profile created successfully",
+        profile,
+      });
+    }
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -48,24 +68,35 @@ async function createProfile(req, res) {
 async function getProfiles(req, res) {
   try {
     const { type } = req.query;
-    console.log(type);
     let profiles;
     if (type === "ADMIN") {
       profiles = await getAdminsProfileInStorage();
+      res.status(200).json({
+        message: "admin profile fetched successfully",
+        profiles,
+      });
     }
     if (type === "CLIENT") {
       profiles = await getClientsProfileInStorage();
+      res.status(200).json({
+        message: "client profile fetched successfully",
+        profiles,
+      });
     }
     if (type === "DOCTOR") {
       profiles = await getDoctorsProfileInStorage();
+      res.status(200).json({
+        message: "doctor profile fetched successfully",
+        profiles,
+      });
     }
     if (type === "SUPPORT") {
       profiles = await getSupportsProfileInStorage();
+      res.status(200).json({
+        message: "support profile fetched successfully",
+        profiles,
+      });
     }
-    res.status(200).json({
-      message: "Profiles fetched successfully",
-      profiles,
-    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -73,21 +104,79 @@ async function getProfiles(req, res) {
 
 async function getSingleProfile(req, res) {
   try {
-    const { type, id } = req.params;
+    const { type, id } = req.query;
+    console.log(type, id);
     let profile;
     if (type === "ADMIN") {
       profile = await getSingleAdminsProfileInStorage(id);
-    } else if (type === "CLIENT") {
-      profile = await getSingleClientsProfileInStorage(id);
-    } else if (type === "DOCTOR") {
-      profile = await getSingleDoctorsProfileInStorage(id);
-    } else if (type === "SUPPORT") {
-      profile = await getSingleSupportsProfileInStorage(id);
+      res.status(200).json({
+        message: "admin profile fetched successfully",
+        profile,
+      });
     }
-    res.status(200).json({
-      message: "Profile fetched successfully",
-      profile,
-    });
+    if (type === "CLIENT") {
+      profile = await getSingleClientsProfileInStorage({ id });
+      res.status(200).json({
+        message: "client profile fetched successfully",
+        profile,
+      });
+    }
+    if (type === "DOCTOR") {
+      profile = await getSingleDoctorsProfileInStorage({ id });
+      res.status(200).json({
+        message: "doctor profile fetched successfully",
+        profile,
+      });
+    }
+    if (type === "SUPPORT") {
+      profile = await getSingleSupportsProfileInStorage({ id });
+      res.status(200).json({
+        message: "support profile fetched successfully",
+        profile,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+async function deleteProfile(req, res) {
+  try {
+    const { type, id } = req.query;
+    console.log(type, id);
+    let profile;
+    if (type === "ADMIN") {
+      profile = await deleteAdminProfileInStorage({ id });
+      res.status(200).json({
+        message: "admin profile deleted successfully",
+        profile,
+      });
+    }
+    if (type === "CLIENT") {
+      profile = await deleteClientProfileInStorage({ id });
+      res.status(200).json({
+        message: "client profile deleted successfully",
+        profile,
+      });
+    }
+    if (type === "DOCTOR") {
+      try {
+        profile = await deleteDoctorProfileInStorage({id});
+        res.status(200).json({
+          message: "doctor profile deleted successfully",
+          profile,
+        });
+      } catch (error) {
+        res.status(500).json({ message: error.message });
+      }
+    }
+    if (type === "SUPPORT") {
+      profile = await deleteSupportProfileInStorage({ id });
+      res.status(200).json({
+        message: "support profile deleted successfully",
+        profile,
+      });
+    }
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -114,28 +203,6 @@ async function updateProfile(req, res) {
     res.status(500).json({ message: error.message });
   }
 }
-
-async function deleteProfile(req, res) {
-  try {
-    const { type, id } = req.params;
-    let profile;
-    if (type === "ADMIN") {
-      profile = await deleteAdminProfileInStorage(id);
-    } else if (type === "CLIENT") {
-      profile = await deleteClientProfileInStorage(id);
-    } else if (type === "DOCTOR") {
-      profile = await deleteDoctorProfileInStorage(id);
-    } else if (type === "SUPPORT") {
-      profile = await deleteSupportProfileInStorage(id);
-    }
-    res.status(200).json({
-      message: "Profile deleted successfully",
-    });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-}
-
 async function createUser(req, res) {
   try {
     const { type } = req.body;

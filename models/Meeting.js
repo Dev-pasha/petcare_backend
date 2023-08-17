@@ -72,7 +72,6 @@ const attributes = {
 const options = {
   tableName: "liveSession",
   comment: "LiveSession data",
-  paranoid: true,
   underscored: true,
 };
 

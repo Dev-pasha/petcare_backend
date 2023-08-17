@@ -1,21 +1,15 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
 
-const modelName = "user";
+const modelName = "users";
 
 const attributes = {
-  id: {
+  userId: {
     primaryKey: true,
     autoIncrement: true,
     allowNull: false,
     field: "user_id",
     type: DataTypes.INTEGER,
-    comment: "User id",
-  },
-
-  type: {
-    type: DataTypes.ENUM("ADMIN", "CLIENT", "DOCTOR", "SUPPORT"),
-    allowNull: false,
   },
 
   userName: {
@@ -101,7 +95,6 @@ const attributes = {
 const options = {
   tableName: "users",
   comment: "User data",
-  paranoid: true,
   underscored: true,
 };
 
@@ -116,29 +109,30 @@ const associate = ({
   admin,
   Chats,
   Notification,
-  Client,
-  Doctor,
-  Support,
+  client,
+  doctor,
+  support,
 }) => {
+  users.hasOne(doctor, {
+    foreignKey: "user_id",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
+
+
+  users.hasOne(client, {
+    foreignKey: "user_id",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
+
   users.hasOne(admin, {
-    foreignKey: "id",
-    onDelete: "CASCADE",
-    onUpdate: "CASCADE",
-  });
-
-  users.hasOne(Client, {
     foreignKey: "user_id",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   });
 
-  users.hasOne(Doctor, {
-    foreignKey: "user_id",
-    onDelete: "CASCADE",
-    onUpdate: "CASCADE",
-  });
-
-  users.hasOne(Support, {
+  users.hasOne(support, {
     foreignKey: "user_id",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
