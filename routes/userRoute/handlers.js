@@ -22,7 +22,6 @@ const {
   updateDoctorProfileInStorage,
   updateSupportProfileInStorage,
 } = require("../../storage/user/index");
-const { userTypes } = require("../userTypes");
 
 async function createProfile(req, res) {
   try {
@@ -202,24 +201,11 @@ async function updateProfile(req, res) {
     res.status(500).json({ message: error.message });
   }
 }
-async function createUser(req, res) {
-  try {
-    const { type } = req.body;
-    const data = req.body;
-    const response = await models.users.create(data);
-    res.status(200).json({
-      message: "User created successfully",
-      response,
-    });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-}
+
 module.exports = {
   createProfile,
   getProfiles,
   getSingleProfile,
   updateProfile,
   deleteProfile,
-  createUser,
 };

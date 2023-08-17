@@ -107,17 +107,17 @@ const define = () => {
 const associate = ({ client, Pet, Appointment, PetAppointment }) => {
   Pet.belongsTo(client, { foreignKey: "client_id" });
 
-  // Pet.hasMany(Appointment, {
-  //   foreignKey: "appointment_id",
-  //   onDelete: "CASCADE",
-  //   onUpdate: "CASCADE",
-  // });
+  Pet.hasMany(Appointment, {
+    foreignKey: "appointmentId",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
 
-  // Pet.hasMany(PetAppointment, {
-  //   foreignKey: "id",
-  //   onDelete: "CASCADE",
-  //   onUpdate: "CASCADE",
-  // });
+  Pet.hasMany(PetAppointment, {
+    foreignKey: "petAppointmentId",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
 };
 
 module.exports = { modelName, attributes, options, define, associate };

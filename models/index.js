@@ -22,7 +22,7 @@ const modelsDefiners = {
   Pet,
   Appointment,
   // Payment,
-  // PetAppointment,
+  PetAppointment,
   // Chats,
   // Notification,
   // Review,
