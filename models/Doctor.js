@@ -1,61 +1,47 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
 
-const modelName = "Doctor";
+const modelName = "doctor";
 
 const attributes = {
-  id: {
+  doctorId: {
+    autoIncrement: true,
     primaryKey: true,
     type: DataTypes.INTEGER,
-    autoIncrement: true,
     allowNull: false,
-    comment: "Doctor id",
+    field: "doctor_id",
     references: {
       model: "users",
-      key: "id",
+      key: "user_id",
     },
   },
+
   specialization: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
     field: "specialization",
   },
 
   licenseNumber: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
     field: "license_number",
   },
   education: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
     field: "education",
   },
   experience: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
     field: "experience",
   },
 
   joiningDate: {
     type: DataTypes.DATE,
-    allowNull: false,
-    field: "joining_date",
-  },
-  contactEmail: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    field: "contact_email",
-  },
-  contactNumber: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    field: "contact_number",
-  },
-  address: {
-    type: DataTypes.STRING,
     allowNull: true,
-    field: "address",
+    field: "joining_date",
   },
   notes: {
     type: DataTypes.STRING,
@@ -67,33 +53,59 @@ const attributes = {
     allowNull: true,
     field: "profile_picture",
   },
+
+  createdAt: {
+    allowNull: false,
+    type: DataTypes.DATE,
+    field: "created_at",
+  },
+
+  updatedAt: {
+    allowNull: false,
+    type: DataTypes.DATE,
+    field: "updated_at",
+  },
+
+  deletedAt: {
+    allowNull: true,
+    type: DataTypes.DATE,
+    field: "deleted_at",
+  },
 };
 
 const options = {
   tableName: "Doctor",
   comment: "Doctor data",
-  paranoid: true,
   underscored: true,
 };
 
 const define = () => {
-  const Doctor = sequelize.define(modelName, attributes, options);
-  Doctor.associate = associate;
-  return Doctor;
+  const doctor = sequelize.define(modelName, attributes, options);
+  doctor.associate = associate;
+  return doctor;
 };
 
-const associate = ({ users, Doctor, Review, Appointment }) => {
-  Doctor.belongsTo(users, { foreignKey: "id" });
-  Doctor.hasMany(Review, {
-    foreignKey: "id",
+const associate = ({ users, doctor,
+   Review, Appointment
+   }) => {
+
+  doctor.belongsTo(users, {
+    foreignKey: "user_id",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   });
-  Doctor.hasMany(Appointment, {
-    foreignKey: "id",
+
+  doctor.hasMany(Appointment, {
+    foreignKey: "appointmentId",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   });
+
+  // Doctor.hasMany(Review, {
+  //   foreignKey: "id",
+  //   onDelete: "CASCADE",
+  //   onUpdate: "CASCADE",
+  // });
 };
 
 module.exports = { modelName, attributes, options, define, associate };

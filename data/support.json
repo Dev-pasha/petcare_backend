@@ -1,11 +1,163 @@
-{
-    "id": 2,
-    "id": 2,
-    "joiningDate": "2021-08-22",
-    "contactEmail": "support2@example.com",
-    "contactNumber": "987-654-3210",
-    "salary": 48000,
-    "address": "456 Help St, Town",
-    "notes": "Knowledgeable in technical troubleshooting",
-    "profilePicture": "https://example.com/profile-pics/support2.jpg"
+[
+  {
+    "type": "SUPPORT",
+    "userName": "tech_support1",
+    "firstName": "John",
+    "lastName": "Smith",
+    "email": "john.smith@example.com",
+    "password": "hashed_password_37",
+    "meta": {
+      "age": 28,
+      "occupation": "Technical Support Specialist"
+    },
+    "dateOfBirth": "1995-09-10",
+    "gender": "Male",
+    "address": "123 Tech Street, Techville",
+    "phoneNumber": "987-654-3210",
+    "registerDate": "2021-07-20",
+    "support": {
+      "suportRole": "Technical Support",
+      "joiningDate": "2022-02-15",
+      "notes": "Provides technical assistance",
+      "profilePicture": "https://example.com/profile-pics/support1.jpg"
+    }
+  },
+  {
+    "type": "SUPPORT",
+    "userName": "alex456",
+    "firstName": "Alex",
+    "lastName": "Smith",
+    "email": "alex.smith@example.com",
+    "password": "hashed_password_18",
+    "meta": {
+      "age": 28,
+      "occupation": "Marketing Manager"
+    },
+    "dateOfBirth": "1995-03-15",
+    "gender": "Male",
+    "address": "123 Marketing Ave, Cityville",
+    "phoneNumber": "987-654-3210",
+    "registerDate": "2021-08-12",
+    "support": {
+      "suportRole": "Technical Support",
+      "joiningDate": "2022-02-15",
+      "notes": "Provides technical assistance",
+      "profilePicture": "https://example.com/profile-pics/support1.jpg"
+    }
+  },
+  {
+    "type": "SUPPORT",
+    "userName": "tech_support2",
+    "firstName": "Emily",
+    "lastName": "Johnson",
+    "email": "emily.johnson@example.com",
+    "password": "hashed_password_48",
+    "meta": {
+      "age": 24,
+      "occupation": "Technical Support Analyst"
+    },
+    "dateOfBirth": "1999-03-18",
+    "gender": "Female",
+    "address": "456 Tech Avenue, Techtown",
+    "phoneNumber": "876-543-2109",
+    "registerDate": "2020-05-15",
+    "support": {
+      "suportRole": "Technical Support",
+      "joiningDate": "2021-03-10",
+      "notes": "Provides troubleshooting assistance",
+      "profilePicture": "https://example.com/profile-pics/support2.jpg"
+    }
+  },
+  {
+    "type": "SUPPORT",
+    "userName": "tech_support3",
+    "firstName": "Michael",
+    "lastName": "Williams",
+    "email": "michael.williams@example.com",
+    "password": "hashed_password_59",
+    "meta": {
+      "age": 30,
+      "occupation": "IT Support Specialist"
+    },
+    "dateOfBirth": "1991-12-05",
+    "gender": "Male",
+    "address": "789 IT Lane, IT City",
+    "phoneNumber": "234-567-8901",
+    "registerDate": "2019-08-28",
+    "support": {
+      "suportRole": "IT Support",
+      "joiningDate": "2020-04-20",
+      "notes": "Provides IT troubleshooting",
+      "profilePicture": "https://example.com/profile-pics/support3.jpg"
+    }
+  },
+  {
+    "type": "SUPPORT",
+    "userName": "tech_support4",
+    "firstName": "Sophia",
+    "lastName": "Davis",
+    "email": "sophia.davis@example.com",
+    "password": "hashed_password_62",
+    "meta": {
+      "age": 26,
+      "occupation": "Customer Support Specialist"
+    },
+    "dateOfBirth": "1997-07-12",
+    "gender": "Female",
+    "address": "234 Support Ave, Helpville",
+    "phoneNumber": "765-432-1098",
+    "registerDate": "2020-12-15",
+    "support": {
+      "suportRole": "Customer Support",
+      "joiningDate": "2021-06-10",
+      "notes": "Provides customer assistance",
+      "profilePicture": "https://example.com/profile-pics/support4.jpg"
+    }
+  },
+  {
+    "type": "SUPPORT",
+    "userName": "tech_support5",
+    "firstName": "Daniel",
+    "lastName": "Brown",
+    "email": "daniel.brown@example.com",
+    "password": "hashed_password_75",
+    "meta": {
+      "age": 29,
+      "occupation": "Help Desk Technician"
+    },
+    "dateOfBirth": "1992-05-22",
+    "gender": "Male",
+    "address": "567 Help Street, Helpville",
+    "phoneNumber": "321-987-6543",
+    "registerDate": "2018-10-20",
+    "support": {
+      "suportRole": "Help Desk",
+      "joiningDate": "2019-04-05",
+      "notes": "Provides technical assistance",
+      "profilePicture": "https://example.com/profile-pics/support5.jpg"
+    }
+  },
+  {
+    "type": "SUPPORT",
+    "userName": "tech_support6",
+    "firstName": "Olivia",
+    "lastName": "Miller",
+    "email": "olivia.miller@example.com",
+    "password": "hashed_password_83",
+    "meta": {
+      "age": 27,
+      "occupation": "Technical Support Engineer"
+    },
+    "dateOfBirth": "1994-09-28",
+    "gender": "Female",
+    "address": "789 Support Road, Techville",
+    "phoneNumber": "234-567-8901",
+    "registerDate": "2017-03-10",
+    "support": {
+      "suportRole": "Technical Support",
+      "joiningDate": "2018-01-15",
+      "notes": "Provides advanced technical assistance",
+      "profilePicture": "https://example.com/profile-pics/support6.jpg"
+    }
   }
+]

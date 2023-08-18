@@ -1,28 +1,31 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
 
-const modelName = "user";
+const modelName = "users";
 
 const attributes = {
-  id: {
+  userId: {
     primaryKey: true,
-    type: DataTypes.INTEGER,
     autoIncrement: true,
     allowNull: false,
-    field: "id",
+    field: "user_id",
+    type: DataTypes.INTEGER,
+  },
+
+  userName: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    field: "user_name",
+    comment: "User's user name",
   },
   firstName: {
     type: DataTypes.STRING,
     allowNull: false,
-    field: "first_name",
-    defaultValue: "User",
     comment: "User's first name",
   },
   lastName: {
     type: DataTypes.STRING,
     allowNull: false,
-    field: "last_name",
-    defaultValue: "User",
     comment: "User's last name",
   },
   email: {
@@ -92,7 +95,6 @@ const attributes = {
 const options = {
   tableName: "users",
   comment: "User data",
-  paranoid: true,
   underscored: true,
 };
 
@@ -107,50 +109,51 @@ const associate = ({
   admin,
   Chats,
   Notification,
-  Client,
-  Doctor,
-  Support,
+  client,
+  doctor,
+  support,
 }) => {
+  users.hasOne(doctor, {
+    foreignKey: "user_id",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
+
+
+  users.hasOne(client, {
+    foreignKey: "user_id",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
+
   users.hasOne(admin, {
-    foreignKey: "id",
+    foreignKey: "user_id",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   });
 
-  users.hasOne(Client, {
-    foreignKey: "id",
+  users.hasOne(support, {
+    foreignKey: "user_id",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   });
 
-  users.hasOne(Doctor, {
-    foreignKey: "id",
-    onDelete: "CASCADE",
-    onUpdate: "CASCADE",
-  });
+  // users.hasMany(Chats, {
+  //   foreignKey: "senderId",
+  //   onDelete: "CASCADE",
+  //   onUpdate: "CASCADE",
+  // });
+  // users.hasMany(Chats, {
+  //   foreignKey: "receiverId",
+  //   onDelete: "CASCADE",
+  //   onUpdate: "CASCADE",
+  // });
 
-  users.hasOne(Support, {
-    foreignKey: "id",
-    onDelete: "CASCADE",
-    onUpdate: "CASCADE",
-  });
-
-  users.hasMany(Chats, {
-    foreignKey: "senderId",
-    onDelete: "CASCADE",
-    onUpdate: "CASCADE",
-  });
-  users.hasMany(Chats, {
-    foreignKey: "receiverId",
-    onDelete: "CASCADE",
-    onUpdate: "CASCADE",
-  });
-
-  users.hasMany(Notification, {
-    foreignKey: "id",
-    onDelete: "CASCADE",
-    onUpdate: "CASCADE",
-  });
+  // users.hasMany(Notification, {
+  //   foreignKey: "id",
+  //   onDelete: "CASCADE",
+  //   onUpdate: "CASCADE",
+  // });
 };
 
 module.exports = { modelName, attributes, options, define, associate };

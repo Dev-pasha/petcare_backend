@@ -61,7 +61,6 @@ const attributes = {
 const options = {
   tableName: "review",
   comment: "Review data",
-  paranoid: true,
   underscored: true,
 };
 

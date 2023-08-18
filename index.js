@@ -15,10 +15,19 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
 // Routes
-const userRoute = require("./routes/userRoute");
+const authRoute = require("./routes/authRoute");
 const petRoute = require("./routes/petRoute");
-app.use("/api", userRoute);
+const userRoute = require("./routes/userRoute");
+const appointmentRoute = require("./routes/appointmentRoute");
+const reviewRoute = require("./routes/reviewRoute");
+const petAppointmentRoute = require("./routes/petApointmentRoute");
+
+app.use("/api", authRoute);
 app.use("/api", petRoute);
+app.use("/api", userRoute);
+app.use("/api", appointmentRoute);
+app.use("/api", reviewRoute);
+app.use("/api", petAppointmentRoute);
 
 // server
 const PORT = process.env.PORT || 5000;

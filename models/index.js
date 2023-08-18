@@ -1,9 +1,9 @@
 const { Sequelize } = require("sequelize");
 const sequelize = require("../config/db");
 const admin = require("./Admin");
-const Client = require("./Clients");
-const Doctor = require("./Doctor");
-const Support = require("./Support");
+const client = require("./clients");
+const doctor = require("./doctor");
+const support = require("./support");
 const Pet = require("./Pets");
 const Appointment = require("./Appointments");
 const Payment = require("./Payments");
@@ -16,27 +16,27 @@ const users = require("./Users");
 
 const modelsDefiners = {
   admin,
-  Client,
-  Doctor,
-  Support,
+  client,
+  doctor,
+  support,
   Pet,
   Appointment,
-  Payment,
+  // Payment,
   PetAppointment,
-  Chats,
-  Notification,
-  Review,
+  // Chats,
+  // Notification,
+  // Review,
   // LiveSession,
   users,
 };
 
-const initModels = sequelize => {
+const initModels = (sequelize) => {
   const models = Object.keys(modelsDefiners).reduce((models, modelname) => {
     models[modelname] = modelsDefiners[modelname].define(sequelize, Sequelize);
     return models;
   }, {});
 
-  Object.keys(models).forEach(modelName => {
+  Object.keys(models).forEach((modelName) => {
     if (models[modelName].associate) {
       models[modelName].associate(models);
     }
@@ -48,11 +48,11 @@ const initModels = sequelize => {
 const models = initModels(sequelize);
 
 sequelize
-  .sync({ force: true })
+  .sync({ alter: true })
   .then(() => {
     console.log("Tables created....");
   })
-  .catch(err => {
+  .catch((err) => {
     console.log(err.message);
     throw err;
   });

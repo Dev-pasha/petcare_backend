@@ -4,11 +4,12 @@ const sequelize = require("../config/db");
 const modelName = "PetAppointment";
 
 const attributes = {
-  id: {
+  petAppointmentId: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     allowNull: false,
     primaryKey: true,
+    field: "pet_appointment_id",
   },
 
   petId: {
@@ -16,8 +17,9 @@ const attributes = {
     allowNull: false,
     references: {
       model: "Pets",
-      key: "pet_id",
+      key: "petId",
     },
+    
   },
 
   appointmentId: {
@@ -25,18 +27,30 @@ const attributes = {
     allowNull: false,
     references: {
       model: "Appointment",
-      key: "appointment_id",
+      key: "appointmentId",
     },
   },
+
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    field: "created_at",
+  },
+
+  updatedAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    field: "updated_at",
+  },
+
 };
 
 const options = {
   tableName: "pet_appointment",
   comment: "Pet Appointment data",
-  paranoid: true,
   underscored: true,
 };
-
+ 
 const define = () => {
   const PetAppointment = sequelize.define(modelName, attributes, options);
   PetAppointment.associate = associate;
@@ -44,8 +58,8 @@ const define = () => {
 };
 
 const associate = ({ PetAppointment, Pet, Appointment }) => {
-  PetAppointment.belongsTo(Pet, { foreignKey: "id" });
-  PetAppointment.belongsTo(Appointment, { foreignKey: "id" });
+  PetAppointment.belongsTo(Pet, { foreignKey: "pet_id" });
+  PetAppointment.belongsTo(Appointment, { foreignKey: "appointment_id" });
 };
 
 module.exports = { modelName, attributes, options, define, associate };

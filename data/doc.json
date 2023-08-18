@@ -1,0 +1,184 @@
+[
+    {
+        "type": "DOCTOR",
+        "userName": "emily987",
+        "firstName": "Emily",
+        "lastName": "Jones",
+        "email": "emily.jones@example.com",
+        "password": "hashed_password_6",
+        "meta": {
+            "age": 31,
+            "occupation": "HR Manager"
+        },
+        "dateOfBirth": "1990-11-28",
+        "gender": "Female",
+        "address": "678 Cedar St, County",
+        "phoneNumber": "543-210-8765",
+        "registerDate": "2022-04-25",
+        "doctor": {
+            "specialization": "dentist",
+            "licenseNumber": "DOC12345",
+            "education": "MD, FACC",
+            "experience": "10+ years",
+            "joiningDate": "2010-05-20",
+            "notes": "Experienced dentist",
+            "profilePicture": "https://example.com/profile-pics/doctor1.jpg"
+        }
+    },
+    {
+        "type": "DOCTOR",
+        "userName": "jennifer789",
+        "firstName": "Jennifer",
+        "lastName": "Smith",
+        "email": "jennifer.smith@example.com",
+        "password": "hashed_password_9",
+        "meta": {
+            "age": 28,
+            "occupation": "Marketing Specialist"
+        },
+        "dateOfBirth": "1995-03-21",
+        "gender": "Female",
+        "address": "567 Elm St, Suburb",
+        "phoneNumber": "876-543-2109",
+        "registerDate": "2022-02-18",
+        "doctor": {
+            "specialization": "Cardiologist",
+            "licenseNumber": "DOC12345",
+            "education": "MD, FACC",
+            "experience": "10+ years",
+            "joiningDate": "2010-05-20",
+            "notes": "Experienced cardiologist",
+            "profilePicture": "https://example.com/profile-pics/doctor1.jpg"
+        }
+    },
+    {
+        "type": "DOCTOR",
+        "userName": "drjackson",
+        "firstName": "Sarah",
+        "lastName": "Jackson",
+        "email": "sarah.jackson@example.com",
+        "password": "hashed_password_13",
+        "meta": {
+            "age": 35,
+            "occupation": "Neurologist"
+        },
+        "dateOfBirth": "1988-07-10",
+        "gender": "Female",
+        "address": "789 Brain St, Neuro City",
+        "phoneNumber": "765-432-1098",
+        "registerDate": "2021-09-05",
+        "doctor": {
+            "specialization": "Neurologist",
+            "licenseNumber": "DOC67890",
+            "education": "MD, FANA",
+            "experience": "15+ years",
+            "joiningDate": "2005-10-15",
+            "notes": "Experienced neurologist",
+            "profilePicture": "https://example.com/profile-pics/doctor2.jpg"
+        }
+    },
+    {
+        "type": "DOCTOR",
+        "userName": "drwilliams",
+        "firstName": "Elizabeth",
+        "lastName": "Williams",
+        "email": "elizabeth.williams@example.com",
+        "password": "hashed_password_19",
+        "meta": {
+            "age": 37,
+            "occupation": "Pediatrician"
+        },
+        "dateOfBirth": "1986-07-28",
+        "gender": "Female",
+        "address": "234 Kid Street, Pedia Town",
+        "phoneNumber": "234-567-8901",
+        "registerDate": "2014-03-10",
+        "doctor": {
+            "specialization": "Pediatrics",
+            "licenseNumber": "DOC67891",
+            "education": "MD, FAAP",
+            "experience": "12+ years",
+            "joiningDate": "2009-08-05",
+            "notes": "Experienced pediatrician",
+            "profilePicture": "https://example.com/profile-pics/doctor6.jpg"
+        }
+    },
+    {
+        "type": "DOCTOR",
+        "userName": "drjohnson",
+        "firstName": "Robert",
+        "lastName": "Johnson",
+        "email": "robert.johnson@example.com",
+        "password": "hashed_password_34",
+        "meta": {
+            "age": 48,
+            "occupation": "Orthopedic Surgeon"
+        },
+        "dateOfBirth": "1975-09-08",
+        "gender": "Male",
+        "address": "123 Bone Street, Ortho Town",
+        "phoneNumber": "567-890-1234",
+        "registerDate": "2008-02-15",
+        "doctor": {
+            "specialization": "Orthopedics",
+            "licenseNumber": "DOC12345",
+            "education": "MD, FACS",
+            "experience": "25+ years",
+            "joiningDate": "1997-06-20",
+            "notes": "Experienced orthopedic surgeon",
+            "profilePicture": "https://example.com/profile-pics/doctor5.jpg"
+        }
+    },
+    {
+        "type": "DOCTOR",
+        "userName": "drharris",
+        "firstName": "Emily",
+        "lastName": "Harris",
+        "email": "emily.harris@example.com",
+        "password": "hashed_password_61",
+        "meta": {
+            "age": 33,
+            "occupation": "Dermatologist"
+        },
+        "dateOfBirth": "1988-11-12",
+        "gender": "Female",
+        "address": "789 Skin Lane, Derm City",
+        "phoneNumber": "876-543-2109",
+        "registerDate": "2016-04-22",
+        "doctor": {
+            "specialization": "Dermatology",
+            "licenseNumber": "DOC98765",
+            "education": "MD, FAAD",
+            "experience": "10+ years",
+            "joiningDate": "2010-09-28",
+            "notes": "Experienced dermatologist",
+            "profilePicture": "https://example.com/profile-pics/doctor4.jpg"
+        }
+    },
+    {
+        "type": "DOCTOR",
+        "userName": "drsmith",
+        "firstName": "Michael",
+        "lastName": "Smith",
+        "email": "michael.smith@example.com",
+        "password": "hashed_password_87",
+        "meta": {
+            "age": 40,
+            "occupation": "Cardiologist"
+        },
+        "dateOfBirth": "1983-02-25",
+        "gender": "Male",
+        "address": "456 Heart Avenue, Cardio Town",
+        "phoneNumber": "321-987-6543",
+        "registerDate": "2010-11-08",
+        "doctor": {
+            "specialization": "Cardiology",
+            "licenseNumber": "DOC54321",
+            "education": "MD, FACC",
+            "experience": "18+ years",
+            "joiningDate": "2002-07-15",
+            "notes": "Experienced cardiologist",
+            "profilePicture": "https://example.com/profile-pics/doctor3.jpg"
+        }
+    }
+]

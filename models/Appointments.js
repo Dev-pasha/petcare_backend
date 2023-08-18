@@ -4,11 +4,10 @@ const sequelize = require("../config/db");
 const modelName = "Appointment";
 
 const attributes = {
-  id: {
+  appointmentId: {
     type: DataTypes.INTEGER,
     allowNull: false,
     autoIncrement: true,
-    field: "appointment_id",
     primaryKey: true,
   },
 
@@ -16,25 +15,26 @@ const attributes = {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: "Pets",
+      model: "Pet",
       key: "pet_id",
     },
+    
   },
 
   clientId: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: "Client",
-      key: "id",
+      model: "client",
+      key: "client_id",
     },
   },
   doctorId: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: "Doctor",
-      key: "id",
+      model: "doctor",
+      key: "doctor_id",
     },
   },
 
@@ -69,13 +69,29 @@ const attributes = {
     field: "payment_status",
   },
 
+  createdAt: {
+    allowNull: false,
+    type: DataTypes.DATE,
+    field: "created_at",
+  },
+
+  updatedAt: {
+    allowNull: false,
+    type: DataTypes.DATE,
+    field: "updated_at",
+  },
+
+  deletedAt: {
+    allowNull: true,
+    type: DataTypes.DATE,
+    field: "deleted_at",
+  },
  
 };
 
 const options = {
   tableName: "Appointment",
   comment: "Appointment data",
-  paranoid: true,
   underscored: true,
 };
 
@@ -87,26 +103,27 @@ const define = () => {
 
 const associate = ({
   Appointment,
-  Doctor,
-  Client,
+  doctor,
+  client,
   Pet,
   PetAppointment,
   Payment,
   LiveSession,
 }) => {
-  Appointment.belongsTo(Doctor, { foreignKey: "id" });
-  Appointment.belongsTo(Client, { foreignKey: "id" });
-  Appointment.belongsTo(Pet, { foreignKey: "id" });
+  Appointment.belongsTo(doctor, { foreignKey: "doctor_id" });
+  Appointment.belongsTo(client, { foreignKey: "client_id" });
+  Appointment.belongsTo(Pet, { foreignKey: "petId" });
+
   Appointment.hasMany(PetAppointment, {
-    foreignKey: "id",
+    foreignKey: "petAppointmentId",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   });
-  Appointment.hasOne(Payment, {
-    foreignKey: "id",
-    onDelete: "CASCADE",
-    onUpdate: "CASCADE",
-  });
+  // Appointment.hasOne(Payment, {
+  //   foreignKey: "id",
+  //   onDelete: "CASCADE",
+  //   onUpdate: "CASCADE",
+  // });
   // Appointment.hasOne(LiveSession, {
   //   foreignKey: "id",
   //   onDelete: "CASCADE",

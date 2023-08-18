@@ -83,7 +83,6 @@ const attributes = {
 const options = {
   tableName: "Chats",
   comment: "Chat data",
-  paranoid: true,
   underscored: true,
 };
 

@@ -1,0 +1,140 @@
+[
+  {
+    "type": "CLIENT",
+    "userName": "jennifer789",
+    "firstName": "Jennifer",
+    "lastName": "Smith",
+    "email": "jennifer.smith@example.com",
+    "password": "hashed_password_9",
+    "meta": {
+      "age": 28,
+      "occupation": "Marketing Specialist"
+    },
+    "dateOfBirth": "1995-03-21",
+    "gender": "Female",
+    "address": "567 Elm St, Suburb",
+    "phoneNumber": "876-543-2109",
+    "registerDate": "2022-02-18",
+    "client": {
+      "dateOfFirstAppointment": "2022-05-15",
+      "dateOfLastAppointment": "2023-08-10",
+      "notes": "Regular client and doctor",
+      "profilePicture": "https://example.com/profile-pics/client1.jpg"
+    }
+  },
+  {
+    "type": "CLIENT",
+    "userName": "william567",
+    "firstName": "William",
+    "lastName": "Brown",
+    "email": "william.brown@example.com",
+    "password": "hashed_password_10",
+    "meta": {
+      "age": 35,
+      "occupation": "Financial Advisor"
+    },
+    "dateOfBirth": "1988-09-08",
+    "gender": "Male",
+    "address": "234 Pine St, Rural",
+    "phoneNumber": "765-432-1098",
+    "registerDate": "2021-10-02",
+    "client": {
+      "dateOfFirstAppointment": "2022-03-15",
+      "dateOfLastAppointment": "2023-08-28",
+      "notes": "Investment client",
+      "profilePicture": "https://example.com/profile-pics/client3.jpg"
+    }
+  },
+  {
+    "type": "CLIENT",
+    "userName": "alex123",
+    "firstName": "Alex",
+    "lastName": "Garcia",
+    "email": "alex.garcia@example.com",
+    "password": "hashed_password_56",
+    "meta": {
+      "age": 28,
+      "occupation": "Software Developer"
+    },
+    "dateOfBirth": "1995-11-20",
+    "gender": "Male",
+    "address": "789 Code Lane, Techville",
+    "phoneNumber": "876-543-2109",
+    "registerDate": "2019-08-10",
+    "client": {
+      "dateOfFirstAppointment": "2020-02-05",
+      "dateOfLastAppointment": "2023-06-28",
+      "notes": "Software project client",
+      "profilePicture": "https://example.com/profile-pics/client5.jpg"
+    }
+  },
+  {
+    "type": "CLIENT",
+    "userName": "sophia77",
+    "firstName": "Sophia",
+    "lastName": "Robinson",
+    "email": "sophia.robinson@example.com",
+    "password": "hashed_password_12",
+    "meta": {
+      "age": 39,
+      "occupation": "Interior Designer"
+    },
+    "dateOfBirth": "1984-03-15",
+    "gender": "Female",
+    "address": "123 Design Ave, Aesthetica",
+    "phoneNumber": "345-678-9012",
+    "registerDate": "2017-05-22",
+    "client": {
+      "dateOfFirstAppointment": "2018-09-10",
+      "dateOfLastAppointment": "2023-07-28",
+      "notes": "Interior design client",
+      "profilePicture": "https://example.com/profile-pics/client6.jpg"
+    }
+  },
+  {
+    "type": "CLIENT",
+    "userName": "daniel89",
+    "firstName": "Daniel",
+    "lastName": "Lee",
+    "email": "daniel.lee@example.com",
+    "password": "hashed_password_82",
+    "meta": {
+      "age": 45,
+      "occupation": "Architect"
+    },
+    "dateOfBirth": "1978-12-05",
+    "gender": "Male",
+    "address": "234 Blueprint Rd, Urbane",
+    "phoneNumber": "234-567-8901",
+    "registerDate": "2016-11-03",
+    "client": {
+      "dateOfFirstAppointment": "2017-03-20",
+      "dateOfLastAppointment": "2023-08-10",
+      "notes": "Architectural project client",
+      "profilePicture": "https://example.com/profile-pics/client7.jpg"
+    }
+  },
+  {
+    "type": "CLIENT",
+    "userName": "olivia65",
+    "firstName": "Olivia",
+    "lastName": "Turner",
+    "email": "olivia.turner@example.com",
+    "password": "hashed_password_47",
+    "meta": {
+      "age": 30,
+      "occupation": "Writer"
+    },
+    "dateOfBirth": "1993-08-28",
+    "gender": "Female",
+    "address": "567 Story Lane, Literaryville",
+    "phoneNumber": "654-321-0987",
+    "registerDate": "2022-02-15",
+    "client": {
+      "dateOfFirstAppointment": "2022-06-10",
+      "dateOfLastAppointment": "2023-07-25",
+      "notes": "Manuscript editing client",
+      "profilePicture": "https://example.com/profile-pics/client8.jpg"
+    }
+  }
+]

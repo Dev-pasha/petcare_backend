@@ -1,48 +1,34 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
 
-const modelName = "Client";
+const modelName = "client";
 
 const attributes = {
-  
-  id: {
+  clientId: {
     primaryKey: true,
+    autoIncrement: true,
     type: DataTypes.INTEGER,
     allowNull: false,
-    autoIncrement: true,
-    comment: "Client ID",
+    field: "client_id",
     references: {
       model: "users",
-      key: "id",
+      key: "user_id",
     },
   },
+
   dateOfFirstAppointment: {
     type: DataTypes.DATE,
-    allowNull: false,
+    allowNull: true,
     field: "first_appointment_date",
   },
   dateOfLastAppointment: {
     type: DataTypes.DATE,
-    allowNull: false,
-    field: "last_appointment_date",
-  },
-  contactEmail: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    field: "contact_email",
-  },
-  contactNumber: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    field: "contact_number",
-  },
-  address: {
-    type: DataTypes.STRING,
     allowNull: true,
-    field: "address",
+    field: "last_appointment_date",
   },
   notes: {
     type: DataTypes.STRING,
+    defaultValue: "No notes",
     allowNull: true,
     field: "notes",
   },
@@ -51,38 +37,63 @@ const attributes = {
     allowNull: true,
     field: "profile_picture",
   },
+
+  createdAt: {
+    allowNull: false,
+    type: DataTypes.DATE,
+    field: "created_at",
+  },
+
+  updatedAt: {
+    allowNull: false,
+    type: DataTypes.DATE,
+    field: "updated_at",
+  },
+
+  deletedAt: {
+    allowNull: true,
+    type: DataTypes.DATE,
+    field: "deleted_at",
+  },
 };
 
 const options = {
-  tableName: "Client",
-  comment: "Client data",
-  paranoid: true,
+  tableName: "client",
+  comment: "client data",
   underscored: true,
 };
 
 const define = () => {
-  const Client = sequelize.define(modelName, attributes, options);
-  Client.associate = associate;
-  return Client;
+  const client = sequelize.define(modelName, attributes, options);
+  client.associate = associate;
+  return client;
 };
 
-const associate = ({ users, Client, Pet, Appointment, Payment }) => {
-  Client.belongsTo(users, { foreignKey: "id" });
-  Client.hasMany(Pet, {
-    foreignKey: "id",
+const associate = ({ users, client, Pet, Appointment, Payment }) => {
+  client.belongsTo(users, {
+    foreignKey: "user_id",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   });
-  Client.hasMany(Appointment, {
-    foreignKey: "id",
+
+  client.hasMany(Pet, {
+    foreignKey: "petId",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   });
-  Client.hasMany(Payment, {
-    foreignKey: "id",
+
+  client.hasMany(Appointment, {
+    foreignKey: "appointmentId",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   });
+
+
+  // Client.hasMany(Payment, {
+  //   foreignKey: "clientId",
+  //   onDelete: "CASCADE",
+  //   onUpdate: "CASCADE",
+  // });
 };
 
 module.exports = { modelName, attributes, options, define, associate };

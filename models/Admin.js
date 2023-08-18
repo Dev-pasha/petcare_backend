@@ -4,64 +4,58 @@ const sequelize = require("../config/db");
 const modelName = "admin";
 
 const attributes = {
-  
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
+  adminId: {
     primaryKey: true,
+    autoIncrement: true,
+    type: DataTypes.INTEGER,
     allowNull: false,
-    comment: "id",
+    field: "admin_id",
     references: {
       model: "users",
-      key: "id",
+      key: "user_id",
     },
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
   },
-  joiningDate: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    field: "joining_date",
-  },
-  contactEmail: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    field: "contact_email",
-  },
-  contactNumber: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    field: "contact_number",
-  },
-  salary: {
-    type: DataTypes.INTEGER,
-    allowNull: true,
-    field: "salary",
-  },
-  address: {
+
+  adminRole: {
     type: DataTypes.STRING,
     allowNull: true,
-    field: "address",
+    field: "admin_role",
   },
+
   notes: {
     type: DataTypes.STRING,
     allowNull: true,
     field: "notes",
-  },
-  socialProfile: {
-    type: DataTypes.STRING,
-    allowNull: true,
-    field: "social_profile",
   },
   profilePicture: {
     type: DataTypes.STRING,
     allowNull: true,
     field: "profile_picture",
   },
+  createdAt: {
+    allowNull: false,
+    type: DataTypes.DATE,
+    field: "created_at",
+  },
+
+  updatedAt: {
+    allowNull: false,
+    type: DataTypes.DATE,
+    field: "updated_at",
+  },
+
+  deletedAt: {
+    allowNull: true,
+    type: DataTypes.DATE,
+    field: "deleted_at",
+  },
 };
 
 const options = {
   tableName: "admin",
   comment: "admin data",
-  paranoid: true,
   underscored: true,
 };
 
@@ -71,16 +65,22 @@ const define = () => {
   return admin;
 };
 
-const associate = ({ users, admin, Payment }) => {
+const associate = ({
+  users,
+  admin,
+  // Payment
+}) => {
   admin.belongsTo(users, {
-    foreignKey: "id",
-  });
-
-  admin.hasMany(Payment, {
-    foreignKey: "id",
+    foreignKey: "user_id",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   });
+
+  // admin.hasMany(Payment, {
+  //   foreignKey: "id",
+  //   onDelete: "CASCADE",
+  //   onUpdate: "CASCADE",
+  // });
 };
 
 module.exports = { modelName, attributes, options, define, associate };

@@ -1,45 +1,35 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
 
-const modelName = "Support";
+const modelName = "support";
 
 const attributes = {
-  id: {
+  supportId: {
     primaryKey: true,
+    autoIncrement: true,
     type: DataTypes.INTEGER,
     autoIncrement: true,
     allowNull: false,
-    comment: "Support ID",
     references: {
       model: "users",
-      key: "id",
+      key: "user_id",
     },
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
   },
+
+  suportRole: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    field: "support_role",
+  },
+
   joiningDate: {
     type: DataTypes.DATE,
-    allowNull: false,
+    allowNull: true,
     field: "joining_date",
   },
-  contactEmail: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    field: "contact_email",
-  },
-  contactNumber: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    field: "contact_number",
-  },
-  salary: {
-    type: DataTypes.INTEGER,
-    allowNull: true,
-    field: "salary",
-  },
-  address: {
-    type: DataTypes.STRING,
-    allowNull: true,
-    field: "address",
-  },
+
   notes: {
     type: DataTypes.STRING,
     allowNull: true,
@@ -51,23 +41,44 @@ const attributes = {
     allowNull: true,
     field: "profile_picture",
   },
+
+  createdAt: {
+    allowNull: false,
+    type: DataTypes.DATE,
+    field: "created_at",
+  },
+
+  updatedAt: {
+    allowNull: false,
+    type: DataTypes.DATE,
+    field: "updated_at",
+  },
+
+  deletedAt: {
+    allowNull: true,
+    type: DataTypes.DATE,
+    field: "deleted_at",
+  },
 };
 
 const options = {
   tableName: "Support",
   comment: "Support data",
-  paranoid: true,
   underscored: true,
 };
 
 const define = () => {
-  const Support = sequelize.define(modelName, attributes, options);
-  Support.associate = associate;
-  return Support;
+  const support = sequelize.define(modelName, attributes, options);
+  support.associate = associate;
+  return support;
 };
 
-const associate = ({ users, Support }) => {
-  Support.belongsTo(users, { foreignKey: "id" });
+const associate = ({ users, support }) => {
+  support.belongsTo(users, {
+    foreignKey: "user_id",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
 };
 
 module.exports = { modelName, attributes, options, define, associate };

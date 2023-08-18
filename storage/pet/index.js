@@ -1,39 +1,21 @@
 const { models } = require("../../models");
 
-const addPetInStorage = async ({ pet, id }) => {
+const addPetInStorage = async ({ pet }) => {
   try {
-    const petCheck = await models.Pet.findOne({
-      where: {
-        petName: pet.petName,
-        id: id,
-      },
-    });
-    if (petCheck) {
-      throw new Error("Pet already exists");
-    }
-    const newPet = await models.Pet.create({
-      petName: pet.petName,
-      petType: pet.petType,
-      petBreed: pet.petBreed,
-      petAge: pet.petAge,
-      petWeight: pet.petWeight,
-      petHeight: pet.petHeight,
-      petColor: pet.petColor,
-      petDescription: pet.petDescription,
-      petImage: pet.petImage,
-      id: id,
-    });
+    const newPet = await models.Pet.create(pet);
     return newPet;
   } catch (error) {
+    console.log(error.message);
     throw error.message;
   }
 };
-const updatePetInStorage = async ({ pet, id }) => {
+
+const updatePetInStorage = async (pet) => {
+  const { petId } = pet;
   try {
     const exsistingPet = await models.Pet.findOne({
       where: {
-        id: pet.id,
-        id: id,
+        petId: petId,
       },
     });
 
@@ -43,11 +25,12 @@ const updatePetInStorage = async ({ pet, id }) => {
     throw error.message;
   }
 };
-const deletePetInStorage = async ({ id }) => {
+
+const deletePetInStorage = async ({ petId }) => {
   try {
     const pet = await models.Pet.findOne({
       where: {
-        id: id,
+        petId: petId,
       },
     });
     await pet.destroy();
@@ -56,11 +39,12 @@ const deletePetInStorage = async ({ id }) => {
     throw error.message;
   }
 };
-const getPetsFromStorage = async ({ id }) => {
+
+const getPetsFromStorage = async (clientId) => {
   try {
     const pets = await models.Pet.findAll({
       where: {
-        id: id,
+        clientId: clientId,
       },
     });
     return pets;
@@ -68,11 +52,12 @@ const getPetsFromStorage = async ({ id }) => {
     throw error.message;
   }
 };
+
 const getSinglePetFromStorage = async ({ id }) => {
   try {
     const pet = await models.Pet.findOne({
       where: {
-        id: id,
+        petId: id,
       },
     });
     return pet;

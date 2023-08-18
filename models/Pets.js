@@ -4,24 +4,21 @@ const sequelize = require("../config/db");
 const modelName = "Pet";
 
 const attributes = {
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    allowNull: false,
+  petId: {
     primaryKey: true,
-    field:"pet_id"
+    autoIncrement: true,
+    type: DataTypes.INTEGER,
+    allowNull: false,
   },
 
   clientId: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    field: "id",
     references: {
-      model: "Client",
-      key: "id",
+      model: "client",
+      key: "client_id",
     },
   },
-
 
   petName: {
     type: DataTypes.STRING,
@@ -93,13 +90,11 @@ const attributes = {
     allowNull: true,
     field: "next_visit",
   },
- 
 };
 
 const options = {
-  tableName: "Pets",
+  tableName: "Pet",
   comment: "Pet data",
-  paranoid: true,
   underscored: true,
 };
 
@@ -109,15 +104,17 @@ const define = () => {
   return Pet;
 };
 
-const associate = ({ Client, Pet, Appointment, PetAppointment }) => {
-  Pet.belongsTo(Client, { foreignKey: "id" });
+const associate = ({ client, Pet, Appointment, PetAppointment }) => {
+  Pet.belongsTo(client, { foreignKey: "client_id" });
+
   Pet.hasMany(Appointment, {
-    foreignKey: "id",
+    foreignKey: "appointmentId",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   });
+
   Pet.hasMany(PetAppointment, {
-    foreignKey: "id",
+    foreignKey: "petAppointmentId",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   });

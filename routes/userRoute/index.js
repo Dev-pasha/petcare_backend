@@ -1,8 +1,17 @@
 const express = require("express");
 const router = express.Router();
-const { register, login } = require("./handlers");
+const {
+  createProfile,
+  getProfiles,
+  getSingleProfile,
+  updateProfile,
+  deleteProfile,
+} = require("./handlers");
 
-router.post("/register", register);
-router.post("/login", login);
+router.post("/createProfile", createProfile);
+router.get("/getProfiles", getProfiles);
+router.get("/getSingleProfile", getSingleProfile);
+router.put("/updateProfile", updateProfile);
+router.get("/deleteProfile", deleteProfile);
 
 module.exports = router;
