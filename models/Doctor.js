@@ -85,9 +85,12 @@ const define = () => {
   return doctor;
 };
 
-const associate = ({ users, doctor,
-   Review, Appointment
-   }) => {
+const associate = ({ users, doctor, Review, Appointment, slot }) => {
+  doctor.hasMany(slot, {
+    foreignKey: "doctorId",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
 
   doctor.belongsTo(users, {
     foreignKey: "user_id",

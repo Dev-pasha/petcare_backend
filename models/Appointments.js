@@ -18,7 +18,6 @@ const attributes = {
       model: "Pet",
       key: "pet_id",
     },
-    
   },
 
   clientId: {
@@ -86,7 +85,6 @@ const attributes = {
     type: DataTypes.DATE,
     field: "deleted_at",
   },
- 
 };
 
 const options = {
@@ -107,18 +105,21 @@ const associate = ({
   client,
   Pet,
   PetAppointment,
+  slot,
   Payment,
   LiveSession,
 }) => {
   Appointment.belongsTo(doctor, { foreignKey: "doctor_id" });
   Appointment.belongsTo(client, { foreignKey: "client_id" });
-  Appointment.belongsTo(Pet, { foreignKey: "petId" });
+  Appointment.belongsTo(Pet, { foreignKey: "petId" }); 
+  Appointment.belongsTo(slot, { foreignKey: "slotId" });
 
   Appointment.hasMany(PetAppointment, {
     foreignKey: "petAppointmentId",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   });
+
   // Appointment.hasOne(Payment, {
   //   foreignKey: "id",
   //   onDelete: "CASCADE",
