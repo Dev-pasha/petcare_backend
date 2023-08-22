@@ -1,0 +1,42 @@
+[
+  {
+    "doctorId": 1,
+    "startTime": "09:00:00",
+    "endTime": "10:00:00",
+    "slotDate": "2023-08-20",
+    "slotStatus": "available",
+    "day": "Friday",
+    "month": "August",
+    "year": "2023",
+    "createdAt": "2023-08-19T12:00:00",
+    "updatedAt": "2023-08-19T14:30:00",
+    "deletedAt": null
+  },
+  {
+  "doctorId": 456,
+  "startTime": "14:30:00",
+  "endTime": "15:30:00",
+  "slotDate": "2023-08-21",
+  "slotStatus": "booked",
+  "day": "Saturday",
+  "month": "August",
+  "year": "2023",
+  "createdAt": "2023-08-19T11:15:00",
+  "updatedAt": "2023-08-19T13:45:00",
+  "deletedAt": null
+  },
+  {
+    "doctorId": 789,
+    "startTime": "11:00:00",
+    "endTime": "12:00:00",
+    "slotDate": "2023-08-22",
+    "slotStatus": "available",
+    "day": "Sunday",
+    "month": "August",
+    "year": "2023",
+    "createdAt": "2023-08-19T09:20:00",
+    "updatedAt": "2023-08-19T11:30:00",
+    "deletedAt": "2023-08-23T08:00:00"
+  }
+  
+]

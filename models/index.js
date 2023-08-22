@@ -2,7 +2,7 @@ const { Sequelize } = require("sequelize");
 const sequelize = require("../config/db");
 const admin = require("./Admin");
 const client = require("./clients");
-const doctor = require("./doctor");
+const doctor = require("./Doctor");
 const support = require("./support");
 const Pet = require("./Pets");
 const Appointment = require("./Appointments");
@@ -11,6 +11,7 @@ const PetAppointment = require("./PetAppointment");
 const Chats = require("./Chats");
 const Notification = require("./Notifications");
 const Review = require("./Reviews");
+const slot = require("./Slots");
 // const LiveSession = require('./liveSession');
 const users = require("./Users");
 
@@ -21,8 +22,10 @@ const modelsDefiners = {
   support,
   Pet,
   Appointment,
-  // Payment,
+  slot,
   PetAppointment,
+  
+  // Payment,
   // Chats,
   // Notification,
   // Review,

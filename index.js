@@ -21,6 +21,7 @@ const userRoute = require("./routes/userRoute");
 const appointmentRoute = require("./routes/appointmentRoute");
 const reviewRoute = require("./routes/reviewRoute");
 const petAppointmentRoute = require("./routes/petApointmentRoute");
+const slotRoute = require("./routes/slotRoute");
 
 app.use("/api", authRoute);
 app.use("/api", petRoute);
@@ -28,6 +29,7 @@ app.use("/api", userRoute);
 app.use("/api", appointmentRoute);
 app.use("/api", reviewRoute);
 app.use("/api", petAppointmentRoute);
+app.use("/api", slotRoute);
 
 // server
 const PORT = process.env.PORT || 5000;
