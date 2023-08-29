@@ -1,17 +1,35 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
 
-const modelName = "Chat";
+const modelName = "ChatMessage";
 
 const attributes = {
-  chatId: {
+  id: {
     primaryKey: true,
     type: DataTypes.INTEGER,
     autoIncrement: true,
     allowNull: false,
-    field: "chat_id",
-    comment: "Chat ID",
+    comment: "Chat Message id",
   },
+
+
+  chatId: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    field: "chat_id",
+    references: {
+      model: "Chats",
+      key: "chat_id",
+    },
+  },
+
+  message: {
+    field: 'message',
+    type: DataTypes.STRING,
+    allowNull: true,
+    comment: 'message',
+  },
+
   userA: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -21,6 +39,7 @@ const attributes = {
       key: "user_id",
     },
   },
+
   userB: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -38,77 +57,47 @@ const attributes = {
     comment: "Message",
   },
 
-  isRead: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-    field: "is_read",
-    comment: "Is Read",
-  },
-
-
-  attachement: {
-    type: DataTypes.STRING,
-    allowNull: true,
-    field: "attachement",
-    comment: "Attachement",
-  },
-
-  messageStatus: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    field: "message_status",
-    comment: "Message Status",
-  },
-
   meta: {
     field: 'meta',
     type: DataTypes.JSONB,
     allowNull: true,
-    comment: 'Meta information on the chat',
+    comment: 'Meta information on the chat message',
   },
 
   createdAt: {
     allowNull: false,
     type: DataTypes.DATE,
-    field: "created_at",
+    field: 'created_at',
   },
-
   updatedAt: {
     allowNull: false,
     type: DataTypes.DATE,
-    field: "updated_at",
+    field: 'updated_at',
   },
-
   deletedAt: {
     allowNull: true,
     type: DataTypes.DATE,
-    field: "deleted_at",
+    field: 'deleted_at',
   },
 };
 
 const options = {
-  tableName: "Chats",
-  comment: "Chat data",
+  tableName: "ChatMessage",
+  comment: "Chat Message",
   underscored: true,
 };
 
 const define = () => {
-  const Chats = sequelize.define(modelName, attributes, options);
-  Chats.associate = associate;
-  return Chats;
+  const ChatMessage = sequelize.define(modelName, attributes, options);
+  ChatMessage.associate = associate;
+  return ChatMessage;
 };
 
-const associate = ({ users, Chats, ChatMessage }) => {
-  Chats.belongsTo(users, {
-    foreignKey: "userA",
-  });
-  Chats.belongsTo(users, {
-    foreignKey: "userB",
-  });
-  Chats.hasMany(ChatMessage, {
+const associate = ({ Chats, ChatMessage }) => {
+  ChatMessage.belongsTo(Chats, {
     foreignKey: "chat_id",
   });
-
+  
 };
 
 module.exports = { modelName, attributes, options, define, associate };

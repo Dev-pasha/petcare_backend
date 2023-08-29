@@ -22,6 +22,8 @@ const appointmentRoute = require("./routes/appointmentRoute");
 const reviewRoute = require("./routes/reviewRoute");
 const petAppointmentRoute = require("./routes/petApointmentRoute");
 const slotRoute = require("./routes/slotRoute");
+const chatRoute = require("./routes/chatsRoute");
+const chatMessageRoute = require("./routes/chatMessage");
 
 app.use("/api", authRoute);
 app.use("/api", petRoute);
@@ -30,18 +32,25 @@ app.use("/api", appointmentRoute);
 app.use("/api", reviewRoute);
 app.use("/api", petAppointmentRoute);
 app.use("/api", slotRoute);
+app.use("/api", chatRoute);
+app.use("/api", chatMessageRoute);
 
 // server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  sequalize
-    .authenticate()
-    .then(() => {
-      console.log("Connection has been established successfully.");
-    })
-    .catch((error) => {
-      console.error("Unable to connect to the database:", error.message);
-      throw error.message;
-    });
-  console.log(`Server is running on port ${PORT}.`);
-});
+
+const server =
+  app.listen(PORT, () => {
+    sequalize
+      .authenticate()
+      .then(() => {
+        console.log("Connection has been established successfully.");
+      })
+      .catch((error) => {
+        console.error("Unable to connect to the database:", error.message);
+        throw error.message;
+      });
+    console.log(`Server is running on port ${PORT}.`);
+  });
+
+
+module.exports = server;
