@@ -1,32 +1,64 @@
 const { models } = require("../../models");
+const { Op } = require("sequelize");
 
 
-const getChatsFromStorage = async () => { }
-
-const getSingleChatFromStorage = async ({ chatId }) => { }
-
-const createChatInStorage = async () => {
-    
- }
-
-const deleteChatFromStorage = async ({ chatId }) => {
+const getChatsOfUserFromStorage = async ({ userId }) => {
     try {
-        const chat = await models.Chat.destroy({
+        const chats = await models.Chats.findAll({
             where: {
-                chatId: chatId
+                [Op.or]: [
+                    {
+                        userA: userId
+                    },
+                    {
+                        userB: userId
+                    }
+                ]
             }
         })
-        return true
+        return chats
+
     } catch (error) {
-        throw error
+        console.log(error.message)
     }
 }
+
+// const getSingleChatFromStorage = async ({ chatId }) => { }
+
+const createChatInStorage = async ({ senderId,
+    receiverId }) => {
+    try {
+        const chat = await models.Chats.create({
+            userA: senderId,
+            userB: receiverId
+        })
+
+        return chat
+
+    } catch (error) {
+        console.log(error.message)
+    }
+
+}
+
+// const deleteChatFromStorage = async ({ chatId }) => {
+//     try {
+//         const chat = await models.Chat.destroy({
+//             where: {
+//                 chatId: chatId
+//             }
+//         })
+//         return true
+//     } catch (error) {
+//         throw error
+//     }
+// }
 
 
 
 module.exports = {
-    getChatsFromStorage,
-    getSingleChatFromStorage,
+    getChatsOfUserFromStorage,
+    // getSingleChatFromStorage,
     createChatInStorage,
-    deleteChatFromStorage
+    // deleteChatFromStorage
 }

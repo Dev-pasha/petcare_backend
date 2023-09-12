@@ -1,16 +1,21 @@
 const express = require("express");
 const router = express.Router();
 const {
-    getChats,
-    getSingleChat,
+    getChatsOfUser,
+    // getSingleChat,
     createChat,
-    deleteChat
-      
+    // deleteChat
+
 } = require("./handlers");
 
-router.get("/chats", getChats);
-router.get("/getSingleChat", getSingleChat);
+
 router.post("/createChat", createChat);
-router.get('/deleteChat', deleteChat);
+router.get("/getChatsOfUser", getChatsOfUser);
+
+
+// const express = require("express");
+// const router = express.Router();
+// router.get("/getSingleChat", getSingleChat);
+// router.get('/deleteChat', deleteChat);
 
 module.exports = router;

@@ -38,7 +38,7 @@ app.use("/api", chatMessageRoute);
 // server
 const PORT = process.env.PORT || 5000;
 
-const server =
+// const server =
   app.listen(PORT, () => {
     sequalize
       .authenticate()
@@ -53,4 +53,4 @@ const server =
   });
 
 
-module.exports = server;
+module.exports = app;

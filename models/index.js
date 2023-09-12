@@ -9,6 +9,7 @@ const Appointment = require("./Appointments");
 const Payment = require("./Payments");
 const PetAppointment = require("./PetAppointment");
 const Chats = require("./Chats");
+const ChatMessage = require("./ChatMessage");
 const Notification = require("./Notifications");
 const Review = require("./Reviews");
 const slot = require("./Slots");
@@ -24,13 +25,14 @@ const modelsDefiners = {
   Appointment,
   slot,
   PetAppointment,
+  Chats,
+  ChatMessage,
+  users,
   
   // Payment,
-  // Chats,
   // Notification,
   // Review,
   // LiveSession,
-  users,
 };
 
 const initModels = (sequelize) => {
