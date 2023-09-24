@@ -14,4 +14,6 @@ router.get("/getSingleProfile", getSingleProfile);
 router.put("/updateProfile", updateProfile);
 router.get("/deleteProfile", deleteProfile);
 
+
+
 module.exports = router;

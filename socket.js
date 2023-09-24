@@ -1,43 +1,59 @@
-// const { addUser, removeUser, getUserByUserId } = require('./utils')
-// const server = require("./index");
+const { addUser, removeUser, getUserByUserId } = require('./utils')
+const { addChatMessage , getChatFromChatId } = require('./routes/chatMessage/handlers')
+const {getChatFromChatIdInStorage} = require('./storage/messages/index')
+const socketIO = require('socket.io');
+
+function initializeSocket(server) {
+    let messages = []
+    const io = socketIO(server, {
+        cors: {
+            origin: '*',
+        }
+    });
+
+    io.on('connection', (socket) => {
+        console.log(`user connected with id: ${socket.id}`)
+
+        socket.on('join', ({ userId }) => {
+            addUser(userId, socket.id);
+            console.log(`user with id: ${userId} joined`);
+        });
+
+        socket.removeUser = () => {
+            removeUser(socket.id);
+            console.log(`user with id: ${socket.id} left`);
+        };
+
+        socket.on('send-message', async ( {chatId , senderId, receiverId, text} ) => {
+            console.log(senderId, chatId, text)
+            const message = { chatId, senderId, text , receiverId };
+           const chat = await getChatFromChatIdInStorage({chatId})
+            messages.push(message);
+
+            // write the code to send the array of messages to the client side
 
 
-// const io = require('socket.io')(server)
+            console.log(chat.map((message) => message.message));
+            socket.emit('receive-message-list', chat);
 
-// io.on('connection', (socket) => {
-//     console.log(`User with socket id: ${socket.id} is connected to socket server`);
+            // addChatMessage({ senderId, chatId, text });
+            // const user = getUserByUserId(receiverId);
+            // if (user) {
+            //     io.to(user.socketId).emit('receive-message', {
+            //         senderId,
+            //         text,
+            //     });
+            // }
+        });
 
-//     // take userId and socketId from user
+        socket.on('disconnect', () => {
+            console.log('user disconnected');
+        });
+    });
 
-//     socket.on('addUser', (userId) => {
-//         addUser(userId, socket.id)
-//         io.emit('getUsers', users)
-//     })
+    return io;
+}
 
-//     socket.on('sendMessage', ({ senderId, receiverId, text }) => {
-//         const user = getUserByUserId(receiverId)
-//         io.to(user.socketId).emit('getMessage', {
-//             senderId,
-//             text
-//         })
-//     })
-
-//     socket.on('getMessages', ({ senderId, receiverId }) => {
-        
-//     })
-
-//     // send and get message
-
-
-//     socket.on("disconnect", () => {
-//         console.log("a user disconnected!");
-//         removeUser(socket.id);
-//         io.emit("getUsers", users);
-//     });
-
-
-
-
-
-// })
-
+module.exports = {
+    initializeSocket,
+};
