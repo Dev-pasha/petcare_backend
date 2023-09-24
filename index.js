@@ -26,11 +26,13 @@ const petAppointmentRoute = require("./routes/petApointmentRoute");
 const slotRoute = require("./routes/slotRoute");
 const chatRoute = require("./routes/chatsRoute");
 const chatMessageRoute = require("./routes/chatMessage");
+const adminRoute = require("./routes/adminRoute");
 
 
 const server = http.createServer(app);
 
 app.use("/api", authRoute);
+app.use("/api", adminRoute);
 app.use("/api", petRoute);
 app.use("/api", userRoute);
 app.use("/api", appointmentRoute);
