@@ -138,11 +138,19 @@ const associate = ({
     onUpdate: "CASCADE",
   });
 
-  // users.hasMany(Chats, {
-  //   foreignKey: "senderId",
-  //   onDelete: "CASCADE",
-  //   onUpdate: "CASCADE",
-  // });
+  users.hasMany(Chats, {
+    foreignKey: "userA",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
+
+  users.hasMany(Chats, {
+    foreignKey: "userB",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
+
+  
   // users.hasMany(Chats, {
   //   foreignKey: "receiverId",
   //   onDelete: "CASCADE",

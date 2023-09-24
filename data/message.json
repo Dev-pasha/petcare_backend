@@ -1,0 +1,55 @@
+[
+    {
+        "id": 1,
+        "message": "Hello, how are you?",
+        "userA": "user123",
+        "userB": "user456",
+        "meta": {
+          "timestamp": "2023-09-11T12:00:00Z",
+          "status": "sent"
+        },
+        "createdAt": "2023-09-11T12:00:00Z",
+        "updatedAt": "2023-09-11T12:05:00Z",
+        "deletedAt": null
+      },      
+      {
+        "id": 2,
+        "message": "I'm doing well, thanks. How about you?",
+        "userA": "user456",
+        "userB": "user123",
+        "meta": {
+          "timestamp": "2023-09-11T12:05:00Z",
+          "status": "received"
+        },
+        "createdAt": "2023-09-11T12:05:00Z",
+        "updatedAt": "2023-09-11T12:10:00Z",
+        "deletedAt": null
+      },
+      {
+        "id": 3,
+        "message": "I'm great too! What have you been up to lately?",
+        "userA": "user123",
+        "userB": "user456",
+        "meta": {
+          "timestamp": "2023-09-11T12:10:00Z",
+          "status": "sent"
+        },
+        "createdAt": "2023-09-11T12:10:00Z",
+        "updatedAt": "2023-09-11T12:15:00Z",
+        "deletedAt": null
+      },
+      {
+        "id": 4,
+        "message": "Just working on a project. How about you?",
+        "userA": "user456",
+        "userB": "user123",
+        "meta": {
+          "timestamp": "2023-09-11T12:15:00Z",
+          "status": "received"
+        },
+        "createdAt": "2023-09-11T12:15:00Z",
+        "updatedAt": "2023-09-11T12:20:00Z",
+        "deletedAt": null
+      }
+      
+]

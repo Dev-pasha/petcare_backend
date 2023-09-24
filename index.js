@@ -1,10 +1,12 @@
 const express = require("express");
 const app = express();
+var http = require('http');
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const sequalize = require("./config/db");
 require("dotenv").config({ path: "./config/.env" });
 const { initModels } = require("./models/index");
+const { initializeSocket  } = require("./socket");
 
 initModels();
 
@@ -22,6 +24,11 @@ const appointmentRoute = require("./routes/appointmentRoute");
 const reviewRoute = require("./routes/reviewRoute");
 const petAppointmentRoute = require("./routes/petApointmentRoute");
 const slotRoute = require("./routes/slotRoute");
+const chatRoute = require("./routes/chatsRoute");
+const chatMessageRoute = require("./routes/chatMessage");
+
+
+const server = http.createServer(app);
 
 app.use("/api", authRoute);
 app.use("/api", petRoute);
@@ -30,10 +37,15 @@ app.use("/api", appointmentRoute);
 app.use("/api", reviewRoute);
 app.use("/api", petAppointmentRoute);
 app.use("/api", slotRoute);
+app.use("/api", chatRoute);
+app.use("/api", chatMessageRoute);
 
-// server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+
+const io = initializeSocket(server);
+
+
+server.listen(PORT, () => {
   sequalize
     .authenticate()
     .then(() => {
@@ -45,3 +57,7 @@ app.listen(PORT, () => {
     });
   console.log(`Server is running on port ${PORT}.`);
 });
+
+
+
+module.exports = { app, io };
