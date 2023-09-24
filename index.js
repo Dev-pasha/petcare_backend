@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-var http = require('http').Server(app);
+var http = require('http');
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const sequalize = require("./config/db");
@@ -11,7 +11,7 @@ const { initializeSocket  } = require("./socket");
 initModels();
 
 // Middleware
-app.use(cors);
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
@@ -27,6 +27,9 @@ const slotRoute = require("./routes/slotRoute");
 const chatRoute = require("./routes/chatsRoute");
 const chatMessageRoute = require("./routes/chatMessage");
 
+
+const server = http.createServer(app);
+
 app.use("/api", authRoute);
 app.use("/api", petRoute);
 app.use("/api", userRoute);
@@ -39,10 +42,10 @@ app.use("/api", chatMessageRoute);
 
 const PORT = process.env.PORT || 5000;
 
-const io = initializeSocket(http);
+const io = initializeSocket(server);
 
 
-http.listen(PORT, () => {
+server.listen(PORT, () => {
   sequalize
     .authenticate()
     .then(() => {
