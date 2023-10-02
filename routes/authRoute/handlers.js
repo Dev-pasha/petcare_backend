@@ -1,11 +1,9 @@
-const {
-  registerUserInStorage,
-} = require("../../storage/auth/index");
+const { registerUserInStorage } = require("../../storage/auth/index");
 
 const { models } = require("../../config/db");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const secretKey = 'hakonamatata'
+const secretKey = "hakonamatata";
 
 async function register(req, res) {
   try {
@@ -29,12 +27,43 @@ async function register(req, res) {
 async function login(req, res) {
   const { email, password, userType } = req.body;
   console.log(req.body);
-
+  
   try {
+  let user;
     // Find the user by email and user type
-    const user = await models.users.findOne({
-      where: { email: email },
-    });
+
+    if (userType === "CLIENT") {
+      user = await models.users.findOne({
+        where: { email: email },
+        include: [
+          {
+            model: models.client,
+          },
+        ],
+      });
+    }
+
+    if (userType === "ADMIN") {
+      user = await models.users.findOne({
+        where: { email: email },
+        include: [
+          {
+            model: models.admin,
+          },
+        ],
+      });
+    }
+
+    if (userType === "DOCTOR") {
+      user = await models.users.findOne({
+        where: { email: email },
+        include: [
+          {
+            model: models.doctor,
+          },
+        ],
+      });
+    }
 
     if (!user) {
       return res
@@ -55,13 +84,14 @@ async function login(req, res) {
     const token = generateToken(user.userId, userType);
 
     // Return the token and user information (you can customize the response as needed)
+
+    delete user.password;
     res.status(200).json({
       message: "Authentication successful",
       token,
       user: {
-        userId: user.userId,
-        email: user.email,
-        type: userType
+        user: user,
+        type: userType,
       },
     });
   } catch (error) {
@@ -75,7 +105,7 @@ function generateToken(userId, userType) {
     userId,
     userType,
   };
-  return jwt.sign(payload, secretKey, { expiresIn: "1h" }); // Token expires in 1 hour
+  return jwt.sign(payload, secretKey, { expiresIn: "5h" }); // Token expires in 1 hour
 }
 
 module.exports = {

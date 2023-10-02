@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 const sequalize = require("./config/db");
 require("dotenv").config({ path: "./config/.env" });
 const { initModels } = require("./models/index");
-const { initializeSocket  } = require("./socket");
+const { initializeSocket } = require("./socket");
 
 initModels();
 
@@ -27,12 +27,15 @@ const slotRoute = require("./routes/slotRoute");
 const chatRoute = require("./routes/chatsRoute");
 const chatMessageRoute = require("./routes/chatMessage");
 const adminRoute = require("./routes/adminRoute");
-
+const clientRoute = require("./routes/clientRoute");
+const doctorRoute = require("./routes/doctorRoute");
 
 const server = http.createServer(app);
 
 app.use("/api", authRoute);
-app.use("/api", adminRoute);
+app.use("/api/admin", adminRoute);
+app.use("/api/client", clientRoute);
+app.use('/api/doctor', doctorRoute)
 app.use("/api", petRoute);
 app.use("/api", userRoute);
 app.use("/api", appointmentRoute);

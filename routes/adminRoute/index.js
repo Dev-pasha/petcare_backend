@@ -20,44 +20,44 @@ const {
     getAllPaymentsOfClientById
 } = require("./handler");
 
-router.use(authenticateAndAuthorize('ADMIN'));
+// router.use();
 
 // GET
 // Routes operation for doctors 
-router.get('/get-all-doctors', getAllDoctors);
-router.get('/get-single-doctor/:id', getSingleDoctor);
+router.get('/get-all-doctors',authenticateAndAuthorize('ADMIN'), getAllDoctors);
+router.get('/get-single-doctor',authenticateAndAuthorize('ADMIN'), getSingleDoctor);
 
 // Routes operation for clients
-router.get('/get-all-clients', getAllclients);
-router.get('/get-single-client/:id', getSingleClient);
+router.get('/get-all-clients',authenticateAndAuthorize('ADMIN'), getAllclients);
+router.get('/get-single-client',authenticateAndAuthorize('ADMIN'), getSingleClient);
 
 // Routes operation for appointments
-router.get('/get-all-appointments', getAllAppointments);
-router.get('/get-all-appointments-of-doctor/:id', getAllAppointmentsOfDoctorById);
-router.get('/get-all-appointments-of-client/:id', getAllAppointmentsOfClientById);
+router.get('/get-all-appointments',authenticateAndAuthorize('ADMIN'), getAllAppointments);
+router.get('/get-all-appointments-of-doctor',authenticateAndAuthorize('ADMIN'), getAllAppointmentsOfDoctorById);
+router.get('/get-all-appointments-of-client',authenticateAndAuthorize('ADMIN'), getAllAppointmentsOfClientById);
 
 // Routes operation for pets
-router.get('/get-all-pets', getAllPets);
-router.get('/get-all-pets-of-client/:id', getAllPetsOfClientById);
-router.get('/get-single-pet/:id', getSinglePet);
+router.get('/get-all-pets', authenticateAndAuthorize('ADMIN'), getAllPets);
+router.get('/get-all-pets-of-client', authenticateAndAuthorize('ADMIN'), getAllPetsOfClientById);
+router.get('/get-single-pet', authenticateAndAuthorize('ADMIN'), getSinglePet);
 
 // Routes operation for reviews
-router.get('/get-all-reviews-of-doctor', getAllReviewsOfDoctor);
+router.get('/get-all-reviews-of-doctor', authenticateAndAuthorize('ADMIN'), getAllReviewsOfDoctor);
 
 // Routes operation for payments
 
-router.get('/get-all-payments', getAllPayments);
-router.get('/get-all-payments-of-client/:id', getAllPaymentsOfClientById);
+router.get('/get-all-payments', authenticateAndAuthorize('ADMIN'), getAllPayments);
+router.get('/get-all-payments-of-client', authenticateAndAuthorize('ADMIN'), getAllPaymentsOfClientById);
 
 
 // POST 
 
 router.post('/create-admin', createAdmin);
 // Routes operation for doctors
-router.post('/doctor-approval', doctorApproval);
+router.post('/doctor-approval', authenticateAndAuthorize('ADMIN'), doctorApproval);
 
 // Routes operation for reviews
-router.post('/review-approval', reviewApproval);
+router.post('/review-approval', authenticateAndAuthorize('ADMIN'), reviewApproval);
 
 
 

@@ -25,6 +25,7 @@ const {
 
 async function createProfile(req, res) {
   try {
+    console.log(req.body);
     const { type } = req.body;
     const data = req.body;
     let profile;

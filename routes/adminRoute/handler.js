@@ -1,5 +1,9 @@
-const { where } = require("sequelize");
 const { models } = require("../../config/db");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+const secretKey = "hakoonamatata"; // Replace with your actual secret key
+const saltRounds = 10; // Number of salt rounds for bcrypt
+
 async function getAllDoctors(req, res) {
   try {
     const doctors = await models.Doctor.findAll();
@@ -152,7 +156,7 @@ async function getAllReviewsOfDoctor(req, res) {
 }
 
 async function createAdmin(req, res) {
-  let userData = data;
+  let userData = req.body;
   let existingUser;
   let user;
   try {
@@ -164,6 +168,18 @@ async function createAdmin(req, res) {
 
     if (existingUser) {
       console.log("user already exists");
+
+      const token = jwt.sign(
+        {
+          email: existingUser.email,
+          id: existingUser.id,
+        },
+        secretKey,
+        {
+          expiresIn: "1h",
+        }
+      );
+
       admin = await models.admin.create({
         ...userData.admin,
       });
@@ -171,12 +187,20 @@ async function createAdmin(req, res) {
       res.status(200).json({
         existingUser: existingUser,
         admin: admin,
+        // token: token,
       });
     } else {
+
+
+      const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
+      userData.password = hashedPassword;
+
       user = await models.users.create({
         ...userData,
       });
-      console.log("user data", user);
+
+      // console.log("user data", user);
+
       admin = await models.admin.create({
         ...userData.admin,
       });
@@ -247,5 +271,5 @@ module.exports = {
   doctorApproval,
   reviewApproval,
   getAllPayments,
-  getAllPaymentsOfClientById
+  getAllPaymentsOfClientById,
 };
