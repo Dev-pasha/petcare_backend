@@ -4,19 +4,30 @@ const { Op } = require("sequelize");
 
 const getChatsOfUserFromStorage = async ({ userId }) => {
     try {
+        let user;
         const chats = await models.Chats.findAll({
             where: {
                 [Op.or]: [
                     {
-                        userA: userId
+                        userA: userId,
                     },
                     {
-                        userB: userId
+                        userB: userId,
+
                     }
                 ]
-            }
+            },
+            include: [
+                {
+                    model: models.ChatMessage,
+                    attributes: ['message', 'createdAt'],
+                    order: [['createdAt', 'DESC']],
+                    limit: 1
+                },
+            ]
         })
-        return chats
+
+        return { chats}
 
     } catch (error) {
         console.log(error.message)

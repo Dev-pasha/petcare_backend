@@ -160,7 +160,7 @@ async function deleteProfile(req, res) {
     }
     if (type === "DOCTOR") {
       try {
-        profile = await deleteDoctorProfileInStorage({id});
+        profile = await deleteDoctorProfileInStorage({ id });
         res.status(200).json({
           message: "doctor profile deleted successfully",
           profile,
@@ -203,10 +203,45 @@ async function updateProfile(req, res) {
   }
 }
 
+
+async function getUsers(req, res) {
+  const { id } = req.query;
+  try {
+    const user = await models.users.findAll({
+      where: {
+        userId: id,
+      },
+      attributes:['userId','firstName','lastName']
+    });
+    res.status(200).send(user);
+
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+}
+
+async function getUser (req, res) {
+  const { id } = req.query;
+  try {
+    const user = await models.users.findOne({
+      where: {
+        userId: id,
+      },
+      attributes:['userId','firstName','lastName']
+    });
+    res.status(200).send(user);
+
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+}
+
 module.exports = {
   createProfile,
   getProfiles,
   getSingleProfile,
   updateProfile,
   deleteProfile,
+  getUser,
+  getUsers,
 };

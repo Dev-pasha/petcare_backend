@@ -1,59 +1,75 @@
-const { addUser, removeUser, getUserByUserId } = require('./utils')
-const { addChatMessage , getChatFromChatId } = require('./routes/chatMessage/handlers')
-const {getChatFromChatIdInStorage} = require('./storage/messages/index')
-const socketIO = require('socket.io');
+const socketIO = require("socket.io");
 
 function initializeSocket(server) {
-    let messages = []
-    const io = socketIO(server, {
-        cors: {
-            origin: '*',
-        }
+  const io = socketIO(server, {
+    cors: {
+      origin: "*",
+    },
+  });
+
+  let users = []; // Use an array for user management
+
+  function addUser(userId, socketId) {
+    users.push({ userId, socketId });
+  }
+
+  function removeUser(userId) {
+    users = users.filter((user) => user.userId !== userId);
+  }
+
+  function getUserSocket(userId) {
+    const user = users.find((user) => user.userId === userId);
+    console.log("user:", user);
+    console.log("users:", users);
+    return user ? user.socketId : null;
+  }
+
+  io.on("connection", (socket) => {
+    console.log(`User connected with socket ID: ${socket.id}`);
+
+    socket.on("addUser", (userId) => {
+      addUser(userId, socket.id);
+      console.log(`User with ID ${userId} joined`);
+      io.emit("getUsers", users.map((user) => user.userId)); // Send an array of connected user IDs
     });
 
-    io.on('connection', (socket) => {
-        console.log(`user connected with id: ${socket.id}`)
+    socket.on("send-message", async ({ senderId, receiverId, text }) => {
+      receiverId = parseInt(receiverId);
+      // console.log("Received message from senderId:", senderId);
+      // console.log("for receiverId:", receiverId);
+      // console.log("with text:", text);
 
-        socket.on('join', ({ userId }) => {
-            addUser(userId, socket.id);
-            console.log(`user with id: ${userId} joined`);
+      const receiverSocketId = getUserSocket(receiverId);
+      console.log("receiverSocketId:", receiverSocketId);
+      if (receiverSocketId) {
+        // console.log("true");
+        await io.to(receiverSocketId).emit("get-message", {
+          senderId,
+          text,
         });
-
-        socket.removeUser = () => {
-            removeUser(socket.id);
-            console.log(`user with id: ${socket.id} left`);
-        };
-
-        socket.on('send-message', async ( {chatId , senderId, receiverId, text} ) => {
-            console.log(senderId, chatId, text)
-            const message = { chatId, senderId, text , receiverId };
-           const chat = await getChatFromChatIdInStorage({chatId})
-            messages.push(message);
-
-            // write the code to send the array of messages to the client side
-
-
-            console.log(chat.map((message) => message.message));
-            socket.emit('receive-message-list', chat);
-
-            // addChatMessage({ senderId, chatId, text });
-            // const user = getUserByUserId(receiverId);
-            // if (user) {
-            //     io.to(user.socketId).emit('receive-message', {
-            //         senderId,
-            //         text,
-            //     });
-            // }
-        });
-
-        socket.on('disconnect', () => {
-            console.log('user disconnected');
-        });
+        console.log(`Message sent to user with ID ${receiverId}`);
+      } else {
+        console.log("false");
+        console.log(`User with ID ${receiverId} is not online`);
+      }
     });
 
-    return io;
+    socket.on("disconnect", () => {
+      console.log(`User with socket ID ${socket.id} disconnected`);
+
+      const disconnectedUserId = users.find((user) => user.socketId === socket.id)?.userId;
+      if (disconnectedUserId) {
+        removeUser(disconnectedUserId);
+
+        io.emit("getUsers", users.map((user) => user.userId));
+        console.log(`User with ID ${disconnectedUserId} disconnected`);
+      }
+    });
+  });
+
+  return io;
 }
 
 module.exports = {
-    initializeSocket,
+  initializeSocket,
 };

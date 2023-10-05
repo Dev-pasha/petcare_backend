@@ -1,7 +1,11 @@
+
+let users = []
+
 function addUser(userId, socketId) {
     if (!users.some((user) => user.userId === userId)) {
         users.push({ userId, socketId });
     }
+    return users;
 }
 
 function removeUser(socketId) {

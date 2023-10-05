@@ -5,17 +5,16 @@ const secretKey = "hakoonamatata";
 const saltRounds = 10;
 
 async function createScheduleOfDoctor(req, res) {
-  console.log("request call ");
+
   const { slotDate, startTime, endTime, doctorId } = req.body;
-  console.log({ slotDate, startTime, endTime, doctorId });
-  const intervalMinutes = 30;
+  let intervalMinutes = 30;
   let scheduleResponse;
   slotStatus = "available";
 
   try {
     const generatedSlots = calculateTimeSlots({
-      startTime,
-      endTime,
+      startTime: startTime,
+      endTime: endTime,
       intervalMinutes,
     });
 
@@ -28,12 +27,18 @@ async function createScheduleOfDoctor(req, res) {
         slotStatus,
       };
 
-      scheduleResponse = await models.slot.create(slotData);
+      scheduleResponse = await models.slot.create({
+        doctorId: doctorId,
+        startTime: slotData.startTime,
+        endTime: slotData.endTime,
+        slotDate: slotData.slotDate,
+        slotStatus: slotData.slotStatus,
+      });
     }
 
-    res.send(200, scheduleResponse);
+    res.status(200).send(scheduleResponse);
   } catch (error) {
-    res.send(500, error.message);
+    res.status(500).send(error.message);
   }
 }
 
@@ -81,12 +86,9 @@ async function deleteScheduleOfDoctor(req, res) {
         slotId: slotId,
       },
     });
-    res.status(200).json({
-      message: "slot deleted successfully",
-      response,
-    });
+    res.status(200).send(response);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).send(error.message);
   }
 }
 
@@ -171,34 +173,99 @@ async function updateDoctor(req, res) {
 }
 
 async function getAllAppointmentsOfDoctor(req, res) {
-  const { doctorId } = req.query;
+  const { id } = req.query;
   try {
-    const response = await models.appointment.findAll({
+    const successAppointments = await models.Appointment.findAll({
       where: {
-        doctorId: doctorId,
+        doctorId: id,
+        appointmentStatus: "success",
       },
     });
-    res.status(200).json({
-      message: "appointments fetched successfully",
-      response,
+    const successCount = await models.Appointment.count({
+      where: {
+        doctorId: id,
+        appointmentStatus: "success",
+      },
     });
+
+
+    const pendingAppointments = await models.Appointment.findAll({
+      where: {
+        doctorId: id,
+        appointmentStatus: "pending",
+      },
+    });
+    const pendingCount = await models.Appointment.count({
+      where: {
+        doctorId: id,
+        appointmentStatus: "pending",
+      },
+    });
+
+
+    const cancelledAppointments = await models.Appointment.findAll({
+      where: {
+        doctorId: id,
+        appointmentStatus: "cancelled",
+      },
+    });
+
+    const cancelledCount = await models.Appointment.count({
+      where: {
+        doctorId: id,
+        appointmentStatus: "cancelled",
+      },  
+    });
+
+    res.status(200).send({
+      successAppointments,
+      successCount,
+      pendingAppointments,
+      pendingCount,
+      cancelledAppointments,
+      cancelledCount,
+    })
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).send(error.message);
   }
 }
 
+
 async function getSingleAppointmentOfDoctor(req, res) {
-  const { appointmentId } = req.query;
+  const { id } = req.query;
   try {
-    const response = await models.appointment.findOne({
+    const appointmentResponse = await models.Appointment.findOne({
       where: {
-        appointmentId: appointmentId,
+        appointmentId: id,
       },
     });
-    res.status(200).json({
-      message: "appointment fetched successfully",
-      response,
+
+
+    const pet = await models.Pet.findOne({
+      where: {
+        petId: appointmentResponse.petId,
+      },
     });
+
+
+    const client = await models.client.findOne({
+      where: {
+        clientId: appointmentResponse.clientId,
+      },
+    });
+
+    const clientUser = await models.users.findOne({
+      where: {
+        userId: client.user_id,
+      },
+    });
+
+    res.status(200).send({
+      appointmentResponse,
+      pet,
+      clientUser,
+    });
+
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -220,6 +287,7 @@ function convertTo24Hour(time12) {
 }
 
 function convertTo12Hour(time24) {
+  console.log('here check 2')
   const [hours, minutes] = time24.split(":").map(Number);
 
   if (hours === 0) {
@@ -234,9 +302,11 @@ function convertTo12Hour(time24) {
 }
 
 function calculateTimeSlots({ startTime, endTime, intervalMinutes }) {
+
   const startTime24 = convertTo24Hour(startTime);
   const endTime24 = convertTo24Hour(endTime);
 
+  console.log(startTime24, endTime24);
   const startDateTime = new Date(`1970-01-01 ${startTime24}`);
   const endDateTime = new Date(`1970-01-01 ${endTime24}`);
 
@@ -244,6 +314,7 @@ function calculateTimeSlots({ startTime, endTime, intervalMinutes }) {
   let currentTime = startDateTime;
 
   const timeSlots = [];
+  console.log('here check')
 
   while (currentTime <= endDateTime) {
     const startTime12 = convertTo12Hour(currentTime.toTimeString().slice(0, 5));
@@ -297,16 +368,16 @@ async function getSingleSlotOfDoctor(req, res) {
   }
 }
 
-
 async function doctorByCategories(req, res) {
   try {
+    const response = await models.doctor
+      .findAll({
+        attributes: ["specialization"],
+        group: ["specialization"],
+      })
+      .then((category) => category.map((cat) => cat.specialization));
 
-    const response = await models.doctor.findAll({
-      attributes: ['specialization'],
-      group: ['specialization']
-    }).then((category) => category.map((cat) => cat.specialization))
-
-    res.status(200).send(response)
+    res.status(200).send(response);
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -333,7 +404,7 @@ async function getDoctorsByCategory(req, res) {
 
 async function getSingleDoctor(req, res) {
   const { id } = req.query;
-  console.log(id)
+  console.log(id);
   try {
     const response = await models.doctor.findOne({
       where: {
@@ -354,7 +425,8 @@ async function getSingleDoctor(req, res) {
 async function getPublicScheduleDatesOfDoctor(req, res) {
   const { doctorId } = req.query;
   try {
-    const response = await models.slot.findAll({
+    const response = await models.slot
+      .findAll({
         where: {
           doctorId: doctorId,
           slotStatus: "available",
@@ -371,7 +443,7 @@ async function getPublicScheduleDatesOfDoctor(req, res) {
 
 async function getTimeSlotsOfDoctor(req, res) {
   const { doctorId, slotDate } = req.query;
-  console.log(doctorId, slotDate)
+  console.log(doctorId, slotDate);
   try {
     const response = await models.slot.findAll({
       where: {
@@ -401,5 +473,5 @@ module.exports = {
   getDoctorsByCategory,
   getSingleDoctor,
   getPublicScheduleDatesOfDoctor,
-  getTimeSlotsOfDoctor
+  getTimeSlotsOfDoctor,
 };

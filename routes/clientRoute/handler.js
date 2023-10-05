@@ -13,7 +13,6 @@ async function getAllPets(req, res) {
       },
     });
     res.status(200).send(pets);
-
   } catch (error) {
     console.log(error.message);
   }
@@ -90,15 +89,14 @@ async function deletePet(req, res) {
 
 async function getMyAppoinments(req, res) {
   const { id } = req.query;
+  console.log(id);
   try {
-    const appoinments = await models.Appoinment.findAll({
+    const appoinments = await models.Appointment.findAll({
       where: {
-        clientId: id,
+        client_id: id,
       },
     });
-    res.status(200).json({
-      appoinments,
-    });
+    res.status(200).send(appoinments);
   } catch (error) {
     console.log(error.message);
   }
@@ -106,14 +104,38 @@ async function getMyAppoinments(req, res) {
 
 async function getAppoinment(req, res) {
   const { id } = req.query;
+  console.log(id);
   try {
-    const appoinment = await models.Appoinment.findOne({
+    const appoinment = await models.Appointment.findOne({
       where: {
-        appoinmentId: id,
+        appointmentId: id,
       },
     });
-    res.status(200).json({
+
+    const pet = await models.Pet.findOne({
+      where: {
+        petId: appoinment.petId,
+      },
+    });
+
+    const doctor = await models.doctor.findOne({
+      where: {
+        doctorId: appoinment.doctorId,
+      },
+    });
+
+    const doctorUser = await models.users.findOne({
+      where: {
+        userId: doctor.user_id,
+      },
+    });
+
+
+    res.status(200).send({
       appoinment,
+      doctorUser,
+      pet,
+
     });
   } catch (error) {
     console.log(error.message);
@@ -121,13 +143,33 @@ async function getAppoinment(req, res) {
 }
 
 async function createAppoinment(req, res) {
-  const data = req.body;
+  const { data } = req.body;
+  const { doctorId } = data;
+  const { slotId } = data;
+  const _slotId = parseInt(slotId);
+  const id = parseInt(doctorId);
+  data["doctorId"] = id;
+  data["slotId"] = _slotId;
+
+  console.log(data);
   try {
-    const newAppoinment = await models.Appoinment.create(data);
-    res.status(200).json({
-      message: "Appoinment added successfully",
-      appoinment: newAppoinment,
+    const newAppoinment = await models.Appointment.create({
+      ...data,
+      appointmentStatus: "pending",
+      paymentStatus: "pending",
     });
+
+    const slot = await models.slot.findOne({
+      where: {
+        slotId: _slotId,
+      },
+    });
+
+    await slot.update({
+      slotStatus: "Unavailable",
+    });
+
+    res.status(200).send(newAppoinment);
   } catch (error) {
     console.log(error.message);
   }
@@ -230,13 +272,19 @@ async function getClient(req, res) {
       where: {
         clientId: id,
       },
-      
-      include:[
+
+      include: [
         {
           model: models.users,
-          attributes: ['firstName', 'lastName', 'phoneNumber', 'address', 'userName']
-        }
-      ]
+          attributes: [
+            "firstName",
+            "lastName",
+            "phoneNumber",
+            "address",
+            "userName",
+          ],
+        },
+      ],
     });
     res.status(200).json({
       client,

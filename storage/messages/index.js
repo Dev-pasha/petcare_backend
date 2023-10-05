@@ -22,8 +22,9 @@ const getChatFromChatIdInStorage = async ({ chatId }) => {
             where: {
                 chatId: chatId
             }
+        
         })
-        return chatMessages;
+        return {chatMessages};
     } catch (error) {
         console.log(error.message);
         throw error.message;
