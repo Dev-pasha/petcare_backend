@@ -1,6 +1,8 @@
 const { models } = require("../../config/db");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const { createChatInStorage } = require("../../storage/chat");
+const { addChatMessageInStorage } = require("../../storage/messages");
 const secretKey = "hakoonamatata";
 const saltRounds = 10;
 
@@ -130,12 +132,10 @@ async function getAppoinment(req, res) {
       },
     });
 
-
     res.status(200).send({
       appoinment,
       doctorUser,
       pet,
-
     });
   } catch (error) {
     console.log(error.message);
@@ -145,13 +145,16 @@ async function getAppoinment(req, res) {
 async function createAppoinment(req, res) {
   const { data } = req.body;
   const { doctorId } = data;
+  const { clientId } = data;
   const { slotId } = data;
   const _slotId = parseInt(slotId);
   const id = parseInt(doctorId);
+  const _clientId = parseInt(clientId);
   data["doctorId"] = id;
   data["slotId"] = _slotId;
 
   console.log(data);
+
   try {
     const newAppoinment = await models.Appointment.create({
       ...data,
@@ -168,6 +171,72 @@ async function createAppoinment(req, res) {
     await slot.update({
       slotStatus: "Unavailable",
     });
+
+
+    const doctor = await models.doctor.findOne({
+      where: {
+        doctorId: id,
+      },
+      include: [
+        {
+          model: models.users,
+          attributes: [
+            "userId",
+            "firstName",
+            "lastName",
+          ],
+        }
+      ]
+    });
+
+    console.log('doctor', doctor.user.userId)
+
+
+    const client = await models.client.findOne({
+      where: {
+        clientId: _clientId,
+      },
+      include: [
+        {
+          model: models.users,
+          attributes: [
+            "userId",
+            "firstName",
+            "lastName",
+          ],
+        }
+      ]
+    });
+
+    console.log('client', client.user.userId)
+    let clientName = `${client.user.firstName} ${client.user.lastName}`;
+    let docName = `${doctor.user.firstName} ${doctor.user.lastName}`;
+    console.log('clientName', clientName)
+    console.log('docName', docName)
+
+
+    const chatCreated = await createChatInStorage({
+      senderId: client.user.userId,
+      receiverId: doctor.user.userId,
+    });
+
+    const chatId = chatCreated.chatId;
+
+    const intiateTextToDoc = await addChatMessageInStorage({
+      chatId,
+      senderId: client.user.userId,
+      message: `Hi, I am ${clientName}. I have booked an appointment with you on ${newAppoinment.appointmentDate} at ${newAppoinment.appointmentTime}.`,
+    });
+
+    console.log("intiateTextToDoc success");
+
+    const intiateTextToClient = await addChatMessageInStorage({
+      chatId,
+      senderId: doctor.user.userId,
+      message: `Thanks for booking an appointment with us. I am ${docName}. I will be available on ${newAppoinment.appointmentDate} at ${newAppoinment.appointmentTime}. `,
+    });
+
+    console.log("intiateTextToClient success");
 
     res.status(200).send(newAppoinment);
   } catch (error) {

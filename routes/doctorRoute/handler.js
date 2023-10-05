@@ -260,6 +260,8 @@ async function getSingleAppointmentOfDoctor(req, res) {
       },
     });
 
+    console.log(appointmentResponse, pet, clientUser);
+
     res.status(200).send({
       appointmentResponse,
       pet,
