@@ -15,6 +15,9 @@ const {
   createReview,
   createClient,
   updateClient,
+  slotStatusPending,
+  slotStatusUnavailable,
+  slotStatusAvailable
 } = require("./handler");
 
 // router.use();
@@ -24,6 +27,11 @@ router.get("/get-pet", authenticateAndAuthorize("CLIENT"), getPet);
 router.post("/create-pet", authenticateAndAuthorize("CLIENT"), createPet);
 router.post("/update-pet", authenticateAndAuthorize("CLIENT"), updatePet);
 router.get("/delete-pet", authenticateAndAuthorize("CLIENT"), deletePet);
+
+// slots working 
+router.get("/slot-status-pending", authenticateAndAuthorize("CLIENT"), slotStatusPending);
+router.get("/slot-status-unavailable", authenticateAndAuthorize("CLIENT"), slotStatusUnavailable);
+router.get("/slot-status-available", authenticateAndAuthorize("CLIENT"), slotStatusAvailable);
 
 router.get(
   "/get-my-appoinments",

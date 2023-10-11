@@ -6,25 +6,34 @@ const saltRounds = 10; // Number of salt rounds for bcrypt
 
 async function getAllDoctors(req, res) {
   try {
-    const doctors = await models.Doctor.findAll();
-    res.status(200).json({
-      response: doctors,
+    const doctors = await models.doctor.findAll({
+      include: [
+        {
+          model: models.users,
+        },
+      ],
     });
+    res.status(200).send(doctors);
   } catch (error) {
     console.log(error.message);
   }
 }
 
 async function getSingleDoctor(req, res) {
+  const { id } = req.query;
   try {
-    const doctor = await models.Doctor.findOne({
+    console.log(id);
+    const doctor = await models.doctor.findOne({
       where: {
-        id: req.params.id,
+        doctorId: id,
       },
+      include: [
+        {
+          model: models.users,
+        },
+      ],
     });
-    res.status(200).json({
-      response: doctor,
-    });
+    res.status(200).send(doctor);
   } catch (error) {
     console.log(error.message);
   }
@@ -32,35 +41,131 @@ async function getSingleDoctor(req, res) {
 
 async function getAllclients(req, res) {
   try {
-    const clients = await models.Client.findAll();
-    res.status(200).json({
-      response: clients,
+    const clients = await models.client.findAll({
+      include: [
+        {
+          model: models.users,
+        },
+      ],
     });
+    res.status(200).send(clients);
   } catch (error) {
     console.log(error.message);
   }
 }
 
 async function getSingleClient(req, res) {
+  const { id } = req.query;
   try {
-    const client = await models.Client.findOne({
+    const client = await models.client.findOne({
       where: {
-        id: req.params.id,
+        clientId: id,
       },
+      include: [
+        {
+          model: models.users,
+        },
+      ],
     });
-    res.status(200).json({
-      response: client,
-    });
+
+    res.status(200).send({ client });
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+async function getAllAppointmentsOfAdmin(req, res) {
+  try {
+    const appointments = await models.Appointment.findAll();
+    res.status(200).send(appointments)
   } catch (error) {
     console.log(error.message);
   }
 }
 
 async function getAllAppointments(req, res) {
+  const { id } = req.query;
+  let _id = parseInt(id);
+  console.log("id", id);
   try {
-    const appointments = await models.Appointment.findAll();
-    res.status(200).json({
-      response: appointments,
+    const appoint = await models.Appointment.findAll({
+      where: {
+        doctorId: _id,
+      },
+    });
+
+
+    console.log("appoint", appoint)
+    res.status(200).send(
+      appoint,
+    );
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+async function getSingleAppointment(req, res) {
+  const { id } = req.query;
+  console.log("id recived", id);
+  try {
+    const appoint = await models.Appointment.findOne({
+      where: {
+        appointmentId: id,
+      },
+    });
+
+    const clientId = appoint.clientId;
+    const doctorId = appoint.doctorId;
+    const petId = appoint.petId;
+    const slotId = appoint.slotId;
+
+    console.log("clientId", clientId);
+    console.log("doctorId", doctorId);
+    console.log("petId", petId);
+    console.log("slotId", slotId);
+
+    const client = await models.client.findOne({
+      where: {
+        clientId: clientId,
+      },
+      include: [
+        {
+          model: models.users,
+          attributes: ["firstName", "lastName", "email"],
+        },
+      ],
+    });
+
+    const doctor = await models.doctor.findOne({
+      where: {
+        doctorId: doctorId,
+      },
+      include: [
+        {
+          model: models.users,
+          attributes: ["firstName", "lastName", "email"],
+        },
+      ],
+    });
+
+    const pet = await models.Pet.findOne({
+      where: {
+        pet_id: petId,
+      },
+    });
+
+    const slot = await models.slot.findOne({
+      where: {
+        slotId: slotId,
+      },
+    });
+
+    res.status(200).send({
+      appoint,
+      client,
+      doctor,
+      pet,
+      slot,
     });
   } catch (error) {
     console.log(error.message);
@@ -83,19 +188,88 @@ async function getAllAppointmentsOfDoctorById(req, res) {
 }
 
 async function getAllAppointmentsOfClientById(req, res) {
+  const { id } = req.query
+  console.log('appointmentClient', id)
   try {
     const appointments = await models.Appointment.findAll({
       where: {
-        clientId: req.params.id,
+        clientId: id,
       },
     });
-    res.status(200).json({
-      response: appointments,
-    });
+    res.status(200).send(appointments)
   } catch (error) {
     console.log(error.message);
   }
 }
+
+async function getSingleAppointmentById(req, res) {
+  // const { id } = req.query;
+  // console.log("id recived", id);
+  // try {
+  //   const appoint = await models.Appointment.findOne({
+  //     where: {
+  //       appointmentId: id,
+  //     },
+  //   });
+
+  //   const clientId = appoint.clientId;
+  //   const doctorId = appoint.doctorId;
+  //   const petId = appoint.petId;
+  //   const slotId = appoint.slotId;
+
+  //   console.log("clientId", clientId);
+  //   console.log("doctorId", doctorId);
+  //   console.log("petId", petId);
+  //   console.log("slotId", slotId);
+
+  //   const client = await models.client.findOne({
+  //     where: {
+  //       clientId: clientId,
+  //     },
+  //     include: [
+  //       {
+  //         model: models.users,
+  //         attributes: ["firstName", "lastName", "email"],
+  //       },
+  //     ],
+  //   });
+
+  //   const doctor = await models.doctor.findOne({
+  //     where: {
+  //       doctorId: doctorId,
+  //     },
+  //     include: [
+  //       {
+  //         model: models.users,
+  //         attributes: ["firstName", "lastName", "email"],
+  //       },
+  //     ],
+  //   });
+
+  //   const pet = await models.Pet.findOne({
+  //     where: {
+  //       pet_id: petId,
+  //     },
+  //   });
+
+  //   const slot = await models.slot.findOne({
+  //     where: {
+  //       slotId: slotId,
+  //     },
+  //   });
+
+  //   res.status(200).send({
+  //     appoint,
+  //     client,
+  //     doctor,
+  //     pet,
+  //     slot,
+  //   });
+  // } catch (error) {
+  //   console.log(error.message);
+  // }
+}
+
 
 async function getAllPets(req, res) {
   try {
@@ -111,30 +285,28 @@ async function getAllPets(req, res) {
 }
 
 async function getAllPetsOfClientById(req, res) {
+  const { id } = req.query;
   try {
     const pets = await models.Pet.findAll({
       where: {
-        clientId: req.params.id,
+        clientId: id,
       },
     });
-    res.status(200).json({
-      response: pets,
-    });
+    res.status(200).send(pets);
   } catch (error) {
     console.log(error.message);
   }
 }
 
 async function getSinglePet(req, res) {
+  const { id } = req.query;
   try {
     const pet = await models.Pet.findOne({
       where: {
-        id: req.params.id,
+        pet_id: id,
       },
     });
-    res.status(200).json({
-      response: pet,
-    });
+    res.status(200).send(pet)
   } catch (error) {
     console.log(error.message);
   }
@@ -190,8 +362,6 @@ async function createAdmin(req, res) {
         // token: token,
       });
     } else {
-
-
       const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
       userData.password = hashedPassword;
 
@@ -252,9 +422,70 @@ async function reviewApproval(req, res) {
   }
 }
 
-async function getAllPayments(req, res) {}
+async function createDoctor(req, res) {
+  let { doctor } = req.body;
+  console.log("data", doctor);
+  let existingUser;
+  let user;
+  try {
+    existingUser = await models.users.findOne({
+      where: {
+        email: doctor.email,
+      },
+    });
+    if (existingUser) {
+      console.log("user already exists");
 
-async function getAllPaymentsOfClientById(req, res) {}
+      const token = jwt.sign(
+        {
+          email: existingUser.email,
+          id: existingUser.id,
+        },
+        secretKey,
+        {
+          expiresIn: "1h",
+        }
+      );
+
+      doctor = await models.doctor.create({
+        ...doctor.doctor,
+      });
+      await existingUser.setDoctor(doctor);
+
+      res.status(200).json({
+        user: existingUser,
+        // token: token,
+        doctor: doctor,
+      });
+    } else {
+      const hashedPassword = await bcrypt.hash(doctor.password, saltRounds);
+      doctor.password = hashedPassword;
+
+      console.log("user data", existingUser);
+      user = await models.users.create({
+        ...doctor,
+      });
+      doctor = await models.doctor.create({
+        ...doctor.doctor,
+      });
+
+      await user.setDoctor(doctor);
+
+      res.status(200).json({
+        user: user,
+        // token: token,
+        doctor: doctor,
+      });
+    }
+  } catch (error) {
+    console.log(error.message);
+    throw error.message;
+  }
+}
+
+async function getAllPayments(req, res) { }
+
+async function getAllPaymentsOfClientById(req, res) { }
 module.exports = {
   getAllDoctors,
   getSingleDoctor,
@@ -272,4 +503,8 @@ module.exports = {
   reviewApproval,
   getAllPayments,
   getAllPaymentsOfClientById,
+  getSingleAppointment,
+  createDoctor,
+  getSingleAppointmentById,
+  getAllAppointmentsOfAdmin
 };

@@ -363,6 +363,94 @@ async function getClient(req, res) {
   }
 }
 
+async function slotStatusPending(req, res) {
+  console.log('slot pending', req.query)
+  const { slotId } = req.query;
+  console.log('slot pending', slotId)
+
+  if (!slotId) {
+    return res.status(400).send({
+      message: "Slot id is required",
+    });
+  }
+
+  try {
+    const exsistngSlot = await models.slot.findOne({
+      where: {
+        slot_id: slotId,
+      },
+    });
+
+    const slot = await exsistngSlot.update({
+      slotStatus: "Pending",
+    });
+
+    console.log(slot);
+
+    res.status(200).send(slot);
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+async function slotStatusUnavailable(req, res) {
+  console.log('slot unavailable', req.query)
+  const { slotId } = req.query;
+  console.log('slot unavailable', slotId)
+
+  if (!slotId) {
+    return res.status(400).send({
+      message: "Slot id is required",
+    });
+  }
+
+  try {
+    const exsistingSlot = await models.slot.findOne({
+      where: {
+        slot_id: slotId,
+      },
+    });
+
+    const slot = await exsistingSlot.update({
+      slotStatus: "Unavailable",
+    });
+
+    res.status(200).send(slot);
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+async function slotStatusAvailable(req, res) {
+  console.log('slot available', req.query)
+  const { slotId } = req.query;
+  console.log('slot available', slotId)
+
+  if (!slotId) {
+    return res.status(400).send({
+      message: "Slot id is required",
+    });
+  }
+
+  try {
+    const exsistingSlot = await models.slot.findOne({
+      where: {
+        slot_id: slotId,
+      },
+    });
+
+    const slot = await exsistingSlot.update({
+      slotStatus: "Available",
+    });
+
+    res.status(200).send(slot);
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+
+
 module.exports = {
   getAllPets,
   getPet,
@@ -376,4 +464,8 @@ module.exports = {
   createClient,
   updateClient,
   getClient,
+  // slots working
+  slotStatusPending,
+  slotStatusUnavailable,
+  slotStatusAvailable
 };

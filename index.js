@@ -29,6 +29,7 @@ const chatMessageRoute = require("./routes/chatMessage");
 const adminRoute = require("./routes/adminRoute");
 const clientRoute = require("./routes/clientRoute");
 const doctorRoute = require("./routes/doctorRoute");
+const paymentRoute = require("./routes/paymentRoute");
 
 const server = http.createServer(app);
 
@@ -44,6 +45,7 @@ app.use("/api", petAppointmentRoute);
 app.use("/api", slotRoute);
 app.use("/api", chatRoute);
 app.use("/api", chatMessageRoute);
+app.use("/api", paymentRoute);
 
 const PORT = process.env.PORT || 5000;
 
