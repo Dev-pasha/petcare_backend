@@ -36,6 +36,14 @@ const attributes = {
       key: "doctor_id",
     },
   },
+  slotId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: "slot",
+      key: "slot_id",
+    },
+  },
 
   appointmentDate: {
     type: DataTypes.DATE,
@@ -44,6 +52,7 @@ const attributes = {
   },
   appointmentTime: {
     type: DataTypes.TIME,
+    
     allowNull: false,
     field: "appointment_time",
   },

@@ -105,7 +105,7 @@ const define = () => {
 };
 
 const associate = ({ client, Pet, Appointment, PetAppointment }) => {
-  Pet.belongsTo(client, { foreignKey: "client_id" });
+  Pet.belongsTo(client, { foreignKey: "clientId" });
 
   Pet.hasMany(Appointment, {
     foreignKey: "appointmentId",

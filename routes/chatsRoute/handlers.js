@@ -13,11 +13,13 @@ async function getChatsOfUser(req, res) {
     const { userId } = req.query;
     try {
         const chats = await getChatsOfUserFromStorage({userId});
-        res.status(200).json(chats);
+        res.status(200).send(chats);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).send({ message: error.message });
     }
 }
+
+
 
 // async function getSingleChat(req, res) {
 //     try {

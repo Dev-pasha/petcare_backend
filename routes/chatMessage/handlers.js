@@ -3,7 +3,6 @@ const { addChatMessageInStorage , getChatFromChatIdInStorage} = require('../../s
 
 async function addChatMessage(req, res) {
     const { chatId, senderId, message } = req.body;
-    console.log(req.body);
     try {
         const newMessage = await addChatMessageInStorage({
             chatId,
@@ -11,10 +10,7 @@ async function addChatMessage(req, res) {
             message
         })
         // console.log(newMessage);
-        res.status(200).json({
-            message: "Message added successfully",
-            newMessage
-        });
+        res.status(200).send(newMessage);
 
     } catch (error) {
         console.log(error.message);
@@ -25,10 +21,7 @@ async function getChatFromChatId(req, res) {
     const { chatId } = req.query;
     try {
         const chatMessages = await getChatFromChatIdInStorage({ chatId });
-        res.status(200).json({
-            message: "Chat messages fetched successfully",
-            chatMessages
-        })
+        res.status(200).send(chatMessages);
     } catch (error) {
         console.log(error.message);
     }

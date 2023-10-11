@@ -1,3 +1,5 @@
+const jwt = require('jsonwebtoken');
+
 function verifyToken(token) {
     let secretKey = 'hakonamatata';
     try {
@@ -8,24 +10,27 @@ function verifyToken(token) {
     }
 }
 
-function authenticateAndAuthorize(allowedRoles) {
+
+function authenticateAndAuthorize(userType) {
+
     return (req, res, next) => {
         const token = req.headers.authorization; // Get the token from the request header
+        // console.log(token);
 
         if (!token) {
-            return res.status(401).json({ message: "Unauthorized: Token missing" });
+            return res.status(401).json({ message: 'Unauthorized: Token missing' });
         }
 
         // Verify the token
         const decoded = verifyToken(token);
 
         if (!decoded) {
-            return res.status(401).json({ message: "Unauthorized: Invalid token" });
+            return res.status(401).json({ message: 'Unauthorized: Invalid token' });
         }
 
-        // Check if the user's role is allowed
-        if (!allowedRoles.includes(decoded.userType)) {
-            return res.status(403).json({ message: "Forbidden: Access denied" });
+        // Check user type
+        if (decoded.userType !== userType) {
+            return res.status(403).json({ message: 'Forbidden: Access denied' });
         }
 
         // Store user information in the request for further use

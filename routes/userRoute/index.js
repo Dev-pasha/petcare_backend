@@ -6,6 +6,8 @@ const {
   getSingleProfile,
   updateProfile,
   deleteProfile,
+  getUsers,
+  getUser
 } = require("./handlers");
 
 router.post("/createProfile", createProfile);
@@ -13,6 +15,9 @@ router.get("/getProfiles", getProfiles);
 router.get("/getSingleProfile", getSingleProfile);
 router.put("/updateProfile", updateProfile);
 router.get("/deleteProfile", deleteProfile);
+
+router.get('/getUsers',getUsers)
+router.get('/getUser',getUser)
 
 
 
