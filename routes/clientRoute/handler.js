@@ -159,7 +159,7 @@ async function createAppoinment(req, res) {
     const newAppoinment = await models.Appointment.create({
       ...data,
       appointmentStatus: "pending",
-      paymentStatus: "pending",
+      paymentStatus: "success",
     });
 
     const slot = await models.slot.findOne({
@@ -172,7 +172,6 @@ async function createAppoinment(req, res) {
       slotStatus: "Unavailable",
     });
 
-
     const doctor = await models.doctor.findOne({
       where: {
         doctorId: id,
@@ -180,17 +179,12 @@ async function createAppoinment(req, res) {
       include: [
         {
           model: models.users,
-          attributes: [
-            "userId",
-            "firstName",
-            "lastName",
-          ],
-        }
-      ]
+          attributes: ["userId", "firstName", "lastName"],
+        },
+      ],
     });
 
-    console.log('doctor', doctor.user.userId)
-
+    console.log("doctor", doctor.user.userId);
 
     const client = await models.client.findOne({
       where: {
@@ -199,21 +193,16 @@ async function createAppoinment(req, res) {
       include: [
         {
           model: models.users,
-          attributes: [
-            "userId",
-            "firstName",
-            "lastName",
-          ],
-        }
-      ]
+          attributes: ["userId", "firstName", "lastName"],
+        },
+      ],
     });
 
-    console.log('client', client.user.userId)
+    console.log("client", client.user.userId);
     let clientName = `${client.user.firstName} ${client.user.lastName}`;
     let docName = `${doctor.user.firstName} ${doctor.user.lastName}`;
-    console.log('clientName', clientName)
-    console.log('docName', docName)
-
+    console.log("clientName", clientName);
+    console.log("docName", docName);
 
     const chatCreated = await createChatInStorage({
       senderId: client.user.userId,
@@ -258,8 +247,8 @@ async function createReview(req, res) {
 }
 
 async function createClient(req, res) {
-  const data = req.body;
-  console.log(data);
+  const { data } = req.body;
+  // console.log(data);
   let userData = data;
   let existingUser;
   let user;
@@ -288,9 +277,11 @@ async function createClient(req, res) {
       });
       await existingUser.setClient(client);
 
-      res.status(200).json({
-        existingUser: existingUser,
-        client: client,
+      res.json({
+        message: "User already exists and client created successfully",
+        status: 200,
+        // existingUser: existingUser,
+        // client: client,
         // token: token,
       });
     } else {
@@ -305,9 +296,11 @@ async function createClient(req, res) {
       });
       await user.setClient(client);
 
-      res.status(200).json({
-        user: user,
-        client: client,
+      res.json({
+        status: 200,
+        message: "User with client profile created successfully",
+        // user: user,
+        // client: client,
       });
     }
   } catch (error) {
@@ -364,9 +357,9 @@ async function getClient(req, res) {
 }
 
 async function slotStatusPending(req, res) {
-  console.log('slot pending', req.query)
+  console.log("slot pending", req.query);
   const { slotId } = req.query;
-  console.log('slot pending', slotId)
+  console.log("slot pending", slotId);
 
   if (!slotId) {
     return res.status(400).send({
@@ -394,9 +387,9 @@ async function slotStatusPending(req, res) {
 }
 
 async function slotStatusUnavailable(req, res) {
-  console.log('slot unavailable', req.query)
+  console.log("slot unavailable", req.query);
   const { slotId } = req.query;
-  console.log('slot unavailable', slotId)
+  console.log("slot unavailable", slotId);
 
   if (!slotId) {
     return res.status(400).send({
@@ -422,9 +415,9 @@ async function slotStatusUnavailable(req, res) {
 }
 
 async function slotStatusAvailable(req, res) {
-  console.log('slot available', req.query)
+  console.log("slot available", req.query);
   const { slotId } = req.query;
-  console.log('slot available', slotId)
+  console.log("slot available", slotId);
 
   if (!slotId) {
     return res.status(400).send({
@@ -449,8 +442,6 @@ async function slotStatusAvailable(req, res) {
   }
 }
 
-
-
 module.exports = {
   getAllPets,
   getPet,
@@ -467,5 +458,5 @@ module.exports = {
   // slots working
   slotStatusPending,
   slotStatusUnavailable,
-  slotStatusAvailable
+  slotStatusAvailable,
 };

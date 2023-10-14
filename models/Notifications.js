@@ -11,13 +11,13 @@ const attributes = {
     allowNull: false,
     comment: "Notification Id",
   },
-  usersId: {
+  userId: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    field: "id",
+    field: "user_id",
     references: {
       model: "users",
-      key: "id",
+      key: "user_id",
     },
   },
 
@@ -75,7 +75,7 @@ const define = () => {
 
 const associate = ({ users, Notification }) => {
   Notification.belongsTo(users, {
-    foreignKey: "id",
+    foreignKey: "user_id",
   });
 };
 

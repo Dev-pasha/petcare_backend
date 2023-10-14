@@ -151,17 +151,12 @@ const associate = ({
   });
 
   
-  // users.hasMany(Chats, {
-  //   foreignKey: "receiverId",
-  //   onDelete: "CASCADE",
-  //   onUpdate: "CASCADE",
-  // });
 
-  // users.hasMany(Notification, {
-  //   foreignKey: "id",
-  //   onDelete: "CASCADE",
-  //   onUpdate: "CASCADE",
-  // });
+  users.hasMany(Notification, {
+    foreignKey: "user_id",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
 };
 
 module.exports = { modelName, attributes, options, define, associate };
