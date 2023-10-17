@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { createChatInStorage } = require("../../storage/chat");
 const { addChatMessageInStorage } = require("../../storage/messages");
+const { createNotificationFromStorage } = require("../../storage/notification");
 const secretKey = "hakoonamatata";
 const saltRounds = 10;
 
@@ -153,7 +154,7 @@ async function createAppoinment(req, res) {
   data["doctorId"] = id;
   data["slotId"] = _slotId;
 
-  console.log(data);
+  // console.log(data);
 
   try {
     const newAppoinment = await models.Appointment.create({
@@ -227,6 +228,25 @@ async function createAppoinment(req, res) {
 
     console.log("intiateTextToClient success");
 
+    // notifications to doctor and admin
+    const notificationBodyForDoc = {
+      actionType: "appointment",
+      message: `New appointment booked by ${clientName} on ${newAppoinment.appointmentDate} at ${newAppoinment.appointmentTime}.`,
+      userId: doctor.user.userId,
+      isRead: false,
+    }
+    const notificationToDoctor = await createNotificationFromStorage({ body: notificationBodyForDoc });
+    console.log("notificationToDoctor success");
+
+    const notificationBodyForAdmin = {
+      actionType: "appointment",
+      message: `New appointment booked by ${clientName} on ${newAppoinment.appointmentDate} at ${newAppoinment.appointmentTime}. with ${docName}`,
+      userId: 1,
+      isRead: false,
+    }
+    const notificationToAdmin = await createNotificationFromStorage({ body: notificationBodyForAdmin });
+    console.log("notificationToAdmin success");
+
     res.status(200).send(newAppoinment);
   } catch (error) {
     console.log(error.message);
@@ -277,6 +297,16 @@ async function createClient(req, res) {
       });
       await existingUser.setClient(client);
 
+      // notification for admin 
+      const notificationBodyForAdmin = {
+        actionType: "client_signup",
+        message: `New client signed up with email ${existingUser.email}`,
+        userId: 1,
+        isRead: false,
+      }
+      const notificationToAdmin = await createNotificationFromStorage({ body: notificationBodyForAdmin });
+      console.log("client signup notification sent to admin successfully");
+
       res.json({
         message: "User already exists and client created successfully",
         status: 200,
@@ -295,6 +325,15 @@ async function createClient(req, res) {
         ...userData.client,
       });
       await user.setClient(client);
+
+      const notificationBodyForAdmin = {
+        actionType: "client_signup",
+        message: `New client signed up with email ${user.email}`,
+        userId: 1,
+        isRead: false,
+      }
+      const notificationToAdmin = await createNotificationFromStorage({ body: notificationBodyForAdmin });
+      console.log("client signup notification sent to admin successfully");
 
       res.json({
         status: 200,

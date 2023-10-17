@@ -1,4 +1,10 @@
 const socketIO = require("socket.io");
+const {
+  addUser,
+  removeUser,
+  getUserSocket,
+  getUsers,
+} = require("./utils");
 
 function initializeSocket(server) {
   const io = socketIO(server, {
@@ -7,39 +13,39 @@ function initializeSocket(server) {
     },
   });
 
-  let users = []; // Use an array for user management
+  // let users = []; // Use an array for user management
 
-  function addUser(userId, socketId) {
-    users.push({ userId, socketId });
-  }
+  // const addUser = (userId, socketId) => {
+  //   users.push({ userId, socketId });
+  // }
 
-  function removeUser(userId) {
-    users = users.filter((user) => user.userId !== userId);
-  }
+  // const removeUser = (userId) => {
+  //   users = users.filter((user) => user.userId !== userId);
+  // }
 
-  function getUserSocket(userId) {
-    const user = users.find((user) => user.userId === userId);
-    console.log("user:", user);
-    console.log("users:", users);
-    return user ? user.socketId : null;
-  }
+  // const getUserSocket = (userId) => {
+  //   const user = users.find((user) => user.userId === userId);
+  //   console.log("user:", user);
+  //   console.log("users:", users);
+  //   return user ? user.socketId : null;
+  // }
 
   io.on("connection", (socket) => {
     console.log(`User connected with socket ID: ${socket.id}`);
 
     socket.on("addUser", (userId) => {
-      addUser(userId, socket.id);
+      addUser({ userId, socketId: socket.id });
       console.log(`User with ID ${userId} joined`);
-      io.emit("getUsers", users.map((user) => user.userId)); // Send an array of connected user IDs
+      io.emit("getUsers", getUsers().map((user) => user.userId)); // Send an array of connected user IDs
     });
 
     socket.on("send-message", async ({ senderId, receiverId, text }) => {
       receiverId = parseInt(receiverId);
-      // console.log("Received message from senderId:", senderId);
-      // console.log("for receiverId:", receiverId);
-      // console.log("with text:", text);
+      console.log("Received message from senderId:", senderId);
+      console.log("for receiverId:", receiverId);
+      console.log("with text:", text);
 
-      const receiverSocketId = getUserSocket(receiverId);
+      const receiverSocketId = getUserSocket({ userId: receiverId });
       console.log("receiverSocketId:", receiverSocketId);
       if (receiverSocketId) {
         // console.log("true");
@@ -57,11 +63,11 @@ function initializeSocket(server) {
     socket.on("disconnect", () => {
       console.log(`User with socket ID ${socket.id} disconnected`);
 
-      const disconnectedUserId = users.find((user) => user.socketId === socket.id)?.userId;
+      const disconnectedUserId = getUsers().find((user) => user.socketId === socket.id)?.userId;
       if (disconnectedUserId) {
-        removeUser(disconnectedUserId);
+        removeUser({ userId: disconnectedUserId });
 
-        io.emit("getUsers", users.map((user) => user.userId));
+        io.emit("getUsers", getUsers().map((user) => user.userId));
         console.log(`User with ID ${disconnectedUserId} disconnected`);
       }
     });
