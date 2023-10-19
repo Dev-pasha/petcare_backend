@@ -215,7 +215,7 @@ async function createAppoinment(req, res) {
     const intiateTextToDoc = await addChatMessageInStorage({
       chatId,
       senderId: client.user.userId,
-      message: `Hi, I am ${clientName}. I have booked an appointment with you on ${newAppoinment.appointmentDate} at ${newAppoinment.appointmentTime}.`,
+      message: `Hi, I am ${clientName}. I have booked an appointment with you on ${new Date(newAppoinment.appointmentDate)} at ${newAppoinment.appointmentTime}.`,
     });
 
     console.log("intiateTextToDoc success");
@@ -223,7 +223,7 @@ async function createAppoinment(req, res) {
     const intiateTextToClient = await addChatMessageInStorage({
       chatId,
       senderId: doctor.user.userId,
-      message: `Thanks for booking an appointment with us. I am ${docName}. I will be available on ${newAppoinment.appointmentDate} at ${newAppoinment.appointmentTime}. `,
+      message: `Thanks for booking an appointment with us. I am ${docName}. I will be available on ${new Date(newAppoinment.appointmentDate)} at ${newAppoinment.appointmentTime}. `,
     });
 
     console.log("intiateTextToClient success");
@@ -231,7 +231,7 @@ async function createAppoinment(req, res) {
     // notifications to doctor and admin
     const notificationBodyForDoc = {
       actionType: "appointment",
-      message: `New appointment booked by ${clientName} on ${newAppoinment.appointmentDate} at ${newAppoinment.appointmentTime}.`,
+      message: `New appointment booked by ${clientName} on ${new Date(newAppoinment.appointmentDate)} at ${newAppoinment.appointmentTime}.`,
       userId: doctor.user.userId,
       isRead: false,
     }
@@ -240,7 +240,7 @@ async function createAppoinment(req, res) {
 
     const notificationBodyForAdmin = {
       actionType: "appointment",
-      message: `New appointment booked by ${clientName} on ${newAppoinment.appointmentDate} at ${newAppoinment.appointmentTime}. with ${docName}`,
+      message: `New appointment booked by ${clientName} on ${new Date(newAppoinment.appointmentDate)} at ${newAppoinment.appointmentTime}. with ${docName}`,
       userId: 1,
       isRead: false,
     }

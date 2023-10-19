@@ -11,7 +11,11 @@ const { initializeSocket } = require("./socket");
 initModels();
 
 // Middleware
-app.use(cors());
+app.use(cors(
+  {
+    origin: "*"
+  }
+));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
@@ -30,7 +34,7 @@ const adminRoute = require("./routes/adminRoute");
 const clientRoute = require("./routes/clientRoute");
 const doctorRoute = require("./routes/doctorRoute");
 const paymentRoute = require("./routes/paymentRoute");
-
+const notificationRoute = require("./routes/notificationRoute");
 const server = http.createServer(app);
 
 app.use("/api", authRoute);
@@ -46,6 +50,8 @@ app.use("/api", slotRoute);
 app.use("/api", chatRoute);
 app.use("/api", chatMessageRoute);
 app.use("/api", paymentRoute);
+app.use("/api", notificationRoute);
+
 
 const PORT = process.env.PORT || 5000;
 

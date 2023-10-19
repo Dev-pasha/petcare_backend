@@ -1,8 +1,8 @@
 let users = []; // Use an array for user management
 
 const addUser = ({userId, socketId}) => {
-    // console.log('add user maen user id:', userId)
-    // console.log('add user maen socket id:', socketId)
+    console.log('add user maen user id:', userId)
+    console.log('add user maen socket id:', socketId)
     users.push({ userId, socketId });
 }
 

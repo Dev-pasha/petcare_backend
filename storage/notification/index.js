@@ -1,12 +1,19 @@
 const { models } = require("../../config/db");
 
-const getNotificationsFromStorage = async (id) => {
+const getNotificationsFromStorage = async ({id}) => {
   try {
     const notifications = await models.Notification.findAll({
       where: {
         userId: id,
-        isRead: false,
+        isRead: false
+
       },
+      include : [
+        {
+          model: models.users,
+          attributes: ["firstName", "lastName"],
+        }
+      ]
     });
     return notifications;
   } catch (error) {
@@ -36,17 +43,18 @@ const createNotificationFromStorage = async ({body}) => {
   }
 };
 
-const updateNotificationFromStorage = async (id, body) => {
+const updateNotificationFromStorage = async ({id}) => {
   try {
     const notification = await models.Notification.findOne({
       where: {
-        id,
+        id: id,
       },
     });
 
     const updateStatus = await notification.update({
       isRead: true,
     });
+    console.log("updateStatus", updateStatus)
 
     return updateStatus;
   } catch (error) {
@@ -71,10 +79,34 @@ const deleteNotificationFromStorage = async (id) => {
   }
 };
 
+
+const updateStatusNotificationFromStorage = async ({id}) => {
+  try {
+
+    console.log("id", id)
+    const notification = await models.Notification.findOne({
+      where: {
+        id: id,
+      },
+    });
+
+    // console.log("notification", notification)
+    const updateStatus = await notification.update({
+      isRead: false,
+    });
+    // console.log("updateStatus", updateStatus)
+
+    return updateStatus;
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   getNotificationsFromStorage,
   getNotificationFromStorage,
   createNotificationFromStorage,
   updateNotificationFromStorage,
   deleteNotificationFromStorage,
+  updateStatusNotificationFromStorage
 };

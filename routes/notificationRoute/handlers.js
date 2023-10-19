@@ -5,6 +5,7 @@ const {
     createNotificationFromStorage,
     updateNotificationFromStorage,
     deleteNotificationFromStorage,
+    updateStatusNotificationFromStorage
 
 } = require('../../storage/notification/index');
 
@@ -12,8 +13,9 @@ const {
 
 async function getNotifications(req, res) {
     const { id } = req.query;
+    console.log('id', id)
     try {
-        const notifications = await getNotificationsFromStorage(id);
+        const notifications = await getNotificationsFromStorage({id});
         res.status(200).send(notifications);
 
     } catch (error) {
@@ -49,8 +51,9 @@ async function createNotification(req, res) {
 async function updateNotification(req, res) {
     // const { body } = req;
     const { id } = req.query;
+    console.log('id of update ', id)
     try {
-        const notification = await updateNotificationFromStorage(id);
+        const notification = await updateNotificationFromStorage({id});
         res.status(200).send(notification);
 
     } catch (error) {
@@ -71,6 +74,17 @@ async function deleteNotification(req, res) {
     }
 }
 
+async function statusChangeNotification(req, res) {
+    const { id } = req.query;
+    try {
+        const notification = await updateStatusNotificationFromStorage({id});
+        res.status(200).send(notification);
+
+    } catch (error) {
+        res.status(500).send(error.message);
+
+    }
+}
 
 module.exports = {
     getNotifications,
@@ -78,4 +92,5 @@ module.exports = {
     createNotification,
     updateNotification,
     deleteNotification,
+    statusChangeNotification
 }

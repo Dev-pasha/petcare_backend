@@ -6,13 +6,15 @@ const {
   getNotification,
   createNotification,
   updateNotification,
+  statusChangeNotification,
   deleteNotification,
 } = require("./handlers");
 
+router.get('/statusCange', statusChangeNotification)
 router.get("/notifications", getNotifications);
 router.get("/notifications/:id", getNotification);
 router.post("/notifications", createNotification);
-router.put("/notifications/:id", updateNotification);
+router.get("/notifications-update", updateNotification);
 router.delete("/notifications/:id", deleteNotification);
 
 module.exports = router;

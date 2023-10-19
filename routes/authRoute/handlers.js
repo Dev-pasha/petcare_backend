@@ -105,6 +105,8 @@ function generateToken(userId, userType) {
     userId,
     userType,
   };
+
+  console.log('payload:', payload)
   return jwt.sign(payload, secretKey, { expiresIn: "5h" }); // Token expires in 1 hour
 }
 

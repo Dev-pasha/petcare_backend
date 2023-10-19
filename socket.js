@@ -60,6 +60,33 @@ function initializeSocket(server) {
       }
     });
 
+
+    socket.on('send-notification',
+      ({ senderId, receiverId, text, type }) => {
+        receiverId = parseInt(receiverId);
+        console.log("Received notification from senderId:", senderId);
+        console.log("for receiverId:", receiverId);
+        console.log("with text:", text);
+        // console.log("with type:", type);
+
+        const receiverSocketId = getUserSocket({ userId: receiverId });
+        console.log("receiverSocketId:", receiverSocketId);
+        if (receiverSocketId) {
+          // console.log("true");
+          io.to(receiverSocketId).emit("get-notification", {
+            senderId,
+            text,
+          });
+          console.log(`Notification sent to user with ID ${receiverId}`);
+        } else {
+          console.log("false");
+          console.log(`User with ID ${receiverId} is not online`);
+        }
+      }
+    );
+
+
+
     socket.on("disconnect", () => {
       console.log(`User with socket ID ${socket.id} disconnected`);
 

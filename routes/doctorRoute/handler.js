@@ -7,6 +7,25 @@ const saltRounds = 10;
 async function createScheduleOfDoctor(req, res) {
 
   const { slotDate, startTime, endTime, doctorId } = req.body;
+
+  let convertedSlotDate = slotDate + ' 05:00:00+05'
+  console.log({ slotDate, startTime, endTime, doctorId });
+
+  // 
+  const exsistanceSlot = await models.slot.findOne({
+    where: {
+      slotDate: convertedSlotDate,
+      doctorId: doctorId,
+    },
+  });
+
+  if (exsistanceSlot) {
+    console.log("slot already exists");
+    res.status(400).send("slot already exists");
+    return;
+  }
+
+  // 
   let intervalMinutes = 30;
   let scheduleResponse;
   slotStatus = "available";
@@ -214,7 +233,7 @@ async function getAllAppointmentsOfDoctor(req, res) {
       where: {
         doctorId: id,
         appointmentStatus: "cancelled",
-      },  
+      },
     });
 
     res.status(200).send({
@@ -379,6 +398,7 @@ async function doctorByCategories(req, res) {
       })
       .then((category) => category.map((cat) => cat.specialization));
 
+    // console.log('response in category', response)
     res.status(200).send(response);
   } catch (error) {
     res.status(500).send(error.message);
