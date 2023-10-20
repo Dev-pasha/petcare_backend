@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const { createChatInStorage } = require("../../storage/chat");
 const { addChatMessageInStorage } = require("../../storage/messages");
 const { createNotificationFromStorage } = require("../../storage/notification");
+const { sendEmail } = require("../../jobs/node-mailer-service");
 const secretKey = "hakoonamatata";
 const saltRounds = 10;
 
@@ -246,6 +247,21 @@ async function createAppoinment(req, res) {
     }
     const notificationToAdmin = await createNotificationFromStorage({ body: notificationBodyForAdmin });
     console.log("notificationToAdmin success");
+
+
+    // email to doctor
+    await sendEmail({
+      email: doctor.user.email,
+      subject: "New Appointment",
+      text: `New appointment booked by ${clientName} on ${new Date(newAppoinment.appointmentDate)} at ${newAppoinment.appointmentTime}.`,
+    });
+
+    // email to client
+    await sendEmail({
+      email: client.user.email,
+      subject: "Appointment Booked",
+      text: `Thanks for booking an appointment with PetCare 365. Your appointment is booked with ${docName} on ${new Date(newAppoinment.appointmentDate)} at ${newAppoinment.appointmentTime}. `,
+    });
 
     res.status(200).send(newAppoinment);
   } catch (error) {

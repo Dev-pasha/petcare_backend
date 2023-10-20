@@ -1,11 +1,13 @@
 const express = require("express");
 const app = express();
+const cron = require('node-cron');
 var http = require('http');
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const sequalize = require("./config/db");
 require("dotenv").config({ path: "./config/.env" });
 const { initModels } = require("./models/index");
+const { pendingSlotToAvailableCronJob, initateAppointmentReminderCron } = require("./jobs/appointment-jobs");
 const { initializeSocket } = require("./socket");
 
 initModels();
@@ -53,6 +55,12 @@ app.use("/api", paymentRoute);
 app.use("/api", notificationRoute);
 
 
+// cron jobs
+pendingSlotToAvailableCronJob.start();
+// initateAppointmentReminderCron.start();
+
+
+
 const PORT = process.env.PORT || 5000;
 
 const io = initializeSocket(server);
@@ -73,4 +81,4 @@ server.listen(PORT, () => {
 
 
 
-module.exports = { app, io };
+module.exports = { app, io, cron };
