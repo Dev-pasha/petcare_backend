@@ -20,7 +20,7 @@ const getChatsOfUserFromStorage = async ({ userId }) => {
             include: [
                 {
                     model: models.ChatMessage,
-                    attributes: ['message', 'createdAt'],
+                    attributes: ['message', 'createdAt', 'sender'],
                     order: [['createdAt', 'DESC']],
                     limit: 1
                 },

@@ -1,14 +1,33 @@
 const { models } = require("../../config/db");
 
-const getNotificationsFromStorage = async ({id}) => {
+const getNotificationsFromStorage = async ({ id, actionType }) => {
   try {
+
+    if(!actionType){
+      const notifications = await models.Notification.findAll({
+        where: {
+          userId: id,
+          isRead: false,
+        },
+        include: [
+          {
+            model: models.users,
+            attributes: ["firstName", "lastName"],
+          }
+        ]
+      });
+      return notifications;
+    }
+
     const notifications = await models.Notification.findAll({
       where: {
         userId: id,
-        isRead: false
+        isRead: false,
+        actionType: actionType
+
 
       },
-      include : [
+      include: [
         {
           model: models.users,
           attributes: ["firstName", "lastName"],
@@ -34,7 +53,7 @@ const getNotificationFromStorage = async (id) => {
   }
 };
 
-const createNotificationFromStorage = async ({body}) => {
+const createNotificationFromStorage = async ({ body }) => {
   try {
     const notification = await models.Notification.create(body);
     return notification;
@@ -43,7 +62,7 @@ const createNotificationFromStorage = async ({body}) => {
   }
 };
 
-const updateNotificationFromStorage = async ({id}) => {
+const updateNotificationFromStorage = async ({ id }) => {
   try {
     const notification = await models.Notification.findOne({
       where: {
@@ -80,7 +99,7 @@ const deleteNotificationFromStorage = async (id) => {
 };
 
 
-const updateStatusNotificationFromStorage = async ({id}) => {
+const updateStatusNotificationFromStorage = async ({ id }) => {
   try {
 
     console.log("id", id)

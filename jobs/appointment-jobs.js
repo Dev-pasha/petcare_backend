@@ -2,6 +2,7 @@ const cron = require("node-cron");
 const {
   updatePendingSlotsStatus,
   fetchAppointments,
+  deleteMessagesNotifications
 } = require("./appointment-service");
 
 const { sendEmail } = require("./node-mailer-service");
@@ -56,7 +57,12 @@ var initateAppointmentReminderCron = cron.schedule("0 */12 * * *", async () => {
 });
 
 
+var initiateMessageNotificationDeleteCron = cron.schedule("0 */12 * * *", async () => {
+   await deleteMessagesNotifications();
+});
+
 module.exports = {
   pendingSlotToAvailableCronJob,
   initateAppointmentReminderCron,
+  initiateMessageNotificationDeleteCron
 };

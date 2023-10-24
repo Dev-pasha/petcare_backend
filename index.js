@@ -7,7 +7,7 @@ const bodyParser = require("body-parser");
 const sequalize = require("./config/db");
 require("dotenv").config({ path: "./config/.env" });
 const { initModels } = require("./models/index");
-const { pendingSlotToAvailableCronJob, initateAppointmentReminderCron } = require("./jobs/appointment-jobs");
+const { pendingSlotToAvailableCronJob, initateAppointmentReminderCron,initiateMessageNotificationDeleteCron } = require("./jobs/appointment-jobs");
 const { initializeSocket } = require("./socket");
 
 initModels();
@@ -57,7 +57,8 @@ app.use("/api", notificationRoute);
 
 // cron jobs
 pendingSlotToAvailableCronJob.start();
-// initateAppointmentReminderCron.start();
+initateAppointmentReminderCron.start();
+initiateMessageNotificationDeleteCron.start();
 
 
 

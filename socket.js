@@ -13,22 +13,6 @@ function initializeSocket(server) {
     },
   });
 
-  // let users = []; // Use an array for user management
-
-  // const addUser = (userId, socketId) => {
-  //   users.push({ userId, socketId });
-  // }
-
-  // const removeUser = (userId) => {
-  //   users = users.filter((user) => user.userId !== userId);
-  // }
-
-  // const getUserSocket = (userId) => {
-  //   const user = users.find((user) => user.userId === userId);
-  //   console.log("user:", user);
-  //   console.log("users:", users);
-  //   return user ? user.socketId : null;
-  // }
 
   io.on("connection", (socket) => {
     console.log(`User connected with socket ID: ${socket.id}`);
@@ -36,7 +20,7 @@ function initializeSocket(server) {
     socket.on("addUser", (userId) => {
       addUser({ userId, socketId: socket.id });
       console.log(`User with ID ${userId} joined`);
-      io.emit("getUsers", getUsers().map((user) => user.userId)); // Send an array of connected user IDs
+      io.emit("getUsers", getUsers().map((user) => user.userId)); 
     });
 
     socket.on("send-message", async ({ senderId, receiverId, text }) => {

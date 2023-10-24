@@ -13,7 +13,7 @@ const {
 router.get('/statusCange', statusChangeNotification)
 router.get("/notifications", getNotifications);
 router.get("/notifications/:id", getNotification);
-router.post("/notifications", createNotification);
+router.post("/notification-create", createNotification);
 router.get("/notifications-update", updateNotification);
 router.delete("/notifications/:id", deleteNotification);
 

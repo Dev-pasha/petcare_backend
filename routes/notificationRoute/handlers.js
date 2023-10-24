@@ -12,10 +12,11 @@ const {
 
 
 async function getNotifications(req, res) {
-    const { id } = req.query;
+    const { id, actionType } = req.query;
     console.log('id', id)
+    console.log('actionType', actionType)
     try {
-        const notifications = await getNotificationsFromStorage({id});
+        const notifications = await getNotificationsFromStorage({ id, actionType });
         res.status(200).send(notifications);
 
     } catch (error) {
@@ -37,7 +38,7 @@ async function getNotification(req, res) {
 }
 
 async function createNotification(req, res) {
-    const { body } = req.query;
+    const { body } = req.body;
     try {
         const notification = await createNotificationFromStorage({ body: body });
         res.status(200).send(notification);
@@ -53,7 +54,7 @@ async function updateNotification(req, res) {
     const { id } = req.query;
     console.log('id of update ', id)
     try {
-        const notification = await updateNotificationFromStorage({id});
+        const notification = await updateNotificationFromStorage({ id });
         res.status(200).send(notification);
 
     } catch (error) {
@@ -77,7 +78,7 @@ async function deleteNotification(req, res) {
 async function statusChangeNotification(req, res) {
     const { id } = req.query;
     try {
-        const notification = await updateStatusNotificationFromStorage({id});
+        const notification = await updateStatusNotificationFromStorage({ id });
         res.status(200).send(notification);
 
     } catch (error) {
