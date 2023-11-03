@@ -1,4 +1,7 @@
 const socketIO = require("socket.io");
+const { addUser, removeUser, getUserSocket, getUsers } = require("./utils");
+
+
 
 function initializeSocket(server) {
   const io = socketIO(server, {
@@ -7,39 +10,64 @@ function initializeSocket(server) {
     },
   });
 
-  let users = []; // Use an array for user management
 
-  function addUser(userId, socketId) {
-    users.push({ userId, socketId });
-  }
+  const emailToSocketIdMap = new Map();
+  const socketidToEmailMap = new Map();
 
-  function removeUser(userId) {
-    users = users.filter((user) => user.userId !== userId);
-  }
-
-  function getUserSocket(userId) {
-    const user = users.find((user) => user.userId === userId);
-    console.log("user:", user);
-    console.log("users:", users);
-    return user ? user.socketId : null;
-  }
 
   io.on("connection", (socket) => {
     console.log(`User connected with socket ID: ${socket.id}`);
 
+    // implementation of video call
+    socket.on("room:join", (data) => {
+      console.log("room:join", data);
+      const { email, roomId } = data;
+      emailToSocketIdMap.set(email, socket.id);
+      socketidToEmailMap.set(socket.id, email);
+      io.to(roomId).emit("user:joined", { email, id: socket.id });
+      socket.join(roomId);
+      io.to(socket.id).emit("room:join", data);
+    });
+
+    socket.on("user:call", ({ to, offer }) => {
+      io.to(to).emit("incomming:call", { from: socket.id, offer });
+    });
+
+    socket.on("call:accepted", ({ to, ans }) => {
+      io.to(to).emit("call:accepted", { from: socket.id, ans });
+    });
+
+    socket.on("peer:nego:needed", ({ to, offer }) => {
+      // console.log("peer:nego:needed", offer);
+      io.to(to).emit("peer:nego:needed", { from: socket.id, offer });
+    });
+
+    socket.on("peer:nego:done", ({ to, ans }) => {
+      // console.log("peer:nego:done", ans);
+      io.to(to).emit("peer:nego:final", { from: socket.id, ans });
+    });
+
+    socket.on("call:cancel", ({ to }) => {
+      io.to(to).emit("call:cancel", { message: "call is disconnected" });
+    });
+
+   
     socket.on("addUser", (userId) => {
-      addUser(userId, socket.id);
+      addUser({ userId, socketId: socket.id });
       console.log(`User with ID ${userId} joined`);
-      io.emit("getUsers", users.map((user) => user.userId)); // Send an array of connected user IDs
+      io.emit(
+        "getUsers",
+        getUsers().map((user) => user.userId)
+      );
     });
 
     socket.on("send-message", async ({ senderId, receiverId, text }) => {
       receiverId = parseInt(receiverId);
-      // console.log("Received message from senderId:", senderId);
-      // console.log("for receiverId:", receiverId);
-      // console.log("with text:", text);
+      console.log("Received message from senderId:", senderId);
+      console.log("for receiverId:", receiverId);
+      console.log("with text:", text);
 
-      const receiverSocketId = getUserSocket(receiverId);
+      const receiverSocketId = getUserSocket({ userId: receiverId });
       console.log("receiverSocketId:", receiverSocketId);
       if (receiverSocketId) {
         // console.log("true");
@@ -54,14 +82,41 @@ function initializeSocket(server) {
       }
     });
 
+    socket.on("send-notification", ({ senderId, receiverId, text, type }) => {
+      receiverId = parseInt(receiverId);
+      console.log("Received notification from senderId:", senderId);
+      console.log("for receiverId:", receiverId);
+      console.log("with text:", text);
+      // console.log("with type:", type);
+
+      const receiverSocketId = getUserSocket({ userId: receiverId });
+      console.log("receiverSocketId:", receiverSocketId);
+      if (receiverSocketId) {
+        // console.log("true");
+        io.to(receiverSocketId).emit("get-notification", {
+          senderId,
+          text,
+        });
+        console.log(`Notification sent to user with ID ${receiverId}`);
+      } else {
+        console.log("false");
+        console.log(`User with ID ${receiverId} is not online`);
+      }
+    });
+
     socket.on("disconnect", () => {
       console.log(`User with socket ID ${socket.id} disconnected`);
 
-      const disconnectedUserId = users.find((user) => user.socketId === socket.id)?.userId;
+      const disconnectedUserId = getUsers().find(
+        (user) => user.socketId === socket.id
+      )?.userId;
       if (disconnectedUserId) {
-        removeUser(disconnectedUserId);
+        removeUser({ userId: disconnectedUserId });
 
-        io.emit("getUsers", users.map((user) => user.userId));
+        io.emit(
+          "getUsers",
+          getUsers().map((user) => user.userId)
+        );
         console.log(`User with ID ${disconnectedUserId} disconnected`);
       }
     });

@@ -21,7 +21,8 @@ const {
     getAllPaymentsOfClientById,
     createDoctor,
     getSingleAppointment,
-    getSingleAppointmentById
+    getSingleAppointmentById,
+    deleteDoctor
 } = require("./handler");
 
 // router.use();
@@ -29,6 +30,7 @@ const {
 // GET
 // Routes operation for doctors 
 router.get('/get-all-doctors', authenticateAndAuthorize('ADMIN'), getAllDoctors);
+router.get('/delete-doctor', authenticateAndAuthorize('ADMIN'), deleteDoctor);
 router.get('/get-single-doctor', authenticateAndAuthorize('ADMIN'), getSingleDoctor);
 
 // Routes operation for clients

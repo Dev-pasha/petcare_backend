@@ -20,7 +20,7 @@ const getChatsOfUserFromStorage = async ({ userId }) => {
             include: [
                 {
                     model: models.ChatMessage,
-                    attributes: ['message', 'createdAt'],
+                    attributes: ['message', 'createdAt', 'sender'],
                     order: [['createdAt', 'DESC']],
                     limit: 1
                 },
@@ -39,6 +39,26 @@ const getChatsOfUserFromStorage = async ({ userId }) => {
 const createChatInStorage = async ({ senderId,
     receiverId }) => {
     try {
+
+        const exsistingChat = await models.Chats.findOne({
+            where: {
+                [Op.or]: [
+                    {
+                        userA: senderId,
+                        userB: receiverId
+                    },
+                    {
+                        userA: receiverId,
+                        userB: senderId
+                    }
+                ]
+            }
+        })
+
+        if (exsistingChat) {
+            return exsistingChat
+        }
+        
         const chat = await models.Chats.create({
             userA: senderId,
             userB: receiverId

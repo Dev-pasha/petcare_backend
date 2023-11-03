@@ -1,22 +1,25 @@
+let users = []; // Use an array for user management
 
-let users = []
 
-function addUser(userId, socketId) {
-    if (!users.some((user) => user.userId === userId)) {
-        users.push({ userId, socketId });
-    }
-    return users;
+const addUser = ({userId, socketId}) => {
+    console.log('add user maen user id:', userId)
+    console.log('add user maen socket id:', socketId)
+    users.push({ userId, socketId });
 }
 
-function removeUser(socketId) {
-    const index = users.findIndex((user) => user.socketId === socketId);
-    if (index !== -1) {
-        users.splice(index, 1);
-    }
+const removeUser = ({userId}) => {
+    console.log('remove user maen user id:', userId)
+    users = users.filter((user) => user.userId !== userId);
 }
 
-function getUserByUserId(userId) {
-    return users.find((user) => user.userId === userId);
+const getUserSocket = ({userId}) => {
+    console.log('get user maen user id:', userId)
+    const user = users.find((u) => u?.userId === userId);
+    console.log("user:", user);
+    console.log("users:", users);
+    return user ? user.socketId : null;
 }
-
-module.exports = { addUser, removeUser, getUserByUserId }
+ 
+module.exports = {
+    addUser, removeUser, getUserSocket, getUsers: () => users,
+};

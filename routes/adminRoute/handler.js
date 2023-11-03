@@ -483,6 +483,25 @@ async function createDoctor(req, res) {
   }
 }
 
+async function deleteDoctor(req, res) {
+  const { id } = req.query
+  try {
+
+    const doctor = await models.doctor.findOne({
+      where: {
+        doctorId: id,
+      },
+    })
+-
+    await doctor.destroy()
+
+    res.status(200).send({
+      message: 'doctor deleted'
+    })
+  } catch (error) {
+    console.log(error.message);
+  }
+}
 async function getAllPayments(req, res) { }
 
 async function getAllPaymentsOfClientById(req, res) { }
@@ -506,5 +525,6 @@ module.exports = {
   getSingleAppointment,
   createDoctor,
   getSingleAppointmentById,
-  getAllAppointmentsOfAdmin
+  getAllAppointmentsOfAdmin,
+  deleteDoctor,
 };

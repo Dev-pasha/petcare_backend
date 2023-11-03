@@ -30,7 +30,7 @@ const modelsDefiners = {
   users,
   
   // Payment,
-  // Notification,
+  Notification,
   // Review,
   // LiveSession,
 };

@@ -38,6 +38,12 @@ const attributes = {
     field: "experience",
   },
 
+  price: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    field: "price",
+  },
+
   joiningDate: {
     type: DataTypes.DATE,
     allowNull: true,

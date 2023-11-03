@@ -1,17 +1,23 @@
 const express = require("express");
 const app = express();
+const cron = require('node-cron');
 var http = require('http');
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const sequalize = require("./config/db");
 require("dotenv").config({ path: "./config/.env" });
 const { initModels } = require("./models/index");
+const { pendingSlotToAvailableCronJob, initateAppointmentReminderCron,initiateMessageNotificationDeleteCron } = require("./jobs/appointment-jobs");
 const { initializeSocket } = require("./socket");
 
 initModels();
 
 // Middleware
-app.use(cors());
+app.use(cors(
+  {
+    origin: "*"
+  }
+));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
@@ -30,7 +36,7 @@ const adminRoute = require("./routes/adminRoute");
 const clientRoute = require("./routes/clientRoute");
 const doctorRoute = require("./routes/doctorRoute");
 const paymentRoute = require("./routes/paymentRoute");
-
+const notificationRoute = require("./routes/notificationRoute");
 const server = http.createServer(app);
 
 app.use("/api", authRoute);
@@ -46,6 +52,15 @@ app.use("/api", slotRoute);
 app.use("/api", chatRoute);
 app.use("/api", chatMessageRoute);
 app.use("/api", paymentRoute);
+app.use("/api", notificationRoute);
+
+
+// cron jobs
+pendingSlotToAvailableCronJob.start();
+initateAppointmentReminderCron.start();
+initiateMessageNotificationDeleteCron.start();
+
+
 
 const PORT = process.env.PORT || 5000;
 
@@ -67,4 +82,4 @@ server.listen(PORT, () => {
 
 
 
-module.exports = { app, io };
+module.exports = { app, io, cron };

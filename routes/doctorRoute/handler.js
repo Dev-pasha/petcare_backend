@@ -1,12 +1,32 @@
 const { models } = require("../../config/db");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const { Op } = require("sequelize");
 const secretKey = "hakoonamatata";
 const saltRounds = 10;
 
 async function createScheduleOfDoctor(req, res) {
 
   const { slotDate, startTime, endTime, doctorId } = req.body;
+
+  let convertedSlotDate = slotDate + ' 05:00:00+05'
+  console.log({ slotDate, startTime, endTime, doctorId });
+
+  // 
+  const exsistanceSlot = await models.slot.findOne({
+    where: {
+      slotDate: convertedSlotDate,
+      doctorId: doctorId,
+    },
+  });
+
+  if (exsistanceSlot) {
+    console.log("slot already exists");
+    res.status(400).send("slot already exists");
+    return;
+  }
+
+  // 
   let intervalMinutes = 30;
   let scheduleResponse;
   slotStatus = "available";
@@ -43,9 +63,9 @@ async function createScheduleOfDoctor(req, res) {
 }
 
 async function updateScheduleOfDoctor(req, res) {
-  console.log(req.body);
-  const { slotId, slotStatus } = req.body;
-  console.log({ slotId, slotStatus });
+  const { slotId } = req.body;
+  console.log({ slotId });
+  let updatedSlot;
   try {
     const exsistingSlot = await models.slot.findOne({
       where: {
@@ -53,9 +73,22 @@ async function updateScheduleOfDoctor(req, res) {
       },
     });
 
-    const updatedSlot = await exsistingSlot.update({
-      slotStatus: slotStatus,
-    });
+    console.log(exsistingSlot.slotStatus)
+    if (exsistingSlot.slotStatus === "available") {
+      updatedSlot = await exsistingSlot.update({
+        slotStatus: "Unavailable",
+      });
+
+    }
+    else {
+      updatedSlot = await exsistingSlot.update({
+        slotStatus: "available",
+      });
+    }
+
+
+    console.log(updatedSlot);
+
     res.status(200).send(updatedSlot);
   } catch (error) {
     res.status(500).send(error.message);
@@ -69,7 +102,9 @@ async function getScheduleOfDoctor(req, res) {
       where: {
         doctorId: doctorId,
         slotDate: slotDate,
-        slotStatus: "available",
+        slotStatus: {
+          [Op.not]: "Pending"
+        }
       },
     });
     res.status(200).send(response);
@@ -214,7 +249,7 @@ async function getAllAppointmentsOfDoctor(req, res) {
       where: {
         doctorId: id,
         appointmentStatus: "cancelled",
-      },  
+      },
     });
 
     res.status(200).send({
@@ -379,6 +414,7 @@ async function doctorByCategories(req, res) {
       })
       .then((category) => category.map((cat) => cat.specialization));
 
+    // console.log('response in category', response)
     res.status(200).send(response);
   } catch (error) {
     res.status(500).send(error.message);
@@ -427,6 +463,9 @@ async function getSingleDoctor(req, res) {
 async function getPublicScheduleDatesOfDoctor(req, res) {
   const { doctorId } = req.query;
   try {
+    // Get the current date and time
+    const currentDate = new Date();
+
     const response = await models.slot
       .findAll({
         where: {
@@ -436,7 +475,13 @@ async function getPublicScheduleDatesOfDoctor(req, res) {
         attributes: ["slotDate"],
         group: ["slotDate"],
       })
-      .then((projects) => projects.map((project) => project.slotDate));
+      .then((projects) => {
+        // Filter out dates that are not in the past
+        return projects
+          .map((project) => project.slotDate)
+          .filter((slotDate) => new Date(slotDate) >= currentDate);
+      });
+
     res.status(200).send(response);
   } catch (error) {
     res.status(500).send(error.message);
@@ -459,6 +504,9 @@ async function getTimeSlotsOfDoctor(req, res) {
     res.status(500).send(error.message);
   }
 }
+
+
+
 
 module.exports = {
   createScheduleOfDoctor,
