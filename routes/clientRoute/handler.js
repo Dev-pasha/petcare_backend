@@ -323,6 +323,12 @@ async function createClient(req, res) {
       const notificationToAdmin = await createNotificationFromStorage({ body: notificationBodyForAdmin });
       console.log("client signup notification sent to admin successfully");
 
+      await sendEmail({
+        email: existingUser.email,
+        subject: "Welcome to PetCare 365",
+        text: `Hi ${existingUser.firstName}, Welcome to PetCare 365. We are glad to have you on board. We are here to help you with your pets. You can book an appointment with our doctors, view your appointments, view your pets and much more. `,
+      });
+
       res.json({
         message: "User already exists and client created successfully",
         status: 200,
@@ -350,6 +356,12 @@ async function createClient(req, res) {
       }
       const notificationToAdmin = await createNotificationFromStorage({ body: notificationBodyForAdmin });
       console.log("client signup notification sent to admin successfully");
+
+      await sendEmail({
+        email: user.email,
+        subject: "Welcome to PetCare 365",
+        text: `Hi ${user.firstName}, Welcome to PetCare 365. We are glad to have you on board. We are here to help you with your pets. You can book an appointment with our doctors, view your appointments, view your pets and much more. `,
+      });
 
       res.json({
         status: 200,
