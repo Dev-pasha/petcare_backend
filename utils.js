@@ -18,7 +18,7 @@ const getUserSocket = ({userId}) => {
     console.log("users:", users);
     return user ? user.socketId : null;
 }
-
+ 
 module.exports = {
     addUser, removeUser, getUserSocket, getUsers: () => users,
 };
