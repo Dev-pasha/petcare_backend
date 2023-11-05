@@ -17,7 +17,9 @@ const {
   updateClient,
   slotStatusPending,
   slotStatusUnavailable,
-  slotStatusAvailable
+  slotStatusAvailable,
+  createRequest
+
 } = require("./handler");
 
 // router.use();
@@ -53,5 +55,9 @@ router.post("/create-review", authenticateAndAuthorize("CLIENT"), createReview);
 router.post("/create-client", createClient);
 router.get('/get-client', authenticateAndAuthorize("CLIENT"), getClient )
 router.post("/update-client", authenticateAndAuthorize("CLIENT"), updateClient);
+
+// request route public
+
+router.post('/create-request', createRequest)
 
 module.exports = router;
