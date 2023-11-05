@@ -111,14 +111,14 @@
   },
   {
     "type": "ADMIN",
-    "userName": "michael124",
-    "firstName": "Michael",
-    "lastName": "Taylor",
-    "email": "michael.taylor@example.com",
-    "password": "hashed_password_21",
+    "userName": "abdullah123",
+    "firstName": "abdullah",
+    "lastName": "khalid",
+    "email": "365pet@yopmail.com",
+    "password": "qwer4321",
     "meta": {
       "age": 38,
-      "occupation": "Sales Manager"
+      "occupation": "admin"
     },
     "dateOfBirth": "1985-02-28",
     "gender": "Male",
@@ -126,8 +126,8 @@
     "phoneNumber": "321-987-6543",
     "registerDate": "2018-06-10",
     "admin": {
-      "adminRole": "Sales Director",
-      "notes": "Oversees sales team",
+      "adminRole": "Administator",
+      "notes": "Over all admin",
       "profilePicture": "https://example.com/profile-pics/sales_admin.jpg"
     }
   }
