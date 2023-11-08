@@ -602,6 +602,56 @@ async function createRequest(req, res) {
   }
 }
 
+async function getCategoryBlog(req, res) {
+  try {
+    const blogCategory = await models.blog
+      .findAll({
+        attributes: ["blogCategory"],
+        group: ["blogCategory"],
+      })
+      .then((category) => category.map((item) => item.blogCategory));
+    res.status(200).send(blogCategory);
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+async function getAllBlogsByCategory(req, res) {
+  const { blogCategory } = req.query;
+  try {
+    const blogs = await models.blog.findAll({
+      where: {
+        blogCategory: blogCategory,
+      },
+    });
+
+    if (blogs.length === 0) {
+      return res.status(200).send({
+        message: "No blogs found for this category"
+      })
+    }
+    res.status(200).send({ blogs });
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+async function getAllBlogs(req, res) { }
+
+async function getBlog(req, res) {
+  const { blogId } = req.query;
+  try {
+    const blog = await models.blog.findOne({
+      where: {
+        blogId: blogId,
+      },
+    });
+    res.status(200).send(blog);
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
 module.exports = {
   getAllPets,
   getPet,
@@ -620,4 +670,8 @@ module.exports = {
   slotStatusUnavailable,
   slotStatusAvailable,
   createRequest,
+  getAllBlogs,
+  getBlog,
+  getCategoryBlog,
+  getAllBlogsByCategory
 };

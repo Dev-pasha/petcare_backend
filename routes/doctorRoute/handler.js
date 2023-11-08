@@ -518,6 +518,7 @@ module.exports = {
   getAllAppointmentsOfDoctor,
   getSingleAppointmentOfDoctor,
   getScheduleDatesOfDoctor,
+  
   getSingleSlotOfDoctor,
   doctorByCategories,
   getDoctorsByCategory,
