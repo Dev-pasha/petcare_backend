@@ -1,4 +1,6 @@
 const { models } = require("../config/db");
+const { createNotificationFromStorage } = require("../storage/notification");
+const { sendEmail } = require("./node-mailer-service");
 
 async function updatePendingSlotsStatus() {
   try {
@@ -29,7 +31,7 @@ async function updatePendingSlotsStatus() {
   }
 }
 
-async function initiateExpiredAppointments() {}
+async function initiateExpiredAppointments() { }
 
 async function fetchAppointments(slotDate) {
   try {
@@ -105,8 +107,102 @@ async function deleteMessagesNotifications() {
   }
 }
 
+async function reminderService() {
+  try {
+    let currentDate = new Date().toISOString().split("T")[0];
+    currentDate = currentDate + " 05:00:00+05"
+
+    const appointments = await models.Appointment.findAll({
+      where: {
+        appointmentDate: currentDate,
+        appointmentStatus: "pending",
+      },
+    });
+
+    return appointments;
+  }
+  catch (error) {
+    return error.message
+  }
+}
+
+async function reminderNotification(doc, client) {
+  try {
+    const clientDetails = await models.client.findOne({
+      where: {
+        clientId: client
+      },
+      include: [
+        {
+          model: models.users,
+        },
+      ],
+    });
+
+    const doctorDetails = await models.doctor.findOne({
+      where: {
+        doctorId: doc
+      },
+      include: [
+        {
+          model: models.users,
+        },
+      ],
+    });
+
+    const notificationBodyForClient = {
+      actionType: "reminder",
+      message: "You have an appointment in the next few minutes with " + doctorDetails.user.firstName + " " + doctorDetails.user.lastName,
+      isRead: false,
+      userId: clientDetails.user.userId,
+    }
+
+    await createNotificationFromStorage(notificationBodyForClient)
+    sendEmail({
+      email: clientDetails.user.email,
+      subject: "Appointment Reminder",
+      text:
+        "You have an Appointment in the few minutes with " +
+        doctorDetails.user.firstName +
+        " " +
+        doctorDetails.user.lastName +
+        " at " +
+        appointment.appointmentTime,
+    })
+
+    const notificationBodyForDoctor = {
+      actionType: "reminder",
+      message: "You have an appointment in the next few minutes with " + clientDetails.user.firstName + " " + clientDetails.user.lastName,
+      isRead: false,
+      userId: doctorDetails.user.userId,
+    }
+
+    await createNotificationFromStorage(notificationBodyForDoctor)
+    sendEmail({
+      email: doctorDetails.user.email,
+      subject: "Appointment Reminder",
+      text:
+        "You have an Appointment in the few minutes with " +
+        clientDetails.user.firstName +
+        " " +
+        clientDetails.user.lastName +
+        " at " +
+        appointment.appointmentTime,
+    })
+    
+  } catch (error) {
+    console.log(error.message)
+    return error.message
+  }
+
+}
+
+
+
 module.exports = {
   updatePendingSlotsStatus,
   fetchAppointments,
   deleteMessagesNotifications,
+  reminderService,
+  reminderNotification
 };

@@ -443,6 +443,12 @@ async function createDoctor(req, res) {
       });
       await existingUser.setDoctor(doctor);
 
+      await sendEmail({
+        to: existingUser.email,
+        subject: "Doctor Approval",
+        text: "Your Request has been approved, Thanks for being a part of PetCare365. use your email and previous profile passowrd to login",
+      });
+
       res.status(200).json({
         user: existingUser,
         // token: token,
@@ -461,6 +467,12 @@ async function createDoctor(req, res) {
       });
 
       await user.setDoctor(doctor);
+
+      await sendEmail({
+        to: user.email,
+        subject: "Doctor Approval",
+        text: "Your Request has been approved, Thanks for being a part of PetCare365. use your email and password is" + doctor.password,
+      });
 
       res.status(200).json({
         user: user,
@@ -683,18 +695,22 @@ async function getStats(req, res) {
 }
 
 async function getAllNotifications(req, res) {
+  const { id } = req.query
   try {
     // client_signup
     const client_signup = await models.Notification.findAll({
       where: {
         actionType: "client_signup",
         isRead: false,
+        userId: id
       },
     });
     const client_signup_count = await models.Notification.count({
       where: {
         actionType: "client_signup",
         isRead: false,
+        userId: id
+
       },
     });
 
@@ -703,6 +719,8 @@ async function getAllNotifications(req, res) {
       where: {
         actionType: "appointment",
         isRead: false,
+        userId: id
+
       },
     });
 
@@ -710,6 +728,8 @@ async function getAllNotifications(req, res) {
       where: {
         actionType: "appointment",
         isRead: false,
+        userId: id
+
       },
     });
 
@@ -718,6 +738,8 @@ async function getAllNotifications(req, res) {
       where: {
         actionType: "request",
         isRead: false,
+        userId: id
+
       },
     });
 
@@ -725,6 +747,8 @@ async function getAllNotifications(req, res) {
       where: {
         actionType: "request",
         isRead: false,
+        userId: id
+
       },
     });
 
@@ -733,6 +757,8 @@ async function getAllNotifications(req, res) {
       where: {
         actionType: "new_doctor_request",
         isRead: false,
+        userId: id
+
       },
     });
 
@@ -740,6 +766,8 @@ async function getAllNotifications(req, res) {
       where: {
         actionType: "new_doctor_request",
         isRead: false,
+        userId: id
+
       },
     });
 
@@ -779,9 +807,9 @@ async function updateNotification(req, res) {
   }
 }
 
-async function getAllPayments(req, res) {}
+async function getAllPayments(req, res) { }
 
-async function getAllPaymentsOfClientById(req, res) {}
+async function getAllPaymentsOfClientById(req, res) { }
 module.exports = {
   getAllDoctors,
   getSingleDoctor,
