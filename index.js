@@ -32,6 +32,7 @@ app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 app.use(express.json({ limit: "50mb" }));
 app.use('/uploads/pet', express.static('uploads/pet'));
+app.use('/uploads/user', express.static('uploads/user'));
 
 
 
@@ -53,6 +54,11 @@ app.use('/uploads/pet', express.static('uploads/pet'));
 
 // const upload = multer({ dest : "uploads/images"})
 app.post("/api/uploadFile", multerConfig("pet").single("file"), (req, res) => {
+  console.log(req.file);
+  res.json({ file: req.file });
+});
+
+app.post("/api/uploadUserFile", multerConfig("user").single("file"), (req, res) => {
   console.log(req.file);
   res.json({ file: req.file });
 });

@@ -7,14 +7,12 @@ const fs = require('fs');
 const generateDynamicUploadFolder = (componentType) => {
   const componentFolder = `uploads/${componentType}`;
   let fullUploadPath = path.join(__dirname, componentFolder);
-  // fullUploadPath = fullUploadPath.replace(/\\/g, '/');
 
   // Create the directory if it doesn't exist
   if (!fs.existsSync(fullUploadPath)) {
     fs.mkdirSync(fullUploadPath, { recursive: true });
   }
 
-  // console.log(`Upload folder: ${componentFolder}`)
   return componentFolder;
 };
 
