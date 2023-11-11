@@ -40,6 +40,7 @@ async function createPet(req, res) {
   // console.log(req.body);
 
   let { pet } = req.body;
+  console.log(pet);
 
   let { petHeight, petWeight, petAge } = pet;
   parsepetHeight = parseInt(petHeight);
@@ -52,7 +53,7 @@ async function createPet(req, res) {
   console.log(pet);
   try {
     const newPet = await models.Pet.create(pet);
-    res.status(200).send(newPet);
+    res.send(200, newPet);
   } catch (error) {
     console.log(error.message);
   }
@@ -627,8 +628,8 @@ async function getAllBlogsByCategory(req, res) {
 
     if (blogs.length === 0) {
       return res.status(200).send({
-        message: "No blogs found for this category"
-      })
+        message: "No blogs found for this category",
+      });
     }
     res.status(200).send({ blogs });
   } catch (error) {
@@ -636,7 +637,7 @@ async function getAllBlogsByCategory(req, res) {
   }
 }
 
-async function getAllBlogs(req, res) { }
+async function getAllBlogs(req, res) {}
 
 async function getBlog(req, res) {
   const { blogId } = req.query;
@@ -673,5 +674,5 @@ module.exports = {
   getAllBlogs,
   getBlog,
   getCategoryBlog,
-  getAllBlogsByCategory
+  getAllBlogsByCategory,
 };

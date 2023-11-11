@@ -1,26 +1,63 @@
 const express = require("express");
 const app = express();
-const cron = require('node-cron');
-var http = require('http');
+const multer = require("multer");
+const cron = require("node-cron");
+var http = require("http");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const sequalize = require("./config/db");
 require("dotenv").config({ path: "./config/.env" });
 const { initModels } = require("./models/index");
-const { pendingSlotToAvailableCronJob, initateAppointmentReminderCron,initiateMessageNotificationDeleteCron, reminder } = require("./jobs/appointment-jobs");
+const {
+  multerConfig,
+  generateDynamicUploadFolder,
+} = require("./multerService");
+const {
+  pendingSlotToAvailableCronJob,
+  initateAppointmentReminderCron,
+  initiateMessageNotificationDeleteCron,
+  reminder,
+} = require("./jobs/appointment-jobs");
 const { initializeSocket } = require("./socket");
 
 initModels();
 
 // Middleware
-app.use(cors(
-  {
-    origin: "*"
-  }
-));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(
+  cors({
+    origin: "*",
+  })
+);
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
+app.use(express.json({ limit: "50mb" }));
+app.use('/uploads/pet', express.static('uploads/pet'));
+
+
+
+// multer
+
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     return cb(null, "./uploads/images");
+//   },
+
+//   filename: function (req, file, cb) {
+//     return cb(null, `${Date.now()}_${file.originalname}`);
+//   }
+
+// });
+
+// const upload = multer({ storage });
+
+
+// const upload = multer({ dest : "uploads/images"})
+app.post("/api/uploadFile", multerConfig("pet").single("file"), (req, res) => {
+  console.log(req.file);
+  res.json({ file: req.file });
+});
+
+
 
 // Routes
 const authRoute = require("./routes/authRoute");
@@ -42,7 +79,7 @@ const server = http.createServer(app);
 app.use("/api", authRoute);
 app.use("/api/admin", adminRoute);
 app.use("/api/client", clientRoute);
-app.use('/api/doctor', doctorRoute)
+app.use("/api/doctor", doctorRoute);
 app.use("/api", petRoute);
 app.use("/api", userRoute);
 app.use("/api", appointmentRoute);
@@ -54,19 +91,17 @@ app.use("/api", chatMessageRoute);
 app.use("/api", paymentRoute);
 app.use("/api", notificationRoute);
 
-
 // cron jobs
 pendingSlotToAvailableCronJob.start();
 initateAppointmentReminderCron.start();
 initiateMessageNotificationDeleteCron.start();
 reminder.start();
 
-
+// multer
 
 const PORT = process.env.PORT || 5000;
 
 const io = initializeSocket(server);
-
 
 server.listen(PORT, () => {
   sequalize
@@ -80,7 +115,5 @@ server.listen(PORT, () => {
     });
   console.log(`Server is running on port ${PORT}.`);
 });
-
-
 
 module.exports = { app, io, cron };
