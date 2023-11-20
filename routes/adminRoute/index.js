@@ -22,7 +22,18 @@ const {
     createDoctor,
     getSingleAppointment,
     getSingleAppointmentById,
-    deleteDoctor
+    deleteDoctor,
+    getAllRequests,
+    getSingleRequest,
+    updateStatus,
+    getAllBlogs,
+    getSingleBlog,
+    createBlog,
+    updateBlog,
+    deleteBlog,
+    getStats,
+    getAllNotifications,
+    updateNotification
 } = require("./handler");
 
 // router.use();
@@ -67,6 +78,8 @@ router.get('/get-all-reviews-of-doctor', authenticateAndAuthorize('ADMIN'), getA
 router.get('/get-all-payments', authenticateAndAuthorize('ADMIN'), getAllPayments);
 router.get('/get-all-payments-of-client', authenticateAndAuthorize('ADMIN'), getAllPaymentsOfClientById);
 
+// stats
+router.get('/get-stats', authenticateAndAuthorize('ADMIN'), getStats);
 
 // POST 
 
@@ -78,15 +91,25 @@ router.post('/doctor-approval', authenticateAndAuthorize('ADMIN'), doctorApprova
 router.post('/review-approval', authenticateAndAuthorize('ADMIN'), reviewApproval);
 
 // Routes to create Doctor
-
 router.post('/create-doctor', authenticateAndAuthorize('ADMIN'), createDoctor);
 
+// Route to update the status of Request
+router.get('/update-status', authenticateAndAuthorize('ADMIN'), updateStatus);
+router.get('/get-all-requests', authenticateAndAuthorize('ADMIN'), getAllRequests);
+router.get('/get-single-request', authenticateAndAuthorize('ADMIN'), getSingleRequest);
+
+// blog routes
+
+router.get('/get-all-blogs', getAllBlogs);
+router.get('/get-single-blog', getSingleBlog);
+router.post('/create-blog', authenticateAndAuthorize('ADMIN'), createBlog);
+router.post('/update-blog', authenticateAndAuthorize('ADMIN'), updateBlog);
+router.get('/delete-blog', authenticateAndAuthorize('ADMIN'), deleteBlog);
 
 
-
-
-
-
+// admin notifications
+router.get('/get-all-notifications', authenticateAndAuthorize('ADMIN'), getAllNotifications);
+router.get('/update-notification', authenticateAndAuthorize('ADMIN'), updateNotification);
 
 
 

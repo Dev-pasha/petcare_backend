@@ -112,6 +112,7 @@ const associate = ({
   client,
   doctor,
   support,
+  blog
 }) => {
   users.hasOne(doctor, {
     foreignKey: "user_id",

@@ -17,7 +17,13 @@ const {
   updateClient,
   slotStatusPending,
   slotStatusUnavailable,
-  slotStatusAvailable
+  slotStatusAvailable,
+  createRequest,
+  getAllBlogs,
+  getBlog,
+  getCategoryBlog,
+  getAllBlogsByCategory
+
 } = require("./handler");
 
 // router.use();
@@ -53,5 +59,16 @@ router.post("/create-review", authenticateAndAuthorize("CLIENT"), createReview);
 router.post("/create-client", createClient);
 router.get('/get-client', authenticateAndAuthorize("CLIENT"), getClient )
 router.post("/update-client", authenticateAndAuthorize("CLIENT"), updateClient);
+
+// request route public
+
+router.post('/create-request', createRequest)
+
+// public blog route
+
+router.get('/get-blog-category', getCategoryBlog)
+router.get('/get-all-blogs-by-category', getAllBlogsByCategory)
+router.get('/get-all-public-blogs', getAllBlogs)
+router.get('/get-single-blog', getBlog)
 
 module.exports = router;

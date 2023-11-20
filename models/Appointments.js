@@ -51,8 +51,7 @@ const attributes = {
     field: "appointment_date",
   },
   appointmentTime: {
-    type: DataTypes.TIME,
-    
+    type: DataTypes.STRING,
     allowNull: false,
     field: "appointment_time",
   },

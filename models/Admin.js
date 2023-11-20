@@ -67,11 +67,27 @@ const define = () => {
 
 const associate = ({
   users,
+  request,
   admin,
+  blog
   // Payment
 }) => {
+
   admin.belongsTo(users, {
     foreignKey: "user_id",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
+
+  admin.hasMany(request, {
+    foreignKey: "admin_id",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+   
+  });
+
+  admin.hasMany(blog, {
+    foreignKey: "admin_id",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   });

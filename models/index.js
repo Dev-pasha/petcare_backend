@@ -13,6 +13,8 @@ const ChatMessage = require("./ChatMessage");
 const Notification = require("./Notifications");
 const Review = require("./Reviews");
 const slot = require("./Slots");
+const blog = require("./blog");
+const request = require("./Request");
 // const LiveSession = require('./liveSession');
 const users = require("./Users");
 
@@ -28,6 +30,8 @@ const modelsDefiners = {
   Chats,
   ChatMessage,
   users,
+  blog,
+  request,
   
   // Payment,
   Notification,

@@ -2,13 +2,15 @@ const cron = require("node-cron");
 const {
   updatePendingSlotsStatus,
   fetchAppointments,
-  deleteMessagesNotifications
+  deleteMessagesNotifications,
+  reminderService,
+  reminderNotification
 } = require("./appointment-service");
 
 const { sendEmail } = require("./node-mailer-service");
 
 // cron for every 10 minutes
-var pendingSlotToAvailableCronJob = cron.schedule("*/10 * * * *", async () => {
+var pendingSlotToAvailableCronJob = cron.schedule("*/5 * * * *", async () => {
   await updatePendingSlotsStatus();
 });
 
@@ -58,11 +60,37 @@ var initateAppointmentReminderCron = cron.schedule("0 */12 * * *", async () => {
 
 
 var initiateMessageNotificationDeleteCron = cron.schedule("0 */12 * * *", async () => {
-   await deleteMessagesNotifications();
+  await deleteMessagesNotifications();
 });
+
+
+// master cron for daily appointment reminder before appointment time
+const masterCronSchedule = '0 0 * * *';
+var reminder = cron.schedule(masterCronSchedule, async () => {
+
+  const appointments = await reminderService();
+  appointments.foreach((time)=>{
+    const appointmentTimeList = time.appointmentTime
+    const doc = time.doctor_id;
+    const client = time.client_id;
+    const hours = appointmentTimeList.hours()
+    const minutes = appointmentTimeList.minutes()
+
+    const cronSchedule = `${minutes - 10} ${hours} * * *`;
+    const fiveMinutesBeforeAppointmentReminder = cron.schedule(cronSchedule, async () => {
+      await reminderNotification(doc, client);
+    })
+  })
+
+  console.log("cron job running at", new Date().toLocaleString("en-US", {
+    timeZone: "Asia/Karachi",
+  }));
+});
+
 
 module.exports = {
   pendingSlotToAvailableCronJob,
   initateAppointmentReminderCron,
-  initiateMessageNotificationDeleteCron
+  initiateMessageNotificationDeleteCron,
+  reminder
 };

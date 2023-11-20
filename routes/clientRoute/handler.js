@@ -40,6 +40,7 @@ async function createPet(req, res) {
   // console.log(req.body);
 
   let { pet } = req.body;
+  console.log(pet);
 
   let { petHeight, petWeight, petAge } = pet;
   parsepetHeight = parseInt(petHeight);
@@ -52,7 +53,7 @@ async function createPet(req, res) {
   console.log(pet);
   try {
     const newPet = await models.Pet.create(pet);
-    res.status(200).send(newPet);
+    res.send(200, newPet);
   } catch (error) {
     console.log(error.message);
   }
@@ -216,7 +217,9 @@ async function createAppoinment(req, res) {
     const intiateTextToDoc = await addChatMessageInStorage({
       chatId,
       senderId: client.user.userId,
-      message: `Hi, I am ${clientName}. I have booked an appointment with you on ${new Date(newAppoinment.appointmentDate)} at ${newAppoinment.appointmentTime}.`,
+      message: `Hi, I am ${clientName}. I have booked an appointment with you on ${new Date(
+        newAppoinment.appointmentDate
+      )} at ${newAppoinment.appointmentTime}.`,
     });
 
     console.log("intiateTextToDoc success");
@@ -224,7 +227,9 @@ async function createAppoinment(req, res) {
     const intiateTextToClient = await addChatMessageInStorage({
       chatId,
       senderId: doctor.user.userId,
-      message: `Thanks for booking an appointment with us. I am ${docName}. I will be available on ${new Date(newAppoinment.appointmentDate)} at ${newAppoinment.appointmentTime}. `,
+      message: `Thanks for booking an appointment with us. I am ${docName}. I will be available on ${new Date(
+        newAppoinment.appointmentDate
+      )} at ${newAppoinment.appointmentTime}. `,
     });
 
     console.log("intiateTextToClient success");
@@ -232,35 +237,46 @@ async function createAppoinment(req, res) {
     // notifications to doctor and admin
     const notificationBodyForDoc = {
       actionType: "appointment",
-      message: `New appointment booked by ${clientName} on ${new Date(newAppoinment.appointmentDate)} at ${newAppoinment.appointmentTime}.`,
+      message: `New appointment booked by ${clientName} on ${new Date(
+        newAppoinment.appointmentDate
+      )} at ${newAppoinment.appointmentTime}.`,
       userId: doctor.user.userId,
       isRead: false,
-    }
-    const notificationToDoctor = await createNotificationFromStorage({ body: notificationBodyForDoc });
+    };
+    const notificationToDoctor = await createNotificationFromStorage({
+      body: notificationBodyForDoc,
+    });
     console.log("notificationToDoctor success");
 
     const notificationBodyForAdmin = {
       actionType: "appointment",
-      message: `New appointment booked by ${clientName} on ${new Date(newAppoinment.appointmentDate)} at ${newAppoinment.appointmentTime}. with ${docName}`,
+      message: `New appointment booked by ${clientName} on ${new Date(
+        newAppoinment.appointmentDate
+      )} at ${newAppoinment.appointmentTime}. with ${docName}`,
       userId: 1,
       isRead: false,
-    }
-    const notificationToAdmin = await createNotificationFromStorage({ body: notificationBodyForAdmin });
+    };
+    const notificationToAdmin = await createNotificationFromStorage({
+      body: notificationBodyForAdmin,
+    });
     console.log("notificationToAdmin success");
-
 
     // email to doctor
     await sendEmail({
       email: doctor.user.email,
       subject: "New Appointment",
-      text: `New appointment booked by ${clientName} on ${new Date(newAppoinment.appointmentDate)} at ${newAppoinment.appointmentTime}.`,
+      text: `New appointment booked by ${clientName} on ${new Date(
+        newAppoinment.appointmentDate
+      )} at ${newAppoinment.appointmentTime}.`,
     });
 
     // email to client
     await sendEmail({
       email: client.user.email,
       subject: "Appointment Booked",
-      text: `Thanks for booking an appointment with PetCare 365. Your appointment is booked with ${docName} on ${new Date(newAppoinment.appointmentDate)} at ${newAppoinment.appointmentTime}. `,
+      text: `Thanks for booking an appointment with PetCare 365. Your appointment is booked with ${docName} on ${new Date(
+        newAppoinment.appointmentDate
+      )} at ${newAppoinment.appointmentTime}. `,
     });
 
     res.status(200).send(newAppoinment);
@@ -313,15 +329,23 @@ async function createClient(req, res) {
       });
       await existingUser.setClient(client);
 
-      // notification for admin 
+      // notification for admin
       const notificationBodyForAdmin = {
         actionType: "client_signup",
         message: `New client signed up with email ${existingUser.email}`,
         userId: 1,
         isRead: false,
-      }
-      const notificationToAdmin = await createNotificationFromStorage({ body: notificationBodyForAdmin });
+      };
+      const notificationToAdmin = await createNotificationFromStorage({
+        body: notificationBodyForAdmin,
+      });
       console.log("client signup notification sent to admin successfully");
+
+      await sendEmail({
+        email: existingUser.email,
+        subject: "Welcome to PetCare 365",
+        text: `Hi ${existingUser.firstName}, Welcome to PetCare 365. We are glad to have you on board. We are here to help you with your pets. You can book an appointment with our doctors, view your appointments, view your pets and much more. `,
+      });
 
       res.json({
         message: "User already exists and client created successfully",
@@ -347,9 +371,17 @@ async function createClient(req, res) {
         message: `New client signed up with email ${user.email}`,
         userId: 1,
         isRead: false,
-      }
-      const notificationToAdmin = await createNotificationFromStorage({ body: notificationBodyForAdmin });
+      };
+      const notificationToAdmin = await createNotificationFromStorage({
+        body: notificationBodyForAdmin,
+      });
       console.log("client signup notification sent to admin successfully");
+
+      await sendEmail({
+        email: user.email,
+        subject: "Welcome to PetCare 365",
+        text: `Hi ${user.firstName}, Welcome to PetCare 365. We are glad to have you on board. We are here to help you with your pets. You can book an appointment with our doctors, view your appointments, view your pets and much more. `,
+      });
 
       res.json({
         status: 200,
@@ -497,6 +529,130 @@ async function slotStatusAvailable(req, res) {
   }
 }
 
+// request function
+
+async function createRequest(req, res) {
+  const { data } = req.body;
+
+  if (data.requestType === "doctor_request") {
+    try {
+      const request = await models.request.create({
+        ...data,
+        requestStatus: "pending",
+        adminId: 1,
+      });
+
+      // notification for admin
+      const notificationBodyForAdmin = {
+        actionType: "new_doctor_request",
+        message: `New Joining Request by ${data.requestResourceName}`,
+        userId: 1,
+        isRead: false,
+      };
+
+      // email to requestor
+      await sendEmail({
+        email: data.requestResourceEmail,
+        subject: "Request Submitted",
+        text: `Hi ${data.requestResourceName},Thanks for showing your concerns to join PetCare 365.Your request has been submitted successfully. Administration will contact you as soon as possible. `,
+      });
+
+      const notificationToAdmin = await createNotificationFromStorage({
+        body: notificationBodyForAdmin,
+      });
+      console.log("request notification sent to admin successfully");
+
+      res.status(200).send(request);
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  if (data.requestType === "contact_query") {
+    try {
+      const request = await models.request.create({
+        ...data,
+        requestStatus: "pending",
+        adminId: 1,
+      });
+
+      // notification for admin
+      const notificationBodyForAdmin = {
+        actionType: "request",
+        message: `New request by ${data.requestResourceName}`,
+        userId: 1,
+        isRead: false,
+      };
+
+      // email to requestor
+      await sendEmail({
+        email: data.requestResourceEmail,
+        subject: "Request Submitted",
+        text: `Hi ${data.requestResourceName},Thanks for showing your concerns for PetCare 365.Your request has been submitted successfully. We will get back to you soon. `,
+      });
+
+      const notificationToAdmin = await createNotificationFromStorage({
+        body: notificationBodyForAdmin,
+      });
+      console.log("request notification sent to admin successfully");
+
+      res.status(200).send(request);
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+}
+
+async function getCategoryBlog(req, res) {
+  try {
+    const blogCategory = await models.blog
+      .findAll({
+        attributes: ["blogCategory"],
+        group: ["blogCategory"],
+      })
+      .then((category) => category.map((item) => item.blogCategory));
+    res.status(200).send(blogCategory);
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+async function getAllBlogsByCategory(req, res) {
+  const { blogCategory } = req.query;
+  try {
+    const blogs = await models.blog.findAll({
+      where: {
+        blogCategory: blogCategory,
+      },
+    });
+
+    if (blogs.length === 0) {
+      return res.status(200).send({
+        message: "No blogs found for this category",
+      });
+    }
+    res.status(200).send({ blogs });
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+async function getAllBlogs(req, res) {}
+
+async function getBlog(req, res) {
+  const { blogId } = req.query;
+  try {
+    const blog = await models.blog.findOne({
+      where: {
+        blogId: blogId,
+      },
+    });
+    res.status(200).send(blog);
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
 module.exports = {
   getAllPets,
   getPet,
@@ -514,4 +670,9 @@ module.exports = {
   slotStatusPending,
   slotStatusUnavailable,
   slotStatusAvailable,
+  createRequest,
+  getAllBlogs,
+  getBlog,
+  getCategoryBlog,
+  getAllBlogsByCategory,
 };
