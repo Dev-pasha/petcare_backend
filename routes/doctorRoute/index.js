@@ -17,7 +17,8 @@ const {
   getDoctorsByCategory,
   getSingleDoctor,
   getPublicScheduleDatesOfDoctor,
-  getTimeSlotsOfDoctor
+  getTimeSlotsOfDoctor,
+  getAllDoctors
 
 } = require("./handler");
 
@@ -66,4 +67,6 @@ router.get('/list-doctors-by-category', getDoctorsByCategory)
 router.get('/get-public-schedule', getPublicScheduleDatesOfDoctor)
 router.get('/get-public-schudle-times', getTimeSlotsOfDoctor)
 
+// route to get all the doctors through search 
+router.get('/get-all-doctors', getAllDoctors)
 module.exports = router;
