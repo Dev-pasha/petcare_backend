@@ -13,6 +13,16 @@ const attributes = {
         field: "blog_id",
     },
     
+    adminId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        field: "admin_id",
+        reference: {
+            model: "admin",
+            key: "admin_id",
+        },
+    },
+
     blogTitle: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -20,7 +30,7 @@ const attributes = {
     },
     
     blogDescription: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false,
         field: "blog_description",
     },
@@ -42,18 +52,6 @@ const attributes = {
         type: DataTypes.STRING,
         allowNull: false,
         field: "time_to_read",
-    },
-
-    upVotes: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-        field: "up_votes",
-    },
-    
-    downVotes: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-        field: "down_votes",
     },
 
     blogAuthor: {
@@ -95,13 +93,22 @@ const define = () => {
 
 const associate = ({
     admin,
-    blog
+    blog,
+    votes
 }) => {
     blog.belongsTo(admin, {
         foreignKey: "admin_id",
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
     });
+
+    blog.hasMany(votes, {
+        foreignKey: "blog_id",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+    });
+
+    
 };
 
 

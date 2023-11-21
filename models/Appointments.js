@@ -116,16 +116,27 @@ const associate = ({
   slot,
   Payment,
   LiveSession,
+  prescription,
 }) => {
   Appointment.belongsTo(doctor, { foreignKey: "doctor_id" });
   Appointment.belongsTo(client, { foreignKey: "client_id" });
-  Appointment.belongsTo(Pet, { foreignKey: "petId" }); 
+  Appointment.belongsTo(Pet, { foreignKey: "petId" });
   Appointment.belongsTo(slot, { foreignKey: "slotId" });
 
   Appointment.hasMany(PetAppointment, {
     foreignKey: "petAppointmentId",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
+  });
+
+  Appointment.hasMany(prescription, {
+    foreignKey: "prescriptionId",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
+
+  Appointment.hasOne(Payment, {
+    foreignKey: "payment_id",
   });
 
   // Appointment.hasOne(Payment, {

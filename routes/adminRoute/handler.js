@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { sendEmail } = require("../../jobs/node-mailer-service");
 const { parse } = require("dotenv");
+const { Sequelize } = require("sequelize");
 const secretKey = "hakoonamatata"; // Replace with your actual secret key
 const saltRounds = 10; // Number of salt rounds for bcrypt
 
@@ -471,7 +472,9 @@ async function createDoctor(req, res) {
       await sendEmail({
         to: user.email,
         subject: "Doctor Approval",
-        text: "Your Request has been approved, Thanks for being a part of PetCare365. use your email and password is" + doctor.password,
+        text:
+          "Your Request has been approved, Thanks for being a part of PetCare365. use your email and password is" +
+          doctor.password,
       });
 
       res.status(200).json({
@@ -572,25 +575,58 @@ async function updateStatus(req, res) {
 
 async function getAllBlogs(req, res) {
   let { blogCategory } = req.query;
-  try {
-    if (blogCategory) {
-      const blogs = await models.blog.findAll({
-        // check a like query
 
+  try {
+    let blogs;
+
+    if (blogCategory) {
+      blogs = await models.blog.findAll({
         where: {
           blogCategory: blogCategory,
         },
+        include: [
+          {
+            model: models.votes,
+          },
+        ],
       });
-      console.log(blogs);
-      res.status(200).send(blogs);
     } else {
-      const blogs = await models.blog.findAll();
-      res.status(200).send(blogs);
+      blogs = await models.blog.findAll();
+
     }
+    
+    const blogList = await Promise.all(
+      blogs.map(async (blog) => {
+        const upvotes = await models.votes.count({
+          where: {
+            voteType: "upvote",
+            blogId: blog.blogId,
+          },
+        });
+
+        const downvotes = await models.votes.count({
+          where: {
+            voteType: "downvote",
+            blogId: blog.blogId,
+          },
+        });
+
+        return {
+          blog: blog,
+          upvotes: upvotes,
+          downvotes: downvotes,
+        };
+      })
+    );
+
+    res.status(200).send(blogList);
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 }
+
+
 
 async function getSingleBlog(req, res) {
   const { id } = req.query;
@@ -609,17 +645,17 @@ async function getSingleBlog(req, res) {
 async function createBlog(req, res) {
   let { blog } = req.body;
 
+  // console.log("blog", blog);
+
   try {
     const newBlog = await models.blog.create({
       blogTitle: blog.blogTitle,
       blogDescription: blog.blogDescription,
       blogCategory: blog.blogCategory,
       timeToRead: blog.timeToRead,
-      upVotes: parseInt(blog.upVotes),
-      downVotes: parseInt(blog.downVotes),
       blogAuthor: blog.blogAuthor,
       blogImage: ["none"],
-      admin_id: 1,
+      adminId: 1,
     });
     res.status(200).send(newBlog);
   } catch (error) {
@@ -644,8 +680,6 @@ async function updateBlog(req, res) {
       blogDescription: blog.blogDescription,
       blogCategory: blog.blogCategory,
       timeToRead: blog.timeToRead,
-      upVotes: parseInt(blog.upVotes),
-      downVotes: parseInt(blog.downVotes),
       blogAuthor: blog.blogAuthor,
       blogImage: ["none"],
       admin_id: 1,
@@ -695,22 +729,21 @@ async function getStats(req, res) {
 }
 
 async function getAllNotifications(req, res) {
-  const { id } = req.query
+  const { id } = req.query;
   try {
     // client_signup
     const client_signup = await models.Notification.findAll({
       where: {
         actionType: "client_signup",
         isRead: false,
-        userId: id
+        userId: id,
       },
     });
     const client_signup_count = await models.Notification.count({
       where: {
         actionType: "client_signup",
         isRead: false,
-        userId: id
-
+        userId: id,
       },
     });
 
@@ -719,8 +752,7 @@ async function getAllNotifications(req, res) {
       where: {
         actionType: "appointment",
         isRead: false,
-        userId: id
-
+        userId: id,
       },
     });
 
@@ -728,8 +760,7 @@ async function getAllNotifications(req, res) {
       where: {
         actionType: "appointment",
         isRead: false,
-        userId: id
-
+        userId: id,
       },
     });
 
@@ -738,8 +769,7 @@ async function getAllNotifications(req, res) {
       where: {
         actionType: "request",
         isRead: false,
-        userId: id
-
+        userId: id,
       },
     });
 
@@ -747,8 +777,7 @@ async function getAllNotifications(req, res) {
       where: {
         actionType: "request",
         isRead: false,
-        userId: id
-
+        userId: id,
       },
     });
 
@@ -757,8 +786,7 @@ async function getAllNotifications(req, res) {
       where: {
         actionType: "new_doctor_request",
         isRead: false,
-        userId: id
-
+        userId: id,
       },
     });
 
@@ -766,8 +794,7 @@ async function getAllNotifications(req, res) {
       where: {
         actionType: "new_doctor_request",
         isRead: false,
-        userId: id
-
+        userId: id,
       },
     });
 
@@ -807,9 +834,23 @@ async function updateNotification(req, res) {
   }
 }
 
-async function getAllPayments(req, res) { }
+async function createVote(req, res) {
+  const { voteType, userId, blogId } = req.body;
+  try {
+    const newVote = await models.votes.create({
+      voteType: voteType,
+      userId: userId,
+      blogId: blogId,
+    });
+    res.status(200).send(newVote);
+  } catch (error) {
+    console.log(error.message);
+  }
+}
 
-async function getAllPaymentsOfClientById(req, res) { }
+async function getAllPayments(req, res) {}
+
+async function getAllPaymentsOfClientById(req, res) {}
 module.exports = {
   getAllDoctors,
   getSingleDoctor,
@@ -843,4 +884,5 @@ module.exports = {
   getStats,
   getAllNotifications,
   updateNotification,
+  createVote,
 };

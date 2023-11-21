@@ -37,7 +37,7 @@ async function getPet(req, res) {
 }
 
 async function createPet(req, res) {
-  // console.log(req.body);
+  console.log(req.body);
 
   let { pet } = req.body;
   console.log(pet);
@@ -50,10 +50,10 @@ async function createPet(req, res) {
   pet["petHeight"] = parsepetHeight;
   pet["petWeight"] = parsepetWeight;
   pet["petAge"] = parsepetAge;
-  console.log(pet);
+  // console.log(pet);
   try {
     const newPet = await models.Pet.create(pet);
-    res.send(200, newPet);
+    res.send(newPet);
   } catch (error) {
     console.log(error.message);
   }
@@ -70,7 +70,7 @@ async function updatePet(req, res) {
     });
 
     const updatedPet = await exsistingPet.update(pet);
-    res.status(200).send(updatedPet);
+    res.send(updatedPet);
   } catch (error) {
     console.log(error.message);
   }
@@ -533,6 +533,7 @@ async function slotStatusAvailable(req, res) {
 
 async function createRequest(req, res) {
   const { data } = req.body;
+  console.log(data);
 
   if (data.requestType === "doctor_request") {
     try {

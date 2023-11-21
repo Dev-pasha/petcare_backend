@@ -33,7 +33,8 @@ const {
     deleteBlog,
     getStats,
     getAllNotifications,
-    updateNotification
+    updateNotification,
+    createVote
 } = require("./handler");
 
 // router.use();
@@ -106,6 +107,11 @@ router.post('/create-blog', authenticateAndAuthorize('ADMIN'), createBlog);
 router.post('/update-blog', authenticateAndAuthorize('ADMIN'), updateBlog);
 router.get('/delete-blog', authenticateAndAuthorize('ADMIN'), deleteBlog);
 
+
+// for votes
+router.post('/create-vote', createVote);
+
+// 
 
 // admin notifications
 router.get('/get-all-notifications', authenticateAndAuthorize('ADMIN'), getAllNotifications);

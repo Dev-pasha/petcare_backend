@@ -21,66 +21,85 @@ const attributes = {
             key: "admin_id",
         },
     },
+
     requestType: {
         type: DataTypes.STRING,
         allowNull: true,
         field: "request_type",
     },
+
     requestStatus: {
         type: DataTypes.STRING,
         allowNull: true,
         field: "request_status",
     },
+
     requestDescription: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false,
         field: "request_description",
     },
+
     requestDate: {
         type: DataTypes.DATE,
         allowNull: true,
         field: "request_date",
     },
+
     requestTime: {
         type: DataTypes.STRING,
         allowNull: true,
         field: "request_time",
     },
+
     requestResourceName: {
         type: DataTypes.STRING,
         allowNull: false,
         field: "request_resource_name",
     },
+
     requestResourceEmail: {
         type: DataTypes.STRING,
         allowNull: false,
         field: "request_resource_email",
     },
+
     requestResourcePhone: {
         type: DataTypes.STRING,
         allowNull: true,
         field: "request_resource_phone",
     },
+
+    requestResourceRegistrationNumber: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        field: "request_resource_registration_number",
+    },
+
     requestResourceAddress: {
         type: DataTypes.STRING,
         allowNull: true,
         field: "request_resource_address",
     },
+
     createdAt: {
         allowNull: true,
         type: DataTypes.DATE,
         field: "created_at",
     },
+
     updatedAt: {
         allowNull: true,
         type: DataTypes.DATE,
         field: "updated_at",
     },
+
     deletedAt: {
         allowNull: true,
         type: DataTypes.DATE,
         field: "deleted_at",
     },
+
 };
 
 const options = {
