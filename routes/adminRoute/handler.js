@@ -445,7 +445,7 @@ async function createDoctor(req, res) {
       await existingUser.setDoctor(doctor);
 
       await sendEmail({
-        to: existingUser.email,
+        email: existingUser.email,
         subject: "Doctor Approval",
         text: "Your Request has been approved, Thanks for being a part of PetCare365. use your email and previous profile passowrd to login",
       });
@@ -470,7 +470,7 @@ async function createDoctor(req, res) {
       await user.setDoctor(doctor);
 
       await sendEmail({
-        to: user.email,
+        email: user.email,
         subject: "Doctor Approval",
         text:
           "Your Request has been approved, Thanks for being a part of PetCare365. use your email and password is" +
@@ -551,7 +551,7 @@ async function updateStatus(req, res) {
     // send an Email to the resource person of simple contact query
     if (exsistingRequest.requestType === "contact_query") {
       await sendEmail({
-        to: exsistingRequest.requestResourceEmail,
+        email: exsistingRequest.requestResourceEmail,
         subject: "Request Approved",
         text: "Your Request has been approved, we will make sure to contact you soon.",
       });
@@ -559,7 +559,7 @@ async function updateStatus(req, res) {
 
     if (exsistingRequest.requestType === "contact_query") {
       await sendEmail({
-        to: exsistingRequest.requestResourceEmail,
+        email: exsistingRequest.requestResourceEmail,
         subject: "Request Approved PetCare 365",
         text: "Your Request has been approved, Thanks for being a part of PetCare365. Our administrator will contact you soon. Please keep in touch for further verification.",
       });
@@ -836,6 +836,7 @@ async function updateNotification(req, res) {
 
 async function createVote(req, res) {
   const { voteType, userId, blogId } = req.body;
+  console.log(req.body);
   try {
     const newVote = await models.votes.create({
       voteType: voteType,

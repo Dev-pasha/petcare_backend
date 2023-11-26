@@ -621,10 +621,16 @@ async function getCategoryBlog(req, res) {
 async function getAllBlogsByCategory(req, res) {
   const { blogCategory } = req.query;
   try {
-    const blogs = await models.blog.findAll({
+    let blogs;
+    blogs = await models.blog.findAll({
       where: {
         blogCategory: blogCategory,
       },
+      include: [
+        {
+          model: models.votes,
+        },
+      ],
     });
 
     if (blogs.length === 0) {
@@ -632,13 +638,40 @@ async function getAllBlogsByCategory(req, res) {
         message: "No blogs found for this category",
       });
     }
-    res.status(200).send({ blogs });
+
+    const blogList = await Promise.all(
+      blogs.map(async (blog) => {
+        const upvotes = await models.votes.count({
+          where: {
+            voteType: "upvote",
+            blogId: blog.blogId,
+          },
+        });
+
+        const downvotes = await models.votes.count({
+          where: {
+            voteType: "downvote",
+            blogId: blog.blogId,
+          },
+        });
+
+        return {
+          blog: blog,
+          upvotes: upvotes,
+          downvotes: downvotes,
+        };
+      })
+    );
+
+    console.log(blogList);
+
+    res.status(200).send(blogList);
   } catch (error) {
     console.log(error.message);
   }
 }
 
-async function getAllBlogs(req, res) {}
+async function getAllBlogs(req, res) { }
 
 async function getBlog(req, res) {
   const { blogId } = req.query;
@@ -648,7 +681,28 @@ async function getBlog(req, res) {
         blogId: blogId,
       },
     });
-    res.status(200).send(blog);
+
+    const upvotes = await models.votes.count({
+      where: {
+        voteType: "upvote",
+        blogId: blog.blogId,
+      },
+    });
+
+    const downvotes = await models.votes.count({
+      where: {
+        voteType: "downvote",
+        blogId: blog.blogId,
+      },
+    });
+
+    res.status(200).send(
+      {
+        blog,
+        upvotes,
+        downvotes
+      }
+    );
   } catch (error) {
     console.log(error.message);
   }

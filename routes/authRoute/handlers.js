@@ -27,9 +27,17 @@ async function register(req, res) {
 async function login(req, res) {
   const { email, password, userType } = req.body;
   console.log(req.body);
-  
+
+  if (!email || !password) {
+    return res.send(
+      {
+        message: 'Authentication failed: Missing email or password'
+      }
+    )
+  }
+
   try {
-  let user;
+    let user;
     // Find the user by email and user type
 
     if (userType === "CLIENT") {
@@ -66,18 +74,22 @@ async function login(req, res) {
     }
 
     if (!user) {
-      return res
-        .status(401)
-        .json({ message: "Authentication failed: User not found" });
+      return res.send(
+        {
+          message: 'Authentication failed: User not found'
+        }
+      )
     }
 
     // Compare the provided password with the hashed password in the database
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
-      return res
-        .status(401)
-        .json({ message: "Authentication failed: Invalid password" });
+      return res.send(
+        {
+          message: 'Authentication failed: Passwords do not match'
+        }
+      )
     }
 
     // Generate a JWT token for the authenticated user
@@ -96,8 +108,22 @@ async function login(req, res) {
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: error.message });
+    res.status(500).send(error.message)
   }
+}
+
+
+function getUserRole(user) {
+  if (user.client) {
+    return 'CLIENT';
+  } else if (user.admin) {
+    return 'ADMIN';
+  } else if (user.doctor) {
+    return 'DOCTOR';
+  }
+
+  // Return a default role if none of the above roles match
+  return 'UNKNOWN';
 }
 
 function generateToken(userId, userType) {
@@ -107,7 +133,7 @@ function generateToken(userId, userType) {
   };
 
   console.log('payload:', payload)
-  return jwt.sign(payload, secretKey, { expiresIn: "5h" }); // Token expires in 1 hour
+  return jwt.sign(payload, secretKey, { expiresIn: "9h" }); // Token expires in 1 hour
 }
 
 module.exports = {

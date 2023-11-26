@@ -71,4 +71,5 @@ router.get('/get-all-blogs-by-category', getAllBlogsByCategory)
 router.get('/get-all-public-blogs', getAllBlogs)
 router.get('/get-single-blog', getBlog)
 
+
 module.exports = router;

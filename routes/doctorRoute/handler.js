@@ -2,6 +2,8 @@ const { models } = require("../../config/db");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { Op } = require("sequelize");
+const { createNotificationFromStorage } = require("../../storage/notification");
+const { sendEmail } = require("../../jobs/node-mailer-service");
 const secretKey = "hakoonamatata";
 const saltRounds = 10;
 
@@ -266,6 +268,11 @@ async function getSingleAppointmentOfDoctor(req, res) {
       where: {
         appointmentId: id,
       },
+      include: [
+        {
+          model: models.prescription,
+        },
+      ],
     });
 
     const pet = await models.Pet.findOne({
@@ -286,7 +293,7 @@ async function getSingleAppointmentOfDoctor(req, res) {
       },
     });
 
-    console.log(appointmentResponse, pet, clientUser);
+    // console.log(appointmentResponse, pet, clientUser);
 
     res.status(200).send({
       appointmentResponse,
@@ -520,6 +527,188 @@ async function getAllDoctors(req, res) {
   }
 }
 
+async function createPrescription(req, res) {
+  const { appointmentId, prescription } = req.body;
+
+  const exsistancePrescription = await models.prescription.findOne({
+    where: {
+      appointmentId: appointmentId,
+    },
+  });
+
+  if (exsistancePrescription) {
+    res.status(400).send((message = "prescription already exists"));
+    return;
+  }
+
+  try {
+    const response = await models.prescription.create({
+      appointmentId: appointmentId,
+      prescription: prescription,
+    });
+
+    // notification to client
+    const appointment = await models.Appointment.findOne({
+      where: {
+        appointmentId: appointmentId,
+      },
+    });
+
+    const client = await models.client.findOne({
+      where: {
+        clientId: appointment.clientId,
+      },
+      include: [
+        {
+          model: models.users,
+        },
+      ],
+    });
+
+    const doctor = await models.doctor.findOne({
+      where: {
+        doctorId: appointment.doctorId,
+      },
+      include: [
+        {
+          model: models.users,
+        },
+      ],
+    });
+
+    let doc = doctor.user.firstName + " " + doctor.user.lastName
+
+    const notificationBodyForClient = {
+      actionType: "prescription",
+      message: `Your prescription is sent from ${doc} to Your Email and Panel ${new Date().toLocaleDateString()}`,
+      userId: client.user_id,
+      isRead: false,
+    };
+
+    const notification = await createNotificationFromStorage({
+      body: notificationBodyForClient,
+    });
+
+
+    sendEmail({
+      email: client.user.email,
+      subject: "Prescription",
+      text: `Your Have Recieved Presceription from ${doc} ${prescription} on ${new Date(
+        response.createdAt
+      ).toLocaleDateString()} `,
+    });
+
+    res.status(200).send((message = "prescription created successfully"));
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+async function getPrescriptionByAppointmentId(req, res) {
+  const { id } = req.query;
+  try {
+    const response = await models.prescription.findOne({
+      where: {
+        appointmentId: id,
+      },
+    });
+    res.status(200).send(response);
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+
+async function markAsComplete(req, res) {
+  const { id } = req.query;
+
+  try {
+    const appointment = await models.Appointment.findOne({
+      where: {
+        appointmentId: id,
+      },
+    });
+
+    const updatedAppointment = await appointment.update({
+      appointmentStatus: "success",
+    });
+
+    // notification to client
+
+    const client = await models.client.findOne({
+      where: {
+        clientId: appointment.clientId,
+      },
+      include: [
+        {
+          model: models.users,
+        },
+      ],
+    });
+
+    const doctor = await models.doctor.findOne({
+      where: {
+        doctorId: appointment.doctorId,
+      },
+      include: [
+        {
+          model: models.users,
+        },
+      ],
+    });
+
+    const doc = doctor.user.firstName + " " + doctor.user.lastName;
+
+    const notificationBodyForClient = {
+      actionType: "appointment",
+      message: `Your appointment is being marked as complete by Doctor ${doc} ${new Date().toLocaleDateString()}`,
+      userId: client.user_id,
+      isRead: false,
+    };
+
+    await createNotificationFromStorage({
+      body: notificationBodyForClient,
+    });
+
+    sendEmail({
+      email: client.user.email,
+      subject: "Appointment Completed",
+      text: `Your appointment is being marked as complete by Doctor ${doc} on ${new Date().toLocaleDateString()} Make sure to give your feedback`,
+    });
+
+    
+
+    res.status(200).send(
+      message = "appointment marked as completed"
+    );
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+async function cancelAppointment(req, res) {
+  const { id, reason } = req.body
+
+  console.log(reason)
+  try {
+
+    const appointment = await models.Appointment.findOne({
+      where: {
+        appointmentId: id
+      }
+    })
+
+    const updatedAppointment = await appointment.update({
+      appointmentStatus: 'cancelled'
+    })
+
+    res.status(200).send(message = 'appointment cancelled successfully')
+  } catch (error) {
+    console.log(error.message)
+  }
+
+}
+
 module.exports = {
   createScheduleOfDoctor,
   updateScheduleOfDoctor,
@@ -537,4 +726,8 @@ module.exports = {
   getPublicScheduleDatesOfDoctor,
   getTimeSlotsOfDoctor,
   getAllDoctors,
+  createPrescription,
+  getPrescriptionByAppointmentId,
+  markAsComplete,
+  cancelAppointment
 };

@@ -109,7 +109,18 @@ router.get('/delete-blog', authenticateAndAuthorize('ADMIN'), deleteBlog);
 
 
 // for votes
-router.post('/create-vote', createVote);
+router.post('/create-vote',
+    authenticateAndAuthorize('CLIENT'),
+    createVote);
+
+    // router.post('/create-vote',
+    // authenticateAndAuthorize('ADMIN'),
+    // createVote);
+
+    // router.post('/create-vote',
+    // authenticateAndAuthorize('DOCTOR'),
+    // createVote);
+
 
 // 
 
