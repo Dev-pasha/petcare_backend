@@ -17,6 +17,7 @@ const {
   initateAppointmentReminderCron,
   initiateMessageNotificationDeleteCron,
   reminder,
+  deleteMeetingNotificationCron
 } = require("./jobs/appointment-jobs");
 const { initializeSocket } = require("./socket");
 
@@ -101,6 +102,7 @@ app.use("/api", notificationRoute);
 pendingSlotToAvailableCronJob.start();
 initateAppointmentReminderCron.start();
 initiateMessageNotificationDeleteCron.start();
+deleteMeetingNotificationCron.start();
 reminder.start();
 
 // multer

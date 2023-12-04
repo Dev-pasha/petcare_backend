@@ -39,6 +39,7 @@ async function getNotification(req, res) {
 
 async function createNotification(req, res) {
     const { body } = req.body;
+    console.log('body', body)
     try {
         const notification = await createNotificationFromStorage({ body: body });
         res.status(200).send(notification);

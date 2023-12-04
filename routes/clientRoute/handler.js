@@ -101,7 +101,105 @@ async function getMyAppoinments(req, res) {
         client_id: id,
       },
     });
+
+    // const successAppointments = await models.Appointment.findAll({
+    //   where: {
+    //     client_id: id,
+    //     appointmentStatus: "success",
+    //   },
+    // });
+
+
+
+    // const successCount = await models.Appointment.count({
+    //   where: {
+    //     client_id: id,
+    //     appointmentStatus: "success",
+    //   },
+    // });
+
+    // console.log('test1')
+
+    // const pendingAppointments = await models.Appointment.findAll({
+    //   where: {
+    //     clientId: id,
+    //     appointmentStatus: "pending",
+    //   },
+    // });
+
+    // const pendingCount = await models.Appointment.count({
+    //   where: {
+    //     clientId: id,
+    //     appointmentStatus: "pending",
+    //   },
+    // });
+
+    // console.log('test2')
+
+
+    // const cancelledAppointments = await models.Appointment.findAll({
+    //   where: {
+    //     clientId: id,
+    //     appointmentStatus: "cancelled",
+    //   },
+    // });
+
+    // const cancelledCount = await models.Appointment.count({
+    //   where: {
+    //     clientId: id,
+    //     appointmentStatus: "cancelled",
+    //   },
+    // });
+
+    // console.log('test3')
+
+
+    // let currentDate = new Date().toLocaleDateString();
+    // currentDate = currentDate.split("/").join("-");
+    //   const inputDate = new Date(currentDate);
+
+    // // Format the date in the desired format
+    // const year = inputDate.getFullYear();
+    // const month = (inputDate.getMonth() + 1).toString().padStart(2, "0");
+    // const day = inputDate.getDate().toString().padStart(2, "0");
+
+    // const formattedDate = `${year}-${month}-${day}`;
+
+
+    // let checkDate = formattedDate + " 05:00:00+05";
+
+
+    // const currentAppointments = await models.Appointment.findAll({
+    //   where: {
+    //     clientId: id,
+    //     appointmentDate: checkDate,
+    //     appoinmentStatus: "pending",
+    //   },
+    // });
+
+    // const currentCount = await models.Appointment.count({
+    //   where: {
+    //     clientId: id,
+    //     appointmentDate: checkDate,
+    //     appoinmentStatus: "pending",
+    //   },
+    // });
+
+    // console.log('test4')
+
+
     res.status(200).send(appoinments);
+    //   res.status(200).send({
+    //     appoinments,
+    // // successAppointments,
+    //     // successCount,
+    //     // pendingAppointments,
+    //     // pendingCount,
+    //     // cancelledAppointments,
+    //     // cancelledCount,
+    //     // currentAppointments,
+    //     // currentCount
+    //   });
   } catch (error) {
     console.log(error.message);
   }
@@ -109,13 +207,14 @@ async function getMyAppoinments(req, res) {
 
 async function getAppoinment(req, res) {
   const { id } = req.query;
-  console.log(id);
+  console.log("check", id);
   try {
     const appoinment = await models.Appointment.findOne({
       where: {
         appointmentId: id,
       },
     });
+
 
     const pet = await models.Pet.findOne({
       where: {
@@ -141,7 +240,7 @@ async function getAppoinment(req, res) {
       pet,
     });
   } catch (error) {
-    console.log(error.message);
+    console.log(error);
   }
 }
 

@@ -248,6 +248,40 @@ async function getAllAppointmentsOfDoctor(req, res) {
       },
     });
 
+
+    let currentDate = new Date().toLocaleDateString();
+    currentDate = currentDate.split("/").join("-");
+      const inputDate = new Date(currentDate);
+
+    // Format the date in the desired format
+    const year = inputDate.getFullYear();
+    const month = (inputDate.getMonth() + 1).toString().padStart(2, "0");
+    const day = inputDate.getDate().toString().padStart(2, "0");
+
+    const formattedDate = `${year}-${month}-${day}`;
+
+
+    let checkDate = formattedDate + " 05:00:00+05";
+
+
+    const currentAppointments = await models.Appointment.findAll({
+      where: {
+        doctorId: id,
+        appointmentStatus: "pending",
+        appointmentDate: checkDate,
+      },
+    });
+    // console.log(currentAppointments);
+    const currentCount = await models.Appointment.count({
+      where: {
+        doctorId: id,
+        appointmentStatus: "pending",
+        appointmentDate: checkDate,
+      },
+    });
+
+    // console.log(currentAppointments, currentCount);
+
     res.status(200).send({
       successAppointments,
       successCount,
@@ -255,6 +289,8 @@ async function getAllAppointmentsOfDoctor(req, res) {
       pendingCount,
       cancelledAppointments,
       cancelledCount,
+      currentAppointments,
+      currentCount,
     });
   } catch (error) {
     res.status(500).send(error.message);
@@ -576,7 +612,7 @@ async function createPrescription(req, res) {
       ],
     });
 
-    let doc = doctor.user.firstName + " " + doctor.user.lastName
+    let doc = doctor.user.firstName + " " + doctor.user.lastName;
 
     const notificationBodyForClient = {
       actionType: "prescription",
@@ -588,7 +624,6 @@ async function createPrescription(req, res) {
     const notification = await createNotificationFromStorage({
       body: notificationBodyForClient,
     });
-
 
     sendEmail({
       email: client.user.email,
@@ -617,7 +652,6 @@ async function getPrescriptionByAppointmentId(req, res) {
     console.log(error.message);
   }
 }
-
 
 async function markAsComplete(req, res) {
   const { id } = req.query;
@@ -676,37 +710,31 @@ async function markAsComplete(req, res) {
       text: `Your appointment is being marked as complete by Doctor ${doc} on ${new Date().toLocaleDateString()} Make sure to give your feedback`,
     });
 
-    
-
-    res.status(200).send(
-      message = "appointment marked as completed"
-    );
+    res.status(200).send((message = "appointment marked as completed"));
   } catch (error) {
     console.log(error.message);
   }
 }
 
 async function cancelAppointment(req, res) {
-  const { id, reason } = req.body
+  const { id, reason } = req.body;
 
-  console.log(reason)
+  console.log(reason);
   try {
-
     const appointment = await models.Appointment.findOne({
       where: {
-        appointmentId: id
-      }
-    })
+        appointmentId: id,
+      },
+    });
 
     const updatedAppointment = await appointment.update({
-      appointmentStatus: 'cancelled'
-    })
+      appointmentStatus: "cancelled",
+    });
 
-    res.status(200).send(message = 'appointment cancelled successfully')
+    res.status(200).send((message = "appointment cancelled successfully"));
   } catch (error) {
-    console.log(error.message)
+    console.log(error.message);
   }
-
 }
 
 module.exports = {
@@ -729,5 +757,5 @@ module.exports = {
   createPrescription,
   getPrescriptionByAppointmentId,
   markAsComplete,
-  cancelAppointment
+  cancelAppointment,
 };
