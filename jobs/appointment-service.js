@@ -197,6 +197,29 @@ async function reminderNotification(doc, client) {
 
 }
 
+async function deleteMeetingNotification() {
+  try {
+    const notifications = await models.Notification.findAll({
+      where: {
+        actionType: "JOINING_ROOM",
+      },
+    });
+
+    if (notifications.length === 0) return "no notifications found";
+
+    const notificationMap = notifications.map((notification) => {
+      return notification.id;
+    });
+
+    notificationMap.map((id) => {
+      models.Notification.destroy({ where: { id: id } });
+    });
+
+    return "cron job run successfully";
+  } catch (error) {
+    return error;
+  }
+}
 
 
 module.exports = {
@@ -204,5 +227,6 @@ module.exports = {
   fetchAppointments,
   deleteMessagesNotifications,
   reminderService,
-  reminderNotification
+  reminderNotification,
+  deleteMeetingNotification
 };

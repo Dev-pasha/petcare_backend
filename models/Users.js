@@ -112,7 +112,8 @@ const associate = ({
   client,
   doctor,
   support,
-  blog
+  blog,
+  votes
 }) => {
   users.hasOne(doctor, {
     foreignKey: "user_id",
@@ -151,13 +152,19 @@ const associate = ({
     onUpdate: "CASCADE",
   });
 
-  
 
   users.hasMany(Notification, {
     foreignKey: "user_id",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   });
+
+
+  users.hasMany(votes, {
+    foreignKey: "user_id",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  })
 };
 
 module.exports = { modelName, attributes, options, define, associate };

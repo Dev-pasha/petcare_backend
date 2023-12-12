@@ -24,8 +24,6 @@ const getNotificationsFromStorage = async ({ id, actionType }) => {
         userId: id,
         isRead: false,
         actionType: actionType
-
-
       },
       include: [
         {

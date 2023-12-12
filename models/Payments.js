@@ -4,15 +4,15 @@ const sequelize = require("../config/db");
 const modelName = "Payment";
 
 const attributes = {
-  id: {
+  paymentId: {
     type: DataTypes.INTEGER,
     allowNull: false,
     autoIncrement: true,
-    comment: "payment_id",
     primaryKey: true,
+    field: "payment_id",
     references: {
       model: "Appointment",
-      key: "id",
+      key: "appointmentId",
     },
   },
 
@@ -21,26 +21,31 @@ const attributes = {
     allowNull: false,
     field: "amount",
   },
+
   paymentDate: {
-    type: DataTypes.DATE,
+    type: DataTypes.STRING,
     allowNull: false,
     field: "payment_date",
   },
+
   paymentTime: {
-    type: DataTypes.TIME,
+    type: DataTypes.STRING,
     allowNull: false,
     field: "payment_time",
   },
+
   paymentType: {
     type: DataTypes.STRING,
     allowNull: true,
     field: "payment_type",
   },
+
   paymentStatus: {
     type: DataTypes.STRING,
     allowNull: true,
     field: "payment_status",
   },
+
   paymentMethod: {
     type: DataTypes.STRING,
     allowNull: true,
@@ -52,22 +57,22 @@ const attributes = {
     allowNull: false,
     field: "transaction_id",
   },
-  adminApproval: {
-    type: DataTypes.BOOLEAN,
-    allowNull: true,
-    field: "admin_approval",
-  },
 
- 
-  clientId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    field: "id",
-    references: {
-      model: "Client",
-      key: "id",
-    },
-  },
+  // adminApproval: {
+  //   type: DataTypes.BOOLEAN,
+  //   allowNull: true,
+  //   field: "admin_approval",
+  // },
+
+  // clientId: {
+  //   type: DataTypes.INTEGER,
+  //   allowNull: false,
+  //   field: "id",
+  //   references: {
+  //     model: "Client",
+  //     key: "id",
+  //   },
+  // },
 
   createdAt: {
     allowNull: false,
@@ -86,11 +91,10 @@ const attributes = {
     type: DataTypes.DATE,
     field: "deleted_at",
   },
- 
 };
 
 const options = {
-  tableName: "payment",
+  tableName: "Payment",
   comment: "Payment data",
   underscored: true,
 };
@@ -101,10 +105,10 @@ const define = () => {
   return Payment;
 };
 
-const associate = ({ Payment, admin, Client, Doctor, Appointment }) => {
-  Payment.belongsTo(admin, { foreignKey: "id" });
-  Payment.belongsTo(Client, { foreignKey: "id" });
-  Payment.belongsTo(Appointment, { foreignKey: "id" });
+const associate = ({ Payment, Appointment }) => {
+  Payment.belongsTo(Appointment, {
+    foreignKey: "appointmentId",
+  });
 };
 
 module.exports = { modelName, attributes, options, define, associate };

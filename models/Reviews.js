@@ -4,16 +4,25 @@ const sequelize = require("../config/db");
 const modelName = "Review";
 
 const attributes = {
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    allowNull: false,
+
+  reviewId: {
     primaryKey: true,
-    field: "review_id",
+    autoIncrement: true,
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    // field: "review_id",
+    references: {
+      model: "Appointment",
+      key: "appointment_id",
+    },
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
   },
+
   reviewDate: {
     type: DataTypes.DATE,
     allowNull: false,
+    field: "review_date",
   },
   reviewRating: {
     type: DataTypes.INTEGER,
@@ -36,7 +45,7 @@ const attributes = {
     allowNull: false,
     references: {
       model: "admin",
-      key: "id",
+      key: "admin_id",
     },
   },
 
@@ -44,18 +53,34 @@ const attributes = {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: "Client",
-      key: "id",
+      model: "client",
+      key: "client_id",
     },
   },
   doctorId: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: "Doctor",
-      key: "id",
+      model: "doctor",
+      key: "doctor_id",
     },
   },
+
+  // appointmentId: {
+  //   type: DataTypes.INTEGER,
+  //   allowNull: false,
+  //   references: {
+  //     model: "Appointment",
+  //     key: "appointment_id",
+  //   },
+  // },
+
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    field: "created_at",
+  },
+
 };
 
 const options = {
@@ -70,17 +95,22 @@ const define = () => {
   return Review;
 };
 
-const associate = ({ Client, Review, Doctor }) => {
-  Review.belongsTo(Client, {
-    foreignKey: {
-      name: "id",
-    },
+const associate = ({ client, Review, doctor, Appointment }) => {
+
+
+  Review.belongsTo(client, {
+    foreignKey: "client_id",
   });
 
-  Review.belongsTo(Doctor, {
-    foreignKey: {
-      name: "id",
-    },
+
+
+  Review.belongsTo(doctor, {
+    foreignKey: "doctor_id",
+  });
+
+
+  Review.belongsTo(Appointment, {
+    foreignKey: "appointment_id"
   });
 };
 

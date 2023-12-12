@@ -18,7 +18,11 @@ const {
   getSingleDoctor,
   getPublicScheduleDatesOfDoctor,
   getTimeSlotsOfDoctor,
-  getAllDoctors
+  getAllDoctors,
+  createPrescription,
+  getPrescriptionByAppointmentId,
+  markAsComplete,
+  cancelAppointment
 
 } = require("./handler");
 
@@ -61,6 +65,10 @@ router.get(
   getSingleAppointmentOfDoctor
 );
 
+// route to mark appointment as completed
+router.get('/mark-appointment-completed', authenticateAndAuthorize('DOCTOR'), markAsComplete)
+router.post('/cancel-appointment', authenticateAndAuthorize('DOCTOR'), cancelAppointment)
+
 router.get('/getSingleDoctor', getSingleDoctor)
 router.get('/doctor-categories', doctorByCategories)
 router.get('/list-doctors-by-category', getDoctorsByCategory)
@@ -69,4 +77,9 @@ router.get('/get-public-schudle-times', getTimeSlotsOfDoctor)
 
 // route to get all the doctors through search 
 router.get('/get-all-doctors', getAllDoctors)
+
+
+// routes for prescription
+router.post('/create-prescription', authenticateAndAuthorize('DOCTOR'), createPrescription)
+router.get('/get-prescription-by-appointment-id', authenticateAndAuthorize('DOCTOR'), getPrescriptionByAppointmentId)
 module.exports = router;

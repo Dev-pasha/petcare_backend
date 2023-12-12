@@ -4,7 +4,8 @@ const {
   fetchAppointments,
   deleteMessagesNotifications,
   reminderService,
-  reminderNotification
+  reminderNotification,
+  deleteMeetingNotification
 } = require("./appointment-service");
 
 const { sendEmail } = require("./node-mailer-service");
@@ -88,9 +89,16 @@ var reminder = cron.schedule(masterCronSchedule, async () => {
 });
 
 
+// cron job runs after every 30 minutes
+
+var deleteMeetingNotificationCron = cron.schedule("*/30 * * * *", async () => {
+  await deleteMeetingNotification();
+});
+
 module.exports = {
   pendingSlotToAvailableCronJob,
   initateAppointmentReminderCron,
   initiateMessageNotificationDeleteCron,
-  reminder
+  reminder,
+  deleteMeetingNotificationCron
 };

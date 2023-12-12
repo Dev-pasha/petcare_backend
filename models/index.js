@@ -17,6 +17,8 @@ const blog = require("./blog");
 const request = require("./Request");
 // const LiveSession = require('./liveSession');
 const users = require("./Users");
+const votes = require("./Votes");
+const prescription = require("./Prescription");
 
 const modelsDefiners = {
   admin,
@@ -25,6 +27,7 @@ const modelsDefiners = {
   support,
   Pet,
   Appointment,
+  Review,
   slot,
   PetAppointment,
   Chats,
@@ -32,10 +35,10 @@ const modelsDefiners = {
   users,
   blog,
   request,
-  
-  // Payment,
+  votes,
+  prescription,
+  Payment,
   Notification,
-  // Review,
   // LiveSession,
 };
 
