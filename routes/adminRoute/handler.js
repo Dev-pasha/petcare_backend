@@ -305,18 +305,51 @@ async function getSinglePet(req, res) {
 }
 
 async function getAllReviewsOfDoctor(req, res) {
+  let { id } = req.query;
+  id_ = parseInt(id);
+  console.log("docotr id", id);
+
   try {
     const reviews = await models.Review.findAll({
       where: {
-        doctorId: req.params.id,
+        doctorId: id_,
       },
+
+      include: [
+        {
+          model: models.client,
+          include: [
+            {
+              model: models.users,
+              attributes: ["firstName", "lastName", "email"],
+            },
+          ],
+        }
+      ]
     });
-    res.status(200).json({
-      response: reviews,
-    });
+
+    res.status(200).send(reviews);
+
   } catch (error) {
     console.log(error.message);
+
   }
+
+
+
+
+  // try {
+  //   const reviews = await models.Review.findAll({
+  //     where: {
+  //       doctorId: req.params.id,
+  //     },
+  //   });
+  //   res.status(200).json({
+  //     response: reviews,
+  //   });
+  // } catch (error) {
+  //   console.log(error.message);
+  // }
 }
 
 async function createAdmin(req, res) {
@@ -594,7 +627,7 @@ async function getAllBlogs(req, res) {
       blogs = await models.blog.findAll();
 
     }
-    
+
     const blogList = await Promise.all(
       blogs.map(async (blog) => {
         const upvotes = await models.votes.count({
@@ -849,9 +882,33 @@ async function createVote(req, res) {
   }
 }
 
-async function getAllPayments(req, res) {}
 
-async function getAllPaymentsOfClientById(req, res) {}
+async function updateReview(req, res) {
+  const { id } = req.query;
+  try {
+    const response = await models.Review.findOne({
+      where: {
+        reviewId: id,
+      },
+    });
+
+    await response.update({
+      reviewStatus: true,
+    });
+
+    res.status(200).send({
+      message: "review updated",
+    });
+  }
+  catch (error) {
+    console.log(error.message);
+  }
+}
+
+
+async function getAllPayments(req, res) { }
+
+async function getAllPaymentsOfClientById(req, res) { }
 module.exports = {
   getAllDoctors,
   getSingleDoctor,
@@ -886,4 +943,5 @@ module.exports = {
   getAllNotifications,
   updateNotification,
   createVote,
+  updateReview
 };

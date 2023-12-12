@@ -22,7 +22,8 @@ const {
   getAllBlogs,
   getBlog,
   getCategoryBlog,
-  getAllBlogsByCategory
+  getAllBlogsByCategory,
+  
 
 } = require("./handler");
 
@@ -56,6 +57,7 @@ router.post(
 );
 
 router.post("/create-review", authenticateAndAuthorize("CLIENT"), createReview);
+
 router.post("/create-client", createClient);
 router.get('/get-client', authenticateAndAuthorize("CLIENT"), getClient )
 router.post("/update-client", authenticateAndAuthorize("CLIENT"), updateClient);

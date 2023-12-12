@@ -65,11 +65,19 @@ const attributes = {
     allowNull: true,
     field: "appointment_notes_purpose",
   },
+
   appointmentStatus: {
     type: DataTypes.STRING,
     allowNull: true,
     field: "appointment_status",
   },
+
+  appointmentCancellationReason: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    field: "appointment_cancellation_reason",
+  },
+
   paymentStatus: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -116,6 +124,7 @@ const associate = ({
   slot,
   Payment,
   LiveSession,
+  Review,
   prescription,
 }) => {
   Appointment.belongsTo(doctor, { foreignKey: "doctor_id" });
@@ -138,6 +147,11 @@ const associate = ({
   Appointment.hasOne(Payment, {
     foreignKey: "payment_id",
   });
+
+  Appointment.hasOne(Review, {
+    foreignKey: "appointment_id",
+  });
+
 
   // Appointment.hasOne(Payment, {
   //   foreignKey: "id",

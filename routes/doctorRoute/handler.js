@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const { Op } = require("sequelize");
 const { createNotificationFromStorage } = require("../../storage/notification");
 const { sendEmail } = require("../../jobs/node-mailer-service");
+const { attributes } = require("../../models/Admin");
 const secretKey = "hakoonamatata";
 const saltRounds = 10;
 
@@ -248,10 +249,9 @@ async function getAllAppointmentsOfDoctor(req, res) {
       },
     });
 
-
     let currentDate = new Date().toLocaleDateString();
     currentDate = currentDate.split("/").join("-");
-      const inputDate = new Date(currentDate);
+    const inputDate = new Date(currentDate);
 
     // Format the date in the desired format
     const year = inputDate.getFullYear();
@@ -260,9 +260,7 @@ async function getAllAppointmentsOfDoctor(req, res) {
 
     const formattedDate = `${year}-${month}-${day}`;
 
-
     let checkDate = formattedDate + " 05:00:00+05";
-
 
     const currentAppointments = await models.Appointment.findAll({
       where: {
@@ -456,7 +454,7 @@ async function doctorByCategories(req, res) {
 async function getDoctorsByCategory(req, res) {
   const { category } = req.query;
   try {
-    const response = await models.doctor.findAll({
+    let doctors = await models.doctor.findAll({
       where: {
         specialization: category,
       },
@@ -466,8 +464,36 @@ async function getDoctorsByCategory(req, res) {
         },
       ],
     });
-    res.status(200).send(response);
+
+    // get all reviews of doctors
+    let reviews = await models.Review.findAll({
+      where: {
+        doctorId: doctors.map((doctor) => doctor.doctorId),
+      },
+    });
+
+    // calculate average rating of doctors
+    doctors = doctors.map((doctor) => {
+      let totalRating = 0;
+      let averageRating = 0;
+      let count = 0;
+      reviews.forEach((review) => {
+        if (review.doctorId === doctor.doctorId) {
+          totalRating += review.reviewRating;
+          count++;
+        }
+      });
+      averageRating = totalRating / count;
+      return {
+        ...doctor.dataValues,
+        averageRating,
+        count,
+      };
+    });
+
+    res.status(200).send({ doctors });
   } catch (error) {
+    console.error(error);
     res.status(500).send(error.message);
   }
 }
@@ -486,7 +512,25 @@ async function getSingleDoctor(req, res) {
         },
       ],
     });
-    res.status(200).send(response);
+
+    const reviews = await models.Review.findAll({
+      where: {
+        doctorId: id,
+      },
+      include: [
+        {
+          model: models.client,
+          include: [
+            {
+              model: models.users,
+              attributes: ["firstName", "lastName"],
+            },
+          ],
+        },
+      ],
+    });
+
+    res.status(200).send({ response, reviews });
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -541,7 +585,7 @@ async function getAllDoctors(req, res) {
   const { query } = req.query;
   console.log(query);
   try {
-    const response = await models.doctor.findAll({
+    let doctors = await models.doctor.findAll({
       where: {
         [Op.or]: [
           {
@@ -557,7 +601,33 @@ async function getAllDoctors(req, res) {
         },
       ],
     });
-    res.send(response);
+
+    let reviews = await models.Review.findAll({
+      where: {
+        doctorId: doctors.map((doctor) => doctor.doctorId),
+      },
+    });
+
+    // calculate average rating of doctors
+    doctors = doctors.map((doctor) => {
+      let totalRating = 0;
+      let averageRating = 0;
+      let count = 0;
+      reviews.forEach((review) => {
+        if (review.doctorId === doctor.doctorId) {
+          totalRating += review.reviewRating;
+          count++;
+        }
+      });
+      averageRating = totalRating / count;
+      return {
+        ...doctor.dataValues,
+        averageRating,
+        count,
+      };
+    });
+
+    res.status(200).send({ doctors });
   } catch (error) {
     console.log(error.message);
   }

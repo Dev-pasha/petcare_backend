@@ -34,7 +34,8 @@ const {
     getStats,
     getAllNotifications,
     updateNotification,
-    createVote
+    createVote,
+    updateReview
 } = require("./handler");
 
 // router.use();
@@ -72,8 +73,8 @@ router.get('/get-all-pets-of-client', authenticateAndAuthorize('ADMIN'), getAllP
 router.get('/get-single-pet', authenticateAndAuthorize('ADMIN'), getSinglePet);
 
 // Routes operation for reviews
-router.get('/get-all-reviews-of-doctor', authenticateAndAuthorize('ADMIN'), getAllReviewsOfDoctor);
-
+router.get('/get-review', authenticateAndAuthorize('ADMIN'), getAllReviewsOfDoctor);
+router.get('/update-review', authenticateAndAuthorize('ADMIN'), updateReview);
 // Routes operation for payments
 
 router.get('/get-all-payments', authenticateAndAuthorize('ADMIN'), getAllPayments);

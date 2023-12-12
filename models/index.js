@@ -27,6 +27,7 @@ const modelsDefiners = {
   support,
   Pet,
   Appointment,
+  Review,
   slot,
   PetAppointment,
   Chats,
@@ -38,7 +39,6 @@ const modelsDefiners = {
   prescription,
   Payment,
   Notification,
-  // Review,
   // LiveSession,
 };
 
