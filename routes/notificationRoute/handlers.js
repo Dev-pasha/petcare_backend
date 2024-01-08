@@ -17,6 +17,7 @@ async function getNotifications(req, res) {
     console.log('actionType', actionType)
     try {
         const notifications = await getNotificationsFromStorage({ id, actionType });
+        console.log('notifications', notifications)
         res.status(200).send(notifications);
 
     } catch (error) {

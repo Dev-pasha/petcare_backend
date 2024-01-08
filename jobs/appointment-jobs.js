@@ -90,7 +90,6 @@ var reminder = cron.schedule(masterCronSchedule, async () => {
 
 
 // cron job runs after every 30 minutes
-
 var deleteMeetingNotificationCron = cron.schedule("*/30 * * * *", async () => {
   await deleteMeetingNotification();
 });

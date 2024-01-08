@@ -765,7 +765,7 @@ async function markAsComplete(req, res) {
 
     const notificationBodyForClient = {
       actionType: "appointment",
-      message: `Your appointment is being marked as complete by Doctor ${doc} ${new Date().toLocaleDateString()}`,
+      message: `Your appointment has been marked as complete by Doctor ${doc} ${new Date().toLocaleDateString()}`,
       userId: client.user_id,
       isRead: false,
     };
@@ -799,7 +799,54 @@ async function cancelAppointment(req, res) {
 
     const updatedAppointment = await appointment.update({
       appointmentStatus: "cancelled",
+      appointmentCancellationReason: reason,
+      
     });
+
+    // notification to client
+
+    const client = await models.client.findOne({
+      where: {
+        clientId: appointment.clientId,
+      },
+      include: [
+        {
+          model: models.users,
+        },
+      ],
+    });
+
+    const doctor = await models.doctor.findOne({
+      where: {
+        doctorId: appointment.doctorId,
+      },
+      include: [
+        {
+          model: models.users,
+        },
+      ],
+    });
+
+    const doc = doctor.user.firstName + " " + doctor.user.lastName;
+
+    const notificationBodyForClient = {
+      actionType: "appointment",
+      message: `Your appointment is being cancelled by Doctor ${doc} ${new Date().toLocaleDateString()}`,
+      userId: client.user_id,
+      isRead: false,
+    };
+
+    await createNotificationFromStorage({
+      body: notificationBodyForClient,
+    });
+
+    await sendEmail({
+      email: client.user.email,
+      subject: "Appointment Cancelled",
+      text: `Your appointment is being cancelled by Doctor ${doc} on ${new Date().toLocaleDateString()} Make sure to give your feedback`,
+    });
+
+    
 
     res.status(200).send((message = "appointment cancelled successfully"));
   } catch (error) {

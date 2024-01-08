@@ -245,7 +245,8 @@ async function getAppoinment(req, res) {
 }
 
 async function createAppoinment(req, res) {
-  const { data } = req.body;
+  console.log(req.body)
+  const { data } = req.body;  
   const { doctorId } = data;
   const { clientId } = data;
   const { slotId } = data;
