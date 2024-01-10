@@ -32,4 +32,21 @@ const multerConfig = (componentType) => {
   });
 };
 
-module.exports = { multerConfig, generateDynamicUploadFolder };
+
+const multerConfigMultiple = (componentType) => {
+  return multer({
+    storage: multer.diskStorage({
+      destination: (req, file, cb) => {
+        const uploadFolder = generateDynamicUploadFolder(componentType);
+        return cb(null, uploadFolder);
+      },
+      filename: (req, file, cb) => {
+        return cb(null, Date.now() + path.extname(file.originalname));
+      },
+    }),
+  }).array('files', 3); // 'files' is the field name for multiple files, and 5 is the maximum number of files allowed.
+};
+
+
+
+module.exports = { multerConfig, generateDynamicUploadFolder, multerConfigMultiple };

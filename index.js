@@ -11,6 +11,7 @@ const { initModels } = require("./models/index");
 const {
   multerConfig,
   generateDynamicUploadFolder,
+  multerConfigMultiple,
 } = require("./multerService");
 const {
   pendingSlotToAvailableCronJob,
@@ -29,11 +30,13 @@ app.use(
     origin: "*",
   })
 );
+app.use(express.static('uploads'));
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 app.use(express.json({ limit: "50mb" }));
 app.use('/uploads/pet', express.static('uploads/pet'));
 app.use('/uploads/user', express.static('uploads/user'));
+app.use('/uploads/blog', express.static('uploads/blog'));
 
 
 
@@ -64,6 +67,11 @@ app.post("/api/uploadUserFile", multerConfig("user").single("file"), (req, res) 
   res.json({ file: req.file });
 });
 
+// blog multiple image
+app.post("/api/uploadBlogImages", multerConfigMultiple("blog"), (req, res) => {
+  console.log(req.files);
+  res.json({ file: req.files });
+});
 
 
 // Routes

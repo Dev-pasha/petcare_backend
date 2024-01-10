@@ -687,7 +687,7 @@ async function createBlog(req, res) {
       blogCategory: blog.blogCategory,
       timeToRead: blog.timeToRead,
       blogAuthor: blog.blogAuthor,
-      blogImage: ["none"],
+      blogImage: blog.blogImage,
       adminId: 1,
     });
     res.status(200).send(newBlog);

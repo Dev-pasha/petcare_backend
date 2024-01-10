@@ -187,19 +187,41 @@ async function createDoctor(req, res) {
 }
 
 async function updateDoctor(req, res) {
-  const { doctorId } = req.query;
-  const data = req.body;
+  console.log(req.body)
+  const { id } = req.body;
+  const { profilePicture } = req.body
+  // const data = req.body;
   try {
-    const exsisitingDoctor = await models.doctor.findOne({
+
+    const exsistingUser = await models.users.findOne({
       where: {
-        doctorId: doctorId,
+        userId: id,
       },
+      include: [
+        {
+          model: models.doctor,
+        },
+      ],
     });
 
-    const updatedDoctor = await exsisitingDoctor.update(data);
+    if (profilePicture) {
+      const exsisitingDoctor = await models.doctor.findOne({
+        where: {
+          user_id: id
+        }
+      });
+
+      const updatedDoctor = await exsisitingDoctor.update({
+        profilePicture: profilePicture
+      });
+    }
+
+    const updatedUser = await exsistingUser.update(req.body);
+
     res.status(200).json({
       message: "doctor updated successfully",
-      updatedDoctor,
+      user: updatedUser,
+
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -800,7 +822,7 @@ async function cancelAppointment(req, res) {
     const updatedAppointment = await appointment.update({
       appointmentStatus: "cancelled",
       appointmentCancellationReason: reason,
-      
+
     });
 
     // notification to client
@@ -846,7 +868,7 @@ async function cancelAppointment(req, res) {
       text: `Your appointment is being cancelled by Doctor ${doc} on ${new Date().toLocaleDateString()} Make sure to give your feedback`,
     });
 
-    
+
 
     res.status(200).send((message = "appointment cancelled successfully"));
   } catch (error) {

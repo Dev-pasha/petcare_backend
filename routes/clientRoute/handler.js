@@ -246,7 +246,7 @@ async function getAppoinment(req, res) {
 
 async function createAppoinment(req, res) {
   console.log(req.body)
-  const { data } = req.body;  
+  const { data } = req.body;
   const { doctorId } = data;
   const { clientId } = data;
   const { slotId } = data;
@@ -404,480 +404,517 @@ async function createReview(req, res) {
     });
   }
 
-    try {
+  try {
 
-      const findAppointment = await models.Appointment.findOne({
-        where: {
-          appointmentId: appointmentId,
-        },
-      });
+    const findAppointment = await models.Appointment.findOne({
+      where: {
+        appointmentId: appointmentId,
+      },
+    });
 
-      review["clientId"] = findAppointment.clientId;
-      review["doctorId"] = findAppointment.doctorId;
-      review["reviewDate"] = new Date();
-      review["adminId"] = 1;
-      review["appointmentId"] = appointmentId;
+    review["clientId"] = findAppointment.clientId;
+    review["doctorId"] = findAppointment.doctorId;
+    review["reviewDate"] = new Date();
+    review["adminId"] = 1;
+    review["appointmentId"] = appointmentId;
 
-      console.log("review", review);
+    console.log("review", review);
 
-      const newReview = await models.Review.create({
-        ...review,
-      });
+    const newReview = await models.Review.create({
+      ...review,
+    });
 
-      console.log("newReview", newReview);
+    console.log("newReview", newReview);
 
-      res.status(200).json({
-        message: "Review added successfully",
-        review: newReview,
-      });
+    res.status(200).json({
+      message: "Review added successfully",
+      review: newReview,
+    });
 
 
-    }
-    catch (error) {
-      console.log(error);
-    }
-    // try {
-    //   const newReview = await models.Review.create(data);
-    //   res.status(200).json({
-    //     message: "Review added successfully",
-    //     review: newReview,
-    //   });
-    // } catch (error) {
-    //   console.log(error.message);
-    // }
   }
-
-  async function createClient(req, res) {
-    const { data } = req.body;
-    // console.log(data);
-    let userData = data;
-    let existingUser;
-    let user;
-    try {
-      existingUser = await models.users.findOne({
-        where: {
-          email: userData.email,
-        },
-      });
-      if (existingUser) {
-        console.log("user already exists");
-
-        const token = jwt.sign(
-          {
-            email: existingUser.email,
-            id: existingUser.id,
-          },
-          secretKey,
-          {
-            expiresIn: "1h",
-          }
-        );
-
-        client = await models.client.create({
-          ...userData.client,
-        });
-        await existingUser.setClient(client);
-
-        // notification for admin
-        const notificationBodyForAdmin = {
-          actionType: "client_signup",
-          message: `New client signed up with email ${existingUser.email}`,
-          userId: 1,
-          isRead: false,
-        };
-        const notificationToAdmin = await createNotificationFromStorage({
-          body: notificationBodyForAdmin,
-        });
-        console.log("client signup notification sent to admin successfully");
-
-        await sendEmail({
-          email: existingUser.email,
-          subject: "Welcome to PetCare 365",
-          text: `Hi ${existingUser.firstName}, Welcome to PetCare 365. We are glad to have you on board. We are here to help you with your pets. You can book an appointment with our doctors, view your appointments, view your pets and much more. `,
-        });
-
-        res.json({
-          message: "User already exists and client created successfully",
-          status: 200,
-          // existingUser: existingUser,
-          // client: client,
-          // token: token,
-        });
-      } else {
-        const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
-        userData.password = hashedPassword;
-
-        user = await models.users.create({
-          ...userData,
-        });
-        client = await models.client.create({
-          ...userData.client,
-        });
-        await user.setClient(client);
-
-        const notificationBodyForAdmin = {
-          actionType: "client_signup",
-          message: `New client signed up with email ${user.email}`,
-          userId: 1,
-          isRead: false,
-        };
-        const notificationToAdmin = await createNotificationFromStorage({
-          body: notificationBodyForAdmin,
-        });
-        console.log("client signup notification sent to admin successfully");
-
-        await sendEmail({
-          email: user.email,
-          subject: "Welcome to PetCare 365",
-          text: `Hi ${user.firstName}, Welcome to PetCare 365. We are glad to have you on board. We are here to help you with your pets. You can book an appointment with our doctors, view your appointments, view your pets and much more. `,
-        });
-
-        res.json({
-          status: 200,
-          message: "User with client profile created successfully",
-          // user: user,
-          // client: client,
-        });
-      }
-    } catch (error) {
-      throw error.message;
-    }
+  catch (error) {
+    console.log(error);
   }
+  // try {
+  //   const newReview = await models.Review.create(data);
+  //   res.status(200).json({
+  //     message: "Review added successfully",
+  //     review: newReview,
+  //   });
+  // } catch (error) {
+  //   console.log(error.message);
+  // }
+}
 
-  async function updateClient(req, res) {
-    const { id } = req.body;
-    const data = req.body;
-    try {
-      const exsistingClient = await models.Client.findOne({
-        where: {
-          clientId: id,
-        },
-      });
-      const updatedClient = await exsistingClient.update(data);
-      res.status(200).json({
-        message: "Client updated successfully",
-        client: updatedClient,
-      });
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
+async function createClient(req, res) {
+  const { data } = req.body;
+  // console.log(data);
+  let userData = data;
+  let existingUser;
+  let user;
+  try {
+    existingUser = await models.users.findOne({
+      where: {
+        email: userData.email,
+      },
+    });
+    if (existingUser) {
+      console.log("user already exists");
 
-  async function getClient(req, res) {
-    const { id } = req.query;
-    try {
-      const client = await models.client.findOne({
-        where: {
-          clientId: id,
-        },
-
-        include: [
-          {
-            model: models.users,
-            attributes: [
-              "firstName",
-              "lastName",
-              "phoneNumber",
-              "address",
-              "userName",
-            ],
-          },
-        ],
-      });
-      res.status(200).json({
-        client,
-      });
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
-
-  async function slotStatusPending(req, res) {
-    console.log("slot pending", req.query);
-    const { slotId } = req.query;
-    console.log("slot pending", slotId);
-
-    if (!slotId) {
-      return res.status(400).send({
-        message: "Slot id is required",
-      });
-    }
-
-    try {
-      const exsistngSlot = await models.slot.findOne({
-        where: {
-          slot_id: slotId,
-        },
-      });
-
-      const slot = await exsistngSlot.update({
-        slotStatus: "Pending",
-      });
-
-      console.log(slot);
-
-      res.status(200).send(slot);
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
-
-  async function slotStatusUnavailable(req, res) {
-    console.log("slot unavailable", req.query);
-    const { slotId } = req.query;
-    console.log("slot unavailable", slotId);
-
-    if (!slotId) {
-      return res.status(400).send({
-        message: "Slot id is required",
-      });
-    }
-
-    try {
-      const exsistingSlot = await models.slot.findOne({
-        where: {
-          slot_id: slotId,
-        },
-      });
-
-      const slot = await exsistingSlot.update({
-        slotStatus: "Unavailable",
-      });
-
-      res.status(200).send(slot);
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
-
-  async function slotStatusAvailable(req, res) {
-    console.log("slot available", req.query);
-    const { slotId } = req.query;
-    console.log("slot available", slotId);
-
-    if (!slotId) {
-      return res.status(400).send({
-        message: "Slot id is required",
-      });
-    }
-
-    try {
-      const exsistingSlot = await models.slot.findOne({
-        where: {
-          slot_id: slotId,
-        },
-      });
-
-      const slot = await exsistingSlot.update({
-        slotStatus: "Available",
-      });
-
-      res.status(200).send(slot);
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
-
-  // request function
-
-  async function createRequest(req, res) {
-    const { data } = req.body;
-    console.log(data);
-
-    if (data.requestType === "doctor_request") {
-      try {
-        const request = await models.request.create({
-          ...data,
-          requestStatus: "pending",
-          adminId: 1,
-        });
-
-        // notification for admin
-        const notificationBodyForAdmin = {
-          actionType: "new_doctor_request",
-          message: `New Joining Request by ${data.requestResourceName}`,
-          userId: 1,
-          isRead: false,
-        };
-
-        // email to requestor
-        await sendEmail({
-          email: data.requestResourceEmail,
-          subject: "Request Submitted",
-          text: `Hi ${data.requestResourceName},Thanks for showing your concerns to join PetCare 365.Your request has been submitted successfully. Administration will contact you as soon as possible. `,
-        });
-
-        const notificationToAdmin = await createNotificationFromStorage({
-          body: notificationBodyForAdmin,
-        });
-        console.log("request notification sent to admin successfully");
-
-        res.status(200).send(request);
-      } catch (error) {
-        console.log(error.message);
-      }
-    }
-
-    if (data.requestType === "contact_query") {
-      try {
-        const request = await models.request.create({
-          ...data,
-          requestStatus: "pending",
-          adminId: 1,
-        });
-
-        // notification for admin
-        const notificationBodyForAdmin = {
-          actionType: "request",
-          message: `New request by ${data.requestResourceName}`,
-          userId: 1,
-          isRead: false,
-        };
-
-        // email to requestor
-        await sendEmail({
-          email: data.requestResourceEmail,
-          subject: "Request Submitted",
-          text: `Hi ${data.requestResourceName},Thanks for showing your concerns for PetCare 365.Your request has been submitted successfully. We will get back to you soon. `,
-        });
-
-        const notificationToAdmin = await createNotificationFromStorage({
-          body: notificationBodyForAdmin,
-        });
-        console.log("request notification sent to admin successfully");
-
-        res.status(200).send(request);
-      } catch (error) {
-        console.log(error.message);
-      }
-    }
-  }
-
-  async function getCategoryBlog(req, res) {
-    try {
-      const blogCategory = await models.blog
-        .findAll({
-          attributes: ["blogCategory"],
-          group: ["blogCategory"],
-        })
-        .then((category) => category.map((item) => item.blogCategory));
-      res.status(200).send(blogCategory);
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
-
-  async function getAllBlogsByCategory(req, res) {
-    const { blogCategory } = req.query;
-    try {
-      let blogs;
-      blogs = await models.blog.findAll({
-        where: {
-          blogCategory: blogCategory,
-        },
-        include: [
-          {
-            model: models.votes,
-          },
-        ],
-      });
-
-      if (blogs.length === 0) {
-        return res.status(200).send({
-          message: "No blogs found for this category",
-        });
-      }
-
-      const blogList = await Promise.all(
-        blogs.map(async (blog) => {
-          const upvotes = await models.votes.count({
-            where: {
-              voteType: "upvote",
-              blogId: blog.blogId,
-            },
-          });
-
-          const downvotes = await models.votes.count({
-            where: {
-              voteType: "downvote",
-              blogId: blog.blogId,
-            },
-          });
-
-          return {
-            blog: blog,
-            upvotes: upvotes,
-            downvotes: downvotes,
-          };
-        })
-      );
-
-      console.log(blogList);
-
-      res.status(200).send(blogList);
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
-
-  async function getAllBlogs(req, res) { }
-
-  async function getBlog(req, res) {
-    const { blogId } = req.query;
-    try {
-      const blog = await models.blog.findOne({
-        where: {
-          blogId: blogId,
-        },
-      });
-
-      const upvotes = await models.votes.count({
-        where: {
-          voteType: "upvote",
-          blogId: blog.blogId,
-        },
-      });
-
-      const downvotes = await models.votes.count({
-        where: {
-          voteType: "downvote",
-          blogId: blog.blogId,
-        },
-      });
-
-      res.status(200).send(
+      const token = jwt.sign(
         {
-          blog,
-          upvotes,
-          downvotes
+          email: existingUser.email,
+          id: existingUser.id,
+        },
+        secretKey,
+        {
+          expiresIn: "1h",
         }
       );
+
+      client = await models.client.create({
+        ...userData.client,
+      });
+      await existingUser.setClient(client);
+
+      // notification for admin
+      const notificationBodyForAdmin = {
+        actionType: "client_signup",
+        message: `New client signed up with email ${existingUser.email}`,
+        userId: 1,
+        isRead: false,
+      };
+      const notificationToAdmin = await createNotificationFromStorage({
+        body: notificationBodyForAdmin,
+      });
+      console.log("client signup notification sent to admin successfully");
+
+      await sendEmail({
+        email: existingUser.email,
+        subject: "Welcome to PetCare 365",
+        text: `Hi ${existingUser.firstName}, Welcome to PetCare 365. We are glad to have you on board. We are here to help you with your pets. You can book an appointment with our doctors, view your appointments, view your pets and much more. `,
+      });
+
+      res.json({
+        message: "User already exists and client created successfully",
+        status: 200,
+        // existingUser: existingUser,
+        // client: client,
+        // token: token,
+      });
+    } else {
+      const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
+      userData.password = hashedPassword;
+
+      user = await models.users.create({
+        ...userData,
+      });
+      client = await models.client.create({
+        ...userData.client,
+      });
+      await user.setClient(client);
+
+      const notificationBodyForAdmin = {
+        actionType: "client_signup",
+        message: `New client signed up with email ${user.email}`,
+        userId: 1,
+        isRead: false,
+      };
+      const notificationToAdmin = await createNotificationFromStorage({
+        body: notificationBodyForAdmin,
+      });
+      console.log("client signup notification sent to admin successfully");
+
+      await sendEmail({
+        email: user.email,
+        subject: "Welcome to PetCare 365",
+        text: `Hi ${user.firstName}, Welcome to PetCare 365. We are glad to have you on board. We are here to help you with your pets. You can book an appointment with our doctors, view your appointments, view your pets and much more. `,
+      });
+
+      res.json({
+        status: 200,
+        message: "User with client profile created successfully",
+        // user: user,
+        // client: client,
+      });
+    }
+  } catch (error) {
+    throw error.message;
+  }
+}
+
+async function updateClient(req, res) {
+  console.log(req.body)
+  const { id } = req.body;
+  const { profilePicture } = req.body;
+ 
+  try {
+
+    const exsistingUser = await models.users.findOne({
+      where: {
+        userId: id,
+      },
+      include: [
+        {
+          model: models.client,
+        },
+      ],
+    });
+
+    if (profilePicture) {
+      const exsisitngClient = await models.client.findOne({
+        where: {
+          user_id: id,
+        },
+      });
+
+      const profileImageUpdate = exsisitngClient.update({
+        profilePicture: profilePicture,
+      });
+
+    }
+
+    const updatedUser = await exsistingUser.update(req.body);
+
+
+    res.status(200).json(
+      {
+        message: "User updated successfully",
+        user: updatedUser,
+      }
+    );
+
+    // const exsistingClient = await models.Client.findOne({
+    //   where: {
+    //     clientId: id,
+    //   },
+    // });
+    // const updatedClient = await exsistingClient.update(data);
+    // res.status(200).json({
+    //   message: "Client updated successfully",
+    //   client: updatedClient,
+    // });
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+async function getClient(req, res) {
+  const { id } = req.query;
+  try {
+    const client = await models.client.findOne({
+      where: {
+        clientId: id,
+      },
+
+      include: [
+        {
+          model: models.users,
+          attributes: [
+            "firstName",
+            "lastName",
+            "phoneNumber",
+            "address",
+            "userName",
+          ],
+        },
+      ],
+    });
+    res.status(200).json({
+      client,
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+async function slotStatusPending(req, res) {
+  console.log("slot pending", req.query);
+  const { slotId } = req.query;
+  console.log("slot pending", slotId);
+
+  if (!slotId) {
+    return res.status(400).send({
+      message: "Slot id is required",
+    });
+  }
+
+  try {
+    const exsistngSlot = await models.slot.findOne({
+      where: {
+        slot_id: slotId,
+      },
+    });
+
+    const slot = await exsistngSlot.update({
+      slotStatus: "Pending",
+    });
+
+    console.log(slot);
+
+    res.status(200).send(slot);
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+async function slotStatusUnavailable(req, res) {
+  console.log("slot unavailable", req.query);
+  const { slotId } = req.query;
+  console.log("slot unavailable", slotId);
+
+  if (!slotId) {
+    return res.status(400).send({
+      message: "Slot id is required",
+    });
+  }
+
+  try {
+    const exsistingSlot = await models.slot.findOne({
+      where: {
+        slot_id: slotId,
+      },
+    });
+
+    const slot = await exsistingSlot.update({
+      slotStatus: "Unavailable",
+    });
+
+    res.status(200).send(slot);
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+async function slotStatusAvailable(req, res) {
+  console.log("slot available", req.query);
+  const { slotId } = req.query;
+  console.log("slot available", slotId);
+
+  if (!slotId) {
+    return res.status(400).send({
+      message: "Slot id is required",
+    });
+  }
+
+  try {
+    const exsistingSlot = await models.slot.findOne({
+      where: {
+        slot_id: slotId,
+      },
+    });
+
+    const slot = await exsistingSlot.update({
+      slotStatus: "Available",
+    });
+
+    res.status(200).send(slot);
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+// request function
+
+async function createRequest(req, res) {
+  const { data } = req.body;
+  console.log(data);
+
+  if (data.requestType === "doctor_request") {
+    try {
+      const request = await models.request.create({
+        ...data,
+        requestStatus: "pending",
+        adminId: 1,
+      });
+
+      // notification for admin
+      const notificationBodyForAdmin = {
+        actionType: "new_doctor_request",
+        message: `New Joining Request by ${data.requestResourceName}`,
+        userId: 1,
+        isRead: false,
+      };
+
+      // email to requestor
+      await sendEmail({
+        email: data.requestResourceEmail,
+        subject: "Request Submitted",
+        text: `Hi ${data.requestResourceName},Thanks for showing your concerns to join PetCare 365.Your request has been submitted successfully. Administration will contact you as soon as possible. `,
+      });
+
+      const notificationToAdmin = await createNotificationFromStorage({
+        body: notificationBodyForAdmin,
+      });
+      console.log("request notification sent to admin successfully");
+
+      res.status(200).send(request);
     } catch (error) {
       console.log(error.message);
     }
   }
 
+  if (data.requestType === "contact_query") {
+    try {
+      const request = await models.request.create({
+        ...data,
+        requestStatus: "pending",
+        adminId: 1,
+      });
 
-  module.exports = {
-    getAllPets,
-    getPet,
-    createPet,
-    updatePet,
-    deletePet,
-    getMyAppoinments,
-    getAppoinment,
-    createAppoinment,
-    createReview,
-    createClient,
-    updateClient,
-    getClient,
-    // slots working
-    slotStatusPending,
-    slotStatusUnavailable,
-    slotStatusAvailable,
-    createRequest,
-    getAllBlogs,
-    getBlog,
-    getCategoryBlog,
-    getAllBlogsByCategory,
-  };
+      // notification for admin
+      const notificationBodyForAdmin = {
+        actionType: "request",
+        message: `New request by ${data.requestResourceName}`,
+        userId: 1,
+        isRead: false,
+      };
+
+      // email to requestor
+      await sendEmail({
+        email: data.requestResourceEmail,
+        subject: "Request Submitted",
+        text: `Hi ${data.requestResourceName},Thanks for showing your concerns for PetCare 365.Your request has been submitted successfully. We will get back to you soon. `,
+      });
+
+      const notificationToAdmin = await createNotificationFromStorage({
+        body: notificationBodyForAdmin,
+      });
+      console.log("request notification sent to admin successfully");
+
+      res.status(200).send(request);
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+}
+
+async function getCategoryBlog(req, res) {
+  try {
+    const blogCategory = await models.blog
+      .findAll({
+        attributes: ["blogCategory"],
+        group: ["blogCategory"],
+      })
+      .then((category) => category.map((item) => item.blogCategory));
+    res.status(200).send(blogCategory);
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+async function getAllBlogsByCategory(req, res) {
+  const { blogCategory } = req.query;
+  try {
+    let blogs;
+    blogs = await models.blog.findAll({
+      where: {
+        blogCategory: blogCategory,
+      },
+      include: [
+        {
+          model: models.votes,
+        },
+      ],
+    });
+
+    if (blogs.length === 0) {
+      return res.status(200).send({
+        message: "No blogs found for this category",
+      });
+    }
+
+    const blogList = await Promise.all(
+      blogs.map(async (blog) => {
+        const upvotes = await models.votes.count({
+          where: {
+            voteType: "upvote",
+            blogId: blog.blogId,
+          },
+        });
+
+        const downvotes = await models.votes.count({
+          where: {
+            voteType: "downvote",
+            blogId: blog.blogId,
+          },
+        });
+
+        return {
+          blog: blog,
+          upvotes: upvotes,
+          downvotes: downvotes,
+        };
+      })
+    );
+
+    console.log(blogList);
+
+    res.status(200).send(blogList);
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+async function getAllBlogs(req, res) { }
+
+async function getBlog(req, res) {
+  const { blogId } = req.query;
+  try {
+    const blog = await models.blog.findOne({
+      where: {
+        blogId: blogId,
+      },
+    });
+
+    const upvotes = await models.votes.count({
+      where: {
+        voteType: "upvote",
+        blogId: blog.blogId,
+      },
+    });
+
+    const downvotes = await models.votes.count({
+      where: {
+        voteType: "downvote",
+        blogId: blog.blogId,
+      },
+    });
+
+    res.status(200).send(
+      {
+        blog,
+        upvotes,
+        downvotes
+      }
+    );
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+
+module.exports = {
+  getAllPets,
+  getPet,
+  createPet,
+  updatePet,
+  deletePet,
+  getMyAppoinments,
+  getAppoinment,
+  createAppoinment,
+  createReview,
+  createClient,
+  updateClient,
+  getClient,
+  // slots working
+  slotStatusPending,
+  slotStatusUnavailable,
+  slotStatusAvailable,
+  createRequest,
+  getAllBlogs,
+  getBlog,
+  getCategoryBlog,
+  getAllBlogsByCategory,
+};
