@@ -278,7 +278,7 @@ async function getAllAppointmentsOfDoctor(req, res) {
     // Format the date in the desired format
     const year = inputDate.getFullYear();
     const month = (inputDate.getMonth() + 1).toString().padStart(2, "0");
-    const day = inputDate.getDate().toString().padStart(2, "0");
+    const day = (inputDate.getDate()+1).toString().padStart(2, "0");
 
     const formattedDate = `${year}-${month}-${day}`;
 
@@ -538,6 +538,7 @@ async function getSingleDoctor(req, res) {
     const reviews = await models.Review.findAll({
       where: {
         doctorId: id,
+        reviewStatus: true,
       },
       include: [
         {
@@ -822,6 +823,7 @@ async function cancelAppointment(req, res) {
     const updatedAppointment = await appointment.update({
       appointmentStatus: "cancelled",
       appointmentCancellationReason: reason,
+      paymentStatus: "refunded",
 
     });
 

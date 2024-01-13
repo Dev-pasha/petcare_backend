@@ -282,7 +282,7 @@ async function createAppoinment(req, res) {
       include: [
         {
           model: models.users,
-          attributes: ["userId", "firstName", "lastName"],
+          attributes: ["userId", "firstName", "lastName", "email"],
         },
       ],
     });
@@ -296,7 +296,7 @@ async function createAppoinment(req, res) {
       include: [
         {
           model: models.users,
-          attributes: ["userId", "firstName", "lastName"],
+          attributes: ["userId", "firstName", "lastName", "email"],
         },
       ],
     });
@@ -361,6 +361,7 @@ async function createAppoinment(req, res) {
     });
     console.log("notificationToAdmin success");
 
+    console.log('Docotor email', doctor.user.email)
     // email to doctor
     await sendEmail({
       email: doctor.user.email,
@@ -370,6 +371,7 @@ async function createAppoinment(req, res) {
       )} at ${newAppoinment.appointmentTime}.`,
     });
 
+    console.log('Client email', client.user.email)
     // email to client
     await sendEmail({
       email: client.user.email,
@@ -386,17 +388,20 @@ async function createAppoinment(req, res) {
 }
 
 async function createReview(req, res) {
-  const { review } = req.body;
+  var { review } = req.body;
   // console.log(req.body);
   console.log(review);
-  const { appointmentId } = review;
-  console.log(appointmentId);
+  const { appointment_id } = review;
+  console.log(appointment_id);
+
 
   const exsisitngReview = await models.Review.findOne({
     where: {
-      appointmentId: appointmentId,
+      appointment_id: appointment_id,
     },
   });
+
+  console.log("pichla review", exsisitngReview);
 
   if (exsisitngReview) {
     return res.status(400).send({
@@ -408,7 +413,7 @@ async function createReview(req, res) {
 
     const findAppointment = await models.Appointment.findOne({
       where: {
-        appointmentId: appointmentId,
+        appointmentId: appointment_id,
       },
     });
 
@@ -416,7 +421,7 @@ async function createReview(req, res) {
     review["doctorId"] = findAppointment.doctorId;
     review["reviewDate"] = new Date();
     review["adminId"] = 1;
-    review["appointmentId"] = appointmentId;
+    review["appointment_id"] = appointment_id;
 
     console.log("review", review);
 
@@ -548,7 +553,7 @@ async function updateClient(req, res) {
   console.log(req.body)
   const { id } = req.body;
   const { profilePicture } = req.body;
- 
+
   try {
 
     const exsistingUser = await models.users.findOne({

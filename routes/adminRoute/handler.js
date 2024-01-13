@@ -306,8 +306,10 @@ async function getSinglePet(req, res) {
 
 async function getAllReviewsOfDoctor(req, res) {
   let { id } = req.query;
+  console.log(typeof id)
   id_ = parseInt(id);
   console.log("docotr id", id);
+
 
   try {
     const reviews = await models.Review.findAll({
@@ -327,6 +329,8 @@ async function getAllReviewsOfDoctor(req, res) {
         }
       ]
     });
+
+    console.log("reviews", reviews.length);
 
     res.status(200).send(reviews);
 
@@ -448,10 +452,11 @@ async function reviewApproval(req, res) {
 }
 
 async function createDoctor(req, res) {
-  let { doctor } = req.body;
+  var { doctor } = req.body;
+  var password = doctor.password;
   console.log("data", doctor);
-  let existingUser;
-  let user;
+  var existingUser;
+  var user;
   try {
     existingUser = await models.users.findOne({
       where: {
@@ -480,7 +485,7 @@ async function createDoctor(req, res) {
       await sendEmail({
         email: existingUser.email,
         subject: "Doctor Approval",
-        text: "Your Request has been approved, Thanks for being a part of PetCare365. use your email and previous profile passowrd to login",
+        text: "Your Request has been approved, Thanks for being a part of PetCare365. use your email and passowrd is" + password + " to login",
       });
 
       res.status(200).json({
@@ -492,7 +497,8 @@ async function createDoctor(req, res) {
       const hashedPassword = await bcrypt.hash(doctor.password, saltRounds);
       doctor.password = hashedPassword;
 
-      console.log("user data", existingUser);
+      console.log('new user')
+      console.log("user data", doctor);
       user = await models.users.create({
         ...doctor,
       });
@@ -506,8 +512,8 @@ async function createDoctor(req, res) {
         email: user.email,
         subject: "Doctor Approval",
         text:
-          "Your Request has been approved, Thanks for being a part of PetCare365. use your email and password is" +
-          doctor.password,
+          "Your Request has been approved, Thanks for being a part of PetCare365. use your email and password is " +
+          password,
       });
 
       res.status(200).json({
@@ -664,12 +670,43 @@ async function getAllBlogs(req, res) {
 async function getSingleBlog(req, res) {
   const { id } = req.query;
   try {
-    const blog = await models.blog.findOne({
+    var blog = await models.blog.findOne({
       where: {
         blogId: id,
       },
+      // count the upvotes and down votes
+      // include: [
+      //   {
+      //     model: models.votes,
+      //     attributes: ["voteType"].filter((vote) => vote.voteType === "upvote"),
+      //     attributes: ["voteType"].filter((vote) => vote.voteType === "downvote"), 
+
+      //   },
+      // ],
     });
-    res.status(200).send(blog);
+
+    const upvotes = await models.votes.count({
+      where: {
+        voteType: "upvote",
+        blogId: blog.blogId,
+      },
+    });
+
+    const downvotes = await models.votes.count({
+      where: {
+        voteType: "downvote",
+        blogId: blog.blogId,
+      },
+    });
+
+
+
+    // console.log("blog", blog);
+    res.status(200).send({
+      blog: blog,
+      upvotes: upvotes,
+      downvotes: downvotes,
+    });
   } catch (error) {
     console.log(error.message);
   }
