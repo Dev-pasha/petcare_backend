@@ -278,7 +278,7 @@ async function getAllAppointmentsOfDoctor(req, res) {
     // Format the date in the desired format
     const year = inputDate.getFullYear();
     const month = (inputDate.getMonth() + 1).toString().padStart(2, "0");
-    const day = (inputDate.getDate()+1).toString().padStart(2, "0");
+    const day = (inputDate.getDate() + 1).toString().padStart(2, "0");
 
     const formattedDate = `${year}-${month}-${day}`;
 
@@ -324,12 +324,15 @@ async function getSingleAppointmentOfDoctor(req, res) {
       where: {
         appointmentId: id,
       },
-      include: [
-        {
-          model: models.prescription,
-        },
-      ],
     });
+
+    const prescription = await models.prescription.findOne({
+      where: {
+        appointmentId: id,
+      },
+    });
+
+
 
     const pet = await models.Pet.findOne({
       where: {
@@ -355,6 +358,7 @@ async function getSingleAppointmentOfDoctor(req, res) {
       appointmentResponse,
       pet,
       clientUser,
+      prescription,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });

@@ -213,6 +213,17 @@ async function getAppoinment(req, res) {
       where: {
         appointmentId: id,
       },
+      // include: [
+      //   {
+      //     model: models.prescription
+      //   }
+      // ]
+    });
+
+    const prescription = await models.prescription.findOne({
+      where: {
+        appointmentId: id,
+      },
     });
 
 
@@ -238,6 +249,7 @@ async function getAppoinment(req, res) {
       appoinment,
       doctorUser,
       pet,
+      prescription
     });
   } catch (error) {
     console.log(error);
